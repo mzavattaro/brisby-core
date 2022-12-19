@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import strataLogo from "../../public/strata-logo.jpg";
+import strataLogo from "../../public/stratalogo.jpg";
 
 type communityNoticeProps = {
   id: string;

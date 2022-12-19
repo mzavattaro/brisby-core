@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
 import Button from "./Button";
-import strataLogo from "../assets/stratalogo.jpg";
+import strataLogo from "../../public/stratalogo.jpg";
 import Arrow from "../../public/Arrow";
 
 const ColumnLayout = (props: { children: ReactNode }) => {
