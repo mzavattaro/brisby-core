@@ -5,7 +5,7 @@ generator client {
   provider = "prisma-client-js"
 }
 
-datasource db {
+datasource supabase {
   provider = "postgresql"
   // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
   // Further reading:
@@ -20,21 +20,49 @@ model Example {
   updatedAt DateTime @updatedAt
 }
 
+model CommunityNotice {
+  id          String     @id @default(cuid())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  title       String
+  author      String
+  documentUrl String?
+  active      Boolean    @default(false)
+  activatedAt DateTime
+  archived    Boolean    @default(true)
+  archivedAt  DateTime   @default(now())
+  community   String
+  Community   Community? @relation(fields: [communityId], references: [id])
+  communityId String?
+}
+
+model Community {
+  id        String            @id @default(cuid())
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  name      String
+  image     String?
+  notices   CommunityNotice[]
+  accounts  Account?          @relation(fields: [accountId], references: [id])
+  accountId String?
+}
+
 // Necessary for Next auth
 model Account {
-  id                String  @id @default(cuid())
+  id                String      @id @default(cuid())
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?     @supabase.Text
+  access_token      String?     @supabase.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?     @supabase.Text
   session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Community         Community[]
 
   @@unique([provider, providerAccountId])
 }
