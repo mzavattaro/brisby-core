@@ -1,17 +1,17 @@
 import Heading from "./Heading";
 
-type noticeProps = {
+type notice = {
   id: number;
   noticeTitle: string;
   uploadDate: string;
   strataName: string;
 };
 
-type noticesProps = {
-  strataNotices: noticeProps[];
+type notices = {
+  strataNotices: notice[];
 };
 
-const NoticeCard = (props: noticesProps) => {
+const NoticeCard = (props: notices) => {
   const { strataNotices } = props;
   return (
     <div className="notice-card">
