@@ -25,7 +25,8 @@ model CommunityNotice {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   title       String
-  author      String
+  author      User       @relation(fields: [authorId], references: [id])
+  authorId    String
   documentUrl String?
   active      Boolean    @default(false)
   activatedAt DateTime
@@ -76,13 +77,14 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
+  id               String            @id @default(cuid())
+  name             String?
+  email            String?           @unique
+  emailVerified    DateTime?
+  image            String?
+  accounts         Account[]
+  sessions         Session[]
+  communityNotices CommunityNotice[]
 }
 
 model VerificationToken {
