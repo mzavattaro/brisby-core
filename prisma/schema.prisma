@@ -14,56 +14,50 @@ datasource supabase {
   url      = env("DATABASE_URL")
 }
 
-model Example {
+model Notice {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-model Notice {
-  id          String     @id @default(cuid())
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  title       String
+  title     String
   author      User       @relation(fields: [authorId], references: [id])
   authorId    String
-  documentUrl String?
-  active      Boolean    @default(false)
-  activatedAt DateTime
-  archived    Boolean    @default(true)
-  archivedAt  DateTime   @default(now())
-  community   String
-  Community   Community? @relation(fields: [communityId], references: [id])
-  communityId String?
+  // documentUrl String?
+  // active      Boolean    @default(false)
+  // activatedAt DateTime
+  // archived    Boolean    @default(true)
+  // archivedAt  DateTime   @default(now())
+  // community   String
+  // Community   Community? @relation(fields: [communityId], references: [id])
+  // communityId String?
 }
 
-model Community {
-  id        String            @id @default(cuid())
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
-  name      String
-  image     String?
-  notices   Notice[]
-  accounts  Account?          @relation(fields: [accountId], references: [id])
-  accountId String?
-}
+// model Community {
+//   id        String            @id @default(cuid())
+//   createdAt DateTime          @default(now())
+//   updatedAt DateTime          @updatedAt
+//   name      String
+//   image     String?
+//   notices   Notice[]
+//   accounts  Account?          @relation(fields: [accountId], references: [id])
+//   accountId String?
+// }
 
 // Necessary for Next auth
 model Account {
-  id                String      @id @default(cuid())
+  id                String  @id @default(cuid())
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String?     @supabase.Text
-  access_token      String?     @supabase.Text
+  refresh_token     String? @supabase.Text
+  access_token      String? @supabase.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String?     @supabase.Text
+  id_token          String? @supabase.Text
   session_state     String?
-  user              User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Community         Community[]
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Community         Community[]
 
   @@unique([provider, providerAccountId])
 }
@@ -77,14 +71,14 @@ model Session {
 }
 
 model User {
-  id               String            @id @default(cuid())
-  name             String?
-  email            String?           @unique
-  emailVerified    DateTime?
-  image            String?
-  accounts         Account[]
-  sessions         Session[]
-  communityNotices Notice[]
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  notices      Notice[]
 }
 
 model VerificationToken {
