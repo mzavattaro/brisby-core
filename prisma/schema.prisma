@@ -20,7 +20,7 @@ model Example {
   updatedAt DateTime @updatedAt
 }
 
-model CommunityNotice {
+model Notice {
   id          String     @id @default(cuid())
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
@@ -43,7 +43,7 @@ model Community {
   updatedAt DateTime          @updatedAt
   name      String
   image     String?
-  notices   CommunityNotice[]
+  notices   Notice[]
   accounts  Account?          @relation(fields: [accountId], references: [id])
   accountId String?
 }
@@ -84,7 +84,7 @@ model User {
   image            String?
   accounts         Account[]
   sessions         Session[]
-  communityNotices CommunityNotice[]
+  communityNotices Notice[]
 }
 
 model VerificationToken {

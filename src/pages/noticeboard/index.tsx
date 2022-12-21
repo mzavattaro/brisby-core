@@ -1,9 +1,9 @@
 import { type NextPage } from "next";
-import ToolBar from "../components/ToolBar";
-import ColumnLayout from "../components/ColumnLayout";
-import Header from "../components/Header";
-import StackedList from "../components/StackedList";
-import communityNotices from "../data/communityNotice";
+import ToolBar from "../../components/ToolBar";
+import ColumnLayout from "../../components/ColumnLayout";
+import Header from "../../components/Header";
+import StackedList from "../../components/StackedList";
+import communityNotices from "../../data/communityNotice";
 
 const Noticeboard: NextPage = () => {
   return (
