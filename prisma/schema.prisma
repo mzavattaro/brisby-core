@@ -5,7 +5,7 @@ generator client {
   provider = "prisma-client-js"
 }
 
-datasource supabase {
+datasource db {
   provider = "postgresql"
   // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
   // Further reading:
@@ -19,8 +19,8 @@ model Notice {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   title     String
-  author      User       @relation(fields: [authorId], references: [id])
-  authorId    String
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
   // documentUrl String?
   // active      Boolean    @default(false)
   // activatedAt DateTime
@@ -44,19 +44,21 @@ model Notice {
 
 // Necessary for Next auth
 model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? @supabase.Text
-  access_token      String? @supabase.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @supabase.Text
-  session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String? @db.Text
+  access_token       String? @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String? @db.Text
+  session_state      String?
+  oauth_token_secret String?
+  oauth_token        String?
+  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   // Community         Community[]
 
   @@unique([provider, providerAccountId])
@@ -78,7 +80,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  notices      Notice[]
+  notices       Notice[]
 }
 
 model VerificationToken {
