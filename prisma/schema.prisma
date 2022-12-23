@@ -12,6 +12,7 @@ datasource db {
   // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
   // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
   url      = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model Notice {
@@ -26,7 +27,7 @@ model Notice {
   // activatedAt DateTime
   // archived    Boolean    @default(true)
   // archivedAt  DateTime   @default(now())
-  // community   String
+  community   String
   // Community   Community? @relation(fields: [communityId], references: [id])
   // communityId String?
 }
