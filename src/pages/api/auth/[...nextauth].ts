@@ -26,8 +26,8 @@ export const authOptions: NextAuthOptions = {
         host: "smtp.sendgrid.net",
         port: 465,
         auth: {
-          user: env.EMAIL_SERVER_USER,
-          pass: env.EMAIL_SERVER_PASSWORD,
+          user: env.NEXT_PUBLIC_EMAIL_SERVER_USER,
+          pass: env.NEXT_PUBLIC_EMAIL_SERVER_PASSWORD,
         },
       },
       from: "no-reply@getbrisby.com",
