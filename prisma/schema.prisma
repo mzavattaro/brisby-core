@@ -27,7 +27,7 @@ model Notice {
   // activatedAt DateTime
   // archived    Boolean    @default(true)
   // archivedAt  DateTime   @default(now())
-  community   String
+  // community   String
   // Community   Community? @relation(fields: [communityId], references: [id])
   // communityId String?
 }
