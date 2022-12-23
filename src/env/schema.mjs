@@ -21,8 +21,8 @@ export const serverSchema = z.object({
   ),
   DISCORD_CLIENT_ID: z.string(),
   DISCORD_CLIENT_SECRET: z.string(),
-  // EMAIL_SERVER_USER: z.string(),
-  // EMAIL_SERVER_PASSWORD: z.string(),
+  EMAIL_SERVER_USER: z.string(),
+  EMAIL_SERVER_PASSWORD: z.string(),
 });
 
 /**
@@ -32,8 +32,6 @@ export const serverSchema = z.object({
  */
 export const clientSchema = z.object({
   // NEXT_PUBLIC_CLIENTVAR: z.string(),
-  NEXT_PUBLIC_EMAIL_SERVER_USER: z.string(),
-  NEXT_PUBLIC_EMAIL_SERVER_PASSWORD: z.string(),
 });
 
 /**
@@ -44,7 +42,4 @@ export const clientSchema = z.object({
  */
 export const clientEnv = {
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
-  NEXT_PUBLIC_EMAIL_SERVER_USER: process.env.NEXT_PUBLIC_EMAIL_SERVER_USER,
-  NEXT_PUBLIC_EMAIL_SERVER_PASSWORD:
-    process.env.NEXT_PUBLIC_EMAIL_SERVER_PASSWORD,
 };
