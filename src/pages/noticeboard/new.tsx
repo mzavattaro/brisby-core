@@ -1,5 +1,4 @@
 import { type NextPage } from "next";
-// import { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { trpc } from "../../utils/trpc";
@@ -13,8 +12,6 @@ export const noticeSchema = z.object({
 type NoticeSchema = z.infer<typeof noticeSchema>;
 
 const New: NextPage = () => {
-  // const [title, setTitle] = useState<string>("");
-  // const [error, setError] = useState<string | null>(null);
   const { mutateAsync } = trpc.notice.create.useMutation();
 
   const {
@@ -37,21 +34,6 @@ const New: NextPage = () => {
     mutateAsync(data);
     console.log(data);
   };
-  // async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-  //   e.preventDefault();
-  //   console.log(title);
-
-  //   try {
-  //     await noticeSchema.parse({ title });
-  //   } catch (error) {
-  //     if (error instanceof Error) {
-  //       setError(error.message);
-  //     }
-  //     return;
-  //   }
-  //   console.log({ title });
-  //   mutateAsync({ title });
-  // }
 
   return (
     <div className="mx-auto max-w-screen-2xl text-gray-900">
@@ -71,15 +53,6 @@ const New: NextPage = () => {
           )}
           <button type="submit">submit</button>
         </form>
-        {/* {error && JSON.stringify(error)}
-        <form onSubmit={handleSubmit}>
-          <input
-            className="bg-gray-200"
-            type="text"
-            onChange={(e) => setTitle(e.target.value)}
-          />
-          <button type="submit">submit</button>
-        </form> */}
       </div>
     </div>
   );
