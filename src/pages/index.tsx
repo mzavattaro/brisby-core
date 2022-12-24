@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import SignInButton from "../components/SignInButton";
+// import SignInButton from "../components/SignInButton";
 
 const Home: NextPage = () => {
   return (
@@ -41,7 +41,7 @@ const Home: NextPage = () => {
             </Link>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <SignInButton />
+            {/* <SignInButton /> */}
           </div>
         </div>
       </main>
