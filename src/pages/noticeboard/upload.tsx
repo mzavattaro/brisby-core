@@ -1,7 +1,8 @@
 import axios from "axios";
 // import type { ChangeEvent } from "react";
 import { useForm } from "react-hook-form";
-import { registerClass } from "superjson";
+import { trpc } from "../../utils/trpc";
+import { z } from "zod";
 
 // async function uploadToS3(e: ChangeEvent<HTMLFormElement>) {
 //   const formData = new FormData(e.target);
@@ -22,6 +23,14 @@ import { registerClass } from "superjson";
 //   return key;
 // }
 
+export const documentSchema = z.object({
+  name: z.string(),
+  size: z.number(),
+  type: z.string(),
+  uploadUrl: z.string(),
+  key: z.string(),
+});
+
 async function uploadToS3(data: any) {
   const file = data.file[0];
 
@@ -31,9 +40,18 @@ async function uploadToS3(data: any) {
 
   const fileType = encodeURIComponent(file.type);
   const fileData = await axios.get(`/api/document?fileType=${fileType}`);
-  const { uploadUrl, key } = fileData.data;
+  const { uploadUrl } = fileData.data;
+
+  const mergedData = {
+    ...fileData.data,
+    name: file.name,
+    size: file.size,
+    type: file.type,
+    lastModified: file.lastModified,
+  };
+
   await axios.put(uploadUrl, file);
-  return key;
+  return mergedData;
 }
 
 function Upload() {
@@ -43,8 +61,9 @@ function Upload() {
   //     await uploadToS3(e);
   //   }
   const { register, handleSubmit } = useForm();
+  const { mutateAsync } = trpc.document.create.useMutation();
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: unknown) => {
     // const file = data.file[0];
 
     // if (!file) {
@@ -56,8 +75,8 @@ function Upload() {
     // const { uploadUrl, key } = fileData.data;
     // await axios.put(uploadUrl, file);
     // return key;
-    const key = await uploadToS3(data);
-    console.log("key", key);
+    const fileData = await uploadToS3(data);
+    mutateAsync(fileData);
   };
 
   return (
