@@ -5,7 +5,7 @@ export const noticeRouter = router({
   // create /api/notice
   create: protectedProcedure.input(noticeSchema).mutation(({ ctx, input }) => {
     const { prisma, session } = ctx;
-    const { title } = input;
+    const { title, documentUrl } = input;
 
     const userId = session.user.id;
 

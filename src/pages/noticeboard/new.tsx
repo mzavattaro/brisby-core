@@ -1,4 +1,6 @@
 import { type NextPage } from "next";
+import type { ChangeEvent } from "react";
+import axios from "axios";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { trpc } from "../../utils/trpc";
@@ -7,13 +9,35 @@ import { useForm } from "react-hook-form";
 
 export const noticeSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
+  documentUrl: z.string(),
 });
 
 type NoticeSchema = z.infer<typeof noticeSchema>;
+const { mutateAsync } = trpc.notice.create.useMutation();
+
+async function uploadToS3(e: ChangeEvent<HTMLFormElement>) {
+  const formData = new FormData(e.target);
+  const file = formData.get("file");
+
+  console.log("file", file);
+
+  if (!file) {
+    return null;
+  }
+
+  // @ts-ignore
+  const fileType = encodeURIComponent(file.type);
+  console.log("fileType", fileType);
+  const { data } = await axios.get(`/api/document?fileType=${fileType}`);
+  console.log("data", data);
+  const { uploadUrl, key } = data;
+  await axios.put(uploadUrl, file);
+  console.log("uploadUrl", uploadUrl);
+  console.log("key", key);
+  return key;
+}
 
 const New: NextPage = () => {
-  const { mutateAsync } = trpc.notice.create.useMutation();
-
   const {
     register,
     handleSubmit,
@@ -22,7 +46,7 @@ const New: NextPage = () => {
     resolver: zodResolver(noticeSchema),
   });
 
-  const onSubmit: SubmitHandler<NoticeSchema> = async (data) => {
+  const onSubmit: SubmitHandler<NoticeSchema> = async (data, e) => {
     try {
       await noticeSchema.parse(data);
     } catch (error) {
@@ -31,6 +55,7 @@ const New: NextPage = () => {
       }
       return;
     }
+    await uploadToS3(e);
     mutateAsync(data);
     console.log(data);
   };

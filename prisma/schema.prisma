@@ -16,14 +16,27 @@ datasource db {
   // shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  notices       Notice[]
+}
+
+
 model Notice {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String     @id @default(cuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   title     String
-  author    User     @relation(fields: [authorId], references: [id])
+  author    User       @relation(fields: [authorId], references: [id])
   authorId  String
-  // documentUrl String?
+  documentUrl String @db.Text
+  // Documents Document[]
   // active      Boolean    @default(false)
   // activatedAt DateTime
   // archived    Boolean    @default(true)
@@ -34,6 +47,18 @@ model Notice {
 
   @@index([authorId])
 }
+
+// model Document {
+//   id        String   @id @default(cuid())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   filename  String
+//   uploadUrl String   @db.Text
+//   notice    Notice   @relation(fields: [noticeId], references: [id])
+//   noticeId  String
+
+//   @@index([noticeId])
+// }
 
 // model Community {
 //   id        String            @id @default(cuid())
@@ -78,18 +103,6 @@ model Session {
 
   @@index([userId])
 }
-
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  notices       Notice[]
-}
-
 model VerificationToken {
   identifier String
   token      String   @unique
