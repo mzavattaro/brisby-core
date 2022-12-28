@@ -9,7 +9,12 @@ import axios from "axios";
 export const noticeSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
   firstName: z.string().min(1, { message: "First name is required" }),
-  // uploadUrl: z.string(),
+  document: z.string(),
+  uploadUrl: z.string().optional(),
+  name: z.string(),
+  size: z.number(),
+  type: z.string(),
+  key: z.string(),
 });
 
 type NoticeSchema = z.infer<typeof noticeSchema>;

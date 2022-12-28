@@ -1,6 +1,10 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -18,7 +22,8 @@ datasource db {
 
 model User {
   id            String    @id @default(cuid())
-  name          String?
+  firstName     String?
+  lastName      String?
   email         String?   @unique
   emailVerified DateTime?
   image         String?
@@ -28,53 +33,32 @@ model User {
 }
 
 model Notice {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id         String    @id @default(cuid())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
   title      String
   firstName  String
-  author     User     @relation(fields: [authorId], references: [id])
+  author     User      @relation(fields: [authorId], references: [id])
   authorId   String
-  document   Document @relation(fields: [documentId], references: [id])
-  documentId String
-  // active      Boolean    @default(false)
-  // activatedAt DateTime
-  // archived    Boolean    @default(true)
-  // archivedAt  DateTime   @default(now())
-  // community   String
-  // Community   Community? @relation(fields: [communityId], references: [id])
-  // communityId String?
+  document   Document? @relation(fields: [documentId], references: [id])
+  documentId String?   @unique
 
-  @@index([documentId])
-  @@index([authorId])
+  @@index([authorId, title])
 }
 
 model Document {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  name      String
-  size      Int
-  type      String
-  uploadUrl String   @db.Text
-  key       String
-  notices   Notice[]
-  // notice    Notice   @relation(fields: [noticeId], references: [id])
-  // noticeId  String   @unique
+  name      String?
+  size      Int?
+  type      String?
+  uploadUrl String?  @db.Text
+  key       String?
+  notice    Notice?
 
-  // @@index([noticeId])
+  @@index([name])
 }
-
-// model Community {
-//   id        String            @id @default(cuid())
-//   createdAt DateTime          @default(now())
-//   updatedAt DateTime          @updatedAt
-//   name      String
-//   image     String?
-//   notices   Notice[]
-//   accounts  Account?          @relation(fields: [accountId], references: [id])
-//   accountId String?
-// }
 
 // Necessary for Next auth
 model Account {
