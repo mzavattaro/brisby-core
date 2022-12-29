@@ -19,23 +19,13 @@ Table Notice {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   title String [not null]
-  firstName String [not null]
   author User [not null]
   authorId String [not null]
-  document Document
-  documentId String [unique]
-}
-
-Table Document {
-  id String [pk]
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
   name String
   size Int
   type String
   uploadUrl String
   key String
-  notice Notice
 }
 
 Table Account {
@@ -79,8 +69,6 @@ Table VerificationToken {
 }
 
 Ref: Notice.authorId > User.id
-
-Ref: Notice.documentId - Document.id
 
 Ref: Account.userId > User.id [delete: Cascade]
 

@@ -33,31 +33,19 @@ model User {
 }
 
 model Notice {
-  id         String    @id @default(cuid())
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  title      String
-  firstName  String
-  author     User      @relation(fields: [authorId], references: [id])
-  authorId   String
-  document   Document? @relation(fields: [documentId], references: [id])
-  documentId String?   @unique
-
-  @@index([authorId, title])
-}
-
-model Document {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  title     String
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
   name      String?
   size      Int?
   type      String?
   uploadUrl String?  @db.Text
   key       String?
-  notice    Notice?
 
-  @@index([name])
+  @@index([authorId, title])
 }
 
 // Necessary for Next auth

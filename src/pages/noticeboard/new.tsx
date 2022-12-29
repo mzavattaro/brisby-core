@@ -8,30 +8,36 @@ import axios from "axios";
 
 export const noticeSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
-  firstName: z.string().min(1, { message: "First name is required" }),
-  document: z.string(),
+  fileList: typeof window === "undefined" ? z.any() : z.instanceof(FileList),
   uploadUrl: z.string().optional(),
-  name: z.string(),
-  size: z.number(),
-  type: z.string(),
-  key: z.string(),
+  name: z.string().optional(),
+  size: z.number().optional(),
+  type: z.string().optional(),
+  key: z.string().optional(),
 });
 
 type NoticeSchema = z.infer<typeof noticeSchema>;
 
-// async function uploadToS3(data: any) {
-//   const file = data.file[0];
+async function uploadToS3(data: FileList) {
+  const file = data[0];
+  if (!file) {
+    return null;
+  }
 
-//   if (!file) {
-//     return null;
-//   }
+  const fileType = encodeURIComponent(file.type);
+  const fileData = await axios.get(`/api/document?fileType=${fileType}`);
+  const { uploadUrl } = fileData.data;
+  await axios.put(uploadUrl, file);
 
-//   const fileType = encodeURIComponent(file.type);
-//   const fileData = await axios.get(`/api/document?fileType=${fileType}`);
-//   const { uploadUrl, key } = fileData.data;
-//   await axios.put(uploadUrl, file);
-//   return key;
-// }
+  const transformedData = {
+    ...fileData.data,
+    name: file.name,
+    size: file.size,
+    type: file.type,
+  };
+
+  return transformedData;
+}
 
 const New: NextPage = () => {
   const {
@@ -52,8 +58,13 @@ const New: NextPage = () => {
       }
       return;
     }
-    console.log("data FN", data.firstName);
-    mutateAsync(data);
+
+    const transformedData = await uploadToS3(data.fileList);
+    const payload = {
+      title: data.title,
+      ...transformedData,
+    };
+    mutateAsync(payload);
   };
 
   return (
@@ -72,13 +83,6 @@ const New: NextPage = () => {
               {errors.title?.message}
             </p>
           )}
-
-          <input
-            id="title"
-            type="text"
-            {...register("firstName", { required: true })}
-            placeholder="Firstname..."
-          />
           {errors.title && (
             <p className="mt-2 text-xs italic text-red-500">
               {" "}
@@ -87,11 +91,11 @@ const New: NextPage = () => {
           )}
 
           <p>Please select file to upload</p>
-          {/* <input
+          <input
             type="file"
-            {...register("uploadUrl")}
+            {...register("fileList")}
             accept="application/pdf"
-          /> */}
+          />
           <button type="submit">submit</button>
         </form>
       </div>
