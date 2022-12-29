@@ -65,7 +65,6 @@ model Account {
   oauth_token_secret String?
   oauth_token        String?
   user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  // Community         Community[]
 
   @@unique([provider, providerAccountId])
   @@index([userId])
