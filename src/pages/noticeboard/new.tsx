@@ -83,12 +83,6 @@ const New: NextPage = () => {
               {errors.title?.message}
             </p>
           )}
-          {errors.title && (
-            <p className="mt-2 text-xs italic text-red-500">
-              {" "}
-              {errors.title?.message}
-            </p>
-          )}
 
           <p>Please select file to upload</p>
           <input
