@@ -1,14 +1,25 @@
 import React from "react";
 
-function Close(props) {
+function Close(props: {
+  title?: string;
+  height?: string;
+  width?: string;
+  viewBox?: string;
+  className?: string;
+}) {
   const title = props.title || "close";
+  const height = props.height || "16";
+  const width = props.width || "16";
+  const viewBox = props.viewBox || "0 0 16 16";
+  const className = props.className;
 
   return (
     <svg
-      height="16"
-      width="16"
-      viewBox="0 0 16 16"
+      height={height}
+      width={width}
+      viewBox={viewBox}
       xmlns="http://www.w3.org/2000/svg"
+      className={className}
     >
       <title>{title}</title>
       <g fill="#111827">

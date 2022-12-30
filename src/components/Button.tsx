@@ -7,12 +7,13 @@ const Button = (props: {
   className?: string;
   onClick?: () => void;
   children: ReactNode;
+  type: "button" | "submit" | "reset";
 }) => {
-  const { className, buttonType, buttonSize, children } = props;
+  const { className, buttonType, buttonSize, type, children } = props;
 
   return (
     <button
-      type="button"
+      type={type}
       className={classNames(
         "inline-flex items-center rounded border border-transparent font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2",
         className,

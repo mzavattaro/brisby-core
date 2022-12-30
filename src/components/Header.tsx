@@ -11,8 +11,8 @@ const Header = () => {
           Community notices
         </Heading>
       </div>
-      <ButtonLink fontSize="xs">
-        <Link href="/noticeboard/settings">Account settings</Link>
+      <ButtonLink href="/noticeboard/settings" fontSize="xs">
+        Account settings
       </ButtonLink>
     </div>
   );

@@ -1,17 +1,19 @@
 import type { ReactNode } from "react";
 import { classNames } from "../utils/classNames";
+import Link from "next/link";
 
-const Button = (props: {
+const ButtonLink = (props: {
   fontSize: "xs" | "sm" | "md" | "lg" | "xl";
+  href: string;
   className?: string;
   onClick?: () => void;
   children: ReactNode;
 }) => {
-  const { className, fontSize, children } = props;
+  const { className, fontSize, href, children } = props;
 
   return (
-    <button
-      type="button"
+    <Link
+      href={href}
       className={classNames(
         "text-sm text-gray-500 hover:text-gray-900 hover:underline",
         className,
@@ -19,8 +21,8 @@ const Button = (props: {
       )}
     >
       {children}
-    </button>
+    </Link>
   );
 };
 
-export default Button;
+export default ButtonLink;
