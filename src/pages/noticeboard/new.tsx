@@ -13,6 +13,7 @@ import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import Button from "../../components/Button";
 import ButtonLink from "../../components/ButtonLink";
+import Calendar from "../../components/Calendar";
 
 const publishingOptions = [
   {
@@ -113,7 +114,7 @@ const New: NextPage = () => {
             building community can view them.
           </p>
         </div>
-
+        {/* Title */}
         <form onSubmit={handleSubmit(onSubmit)}>
           <label className="text-base font-bold" htmlFor="title">
             Notice title
@@ -279,6 +280,11 @@ const New: NextPage = () => {
               </>
             )}
           </Listbox>
+
+          {/* Datepicker */}
+          <Calendar />
+
+          {/* Submit form */}
           <div className="flex items-center justify-end">
             <ButtonLink className="mr-6" href={"/noticeboard"} fontSize="md">
               Cancel
