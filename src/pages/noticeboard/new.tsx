@@ -17,11 +17,11 @@ import ButtonLink from "../../components/ButtonLink";
 const publishingOptions = [
   {
     state: "Published",
-    description: "This job posting can be viewed by anyone who has the link.",
+    description: "This notice can be viewed by anyone who has the link.",
   },
   {
     state: "Draft",
-    description: "This job posting will no longer be publicly accessible.",
+    description: "This notice will no longer be publicly accessible.",
   },
 ];
 
