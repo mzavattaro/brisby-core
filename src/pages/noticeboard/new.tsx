@@ -7,24 +7,21 @@ import type { SubmitHandler } from "react-hook-form";
 import axios from "axios";
 import Close from "../../../public/Close";
 import Link from "next/link";
-import UploadFile from "../../../public/UploadFile";
 import { classNames } from "../../utils/classNames";
-import Button from "../../components/Button";
-import ButtonLink from "../../components/ButtonLink";
 import { Fragment, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
+import Button from "../../components/Button";
+import ButtonLink from "../../components/ButtonLink";
 
 const publishingOptions = [
   {
     state: "Published",
     description: "This job posting can be viewed by anyone who has the link.",
-    current: true,
   },
   {
     state: "Draft",
     description: "This job posting will no longer be publicly accessible.",
-    current: false,
   },
 ];
 
@@ -32,10 +29,11 @@ export const noticeSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
   fileList: typeof window === "undefined" ? z.any() : z.instanceof(FileList),
   uploadUrl: z.string().optional(),
-  name: z.string(),
+  name: z.string().optional(),
   size: z.number().optional(),
   type: z.string().optional(),
   key: z.string().optional(),
+  state: z.string().optional(),
 });
 
 type NoticeSchema = z.infer<typeof noticeSchema>;
@@ -63,7 +61,6 @@ async function uploadToS3(data: FileList) {
 
 const New: NextPage = () => {
   const [selected, setSelected] = useState(publishingOptions[0]);
-
   const {
     register,
     handleSubmit,
@@ -87,6 +84,7 @@ const New: NextPage = () => {
     const transformedData = await uploadToS3(data.fileList);
     const payload = {
       title: data.title,
+      state: selected?.state.toLowerCase(),
       ...transformedData,
     };
     mutateAsync(payload);
@@ -94,18 +92,17 @@ const New: NextPage = () => {
 
   const handleChange = (event: any) => {
     const infoArea = document.getElementById("file-upload-filename");
-    infoArea
-      ? (infoArea.textContent = "File: " + event.target.files[0].name)
+    const fileName = infoArea
+      ? (infoArea.textContent = event.target.files[0].name)
       : "";
+    return fileName;
   };
-
-  console.log("selected: ", selected);
 
   return (
     <div className="mx-auto max-w-screen-2xl text-gray-900">
       <div className="mx-auto max-w-screen-md px-6">
         <div className="my-6 flex flex-col">
-          <div className="content-ceter flex place-content-between items-center">
+          <div className="content-ceter flex place-content-between">
             <h3 className=" text-xl font-semibold">Upload new strata notice</h3>
             <Link href={"/noticeboard"}>
               <Close />
@@ -117,47 +114,57 @@ const New: NextPage = () => {
           </p>
         </div>
 
-        <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
-          {/* Title */}
-          <div className="mb-10">
-            <label className="text-base font-bold" htmlFor="title">
-              Notice title
-            </label>
-            <input
-              className={classNames(
-                "mt-2 h-10 w-full rounded-md border border-slate-200 bg-slate-50 px-4 focus:ring-1",
-                errors.title
-                  ? "focus:border-rose-500 focus:ring-rose-500"
-                  : "focus:border-blue-600 focus:ring-blue-600"
-              )}
-              id="title"
-              type="text"
-              {...register("title")}
-              placeholder="Title..."
-            />
-            <div className="absolute">
-              {errors.title && (
-                <p className="mt-2 text-sm font-bold text-red-500">
-                  {" "}
-                  {errors.title?.message}
-                </p>
-              )}
-            </div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <label className="text-base font-bold" htmlFor="title">
+            Notice title
+          </label>
+          <input
+            className={classNames(
+              "mt-2 h-10 w-full rounded-md border border-slate-200 bg-slate-50 px-4 focus:ring-1",
+              errors.title
+                ? "focus:border-rose-500 focus:ring-rose-500"
+                : "focus:border-blue-600 focus:ring-blue-600"
+            )}
+            id="title"
+            type="text"
+            {...register("title", { required: true })}
+            placeholder="Title..."
+          />
+          <div className="absolute">
+            {errors.title && (
+              <p className="mt-2 text-sm font-bold text-red-500">
+                {" "}
+                {errors.title?.message}
+              </p>
+            )}
           </div>
           {/* File upload */}
-          <div className="border-b-2 border-slate-200 pb-10 sm:col-span-6">
+          <div className="mt-10 border-b-2 border-slate-200 pb-10 sm:col-span-6">
             <label className="text-base font-bold" htmlFor="fileList">
               File upload
             </label>
             <div className="mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
               <div className="space-y-1 text-center">
-                <UploadFile />
+                <svg
+                  className="mx-auto h-12 w-12 text-gray-400"
+                  stroke="currentColor"
+                  fill="none"
+                  viewBox="0 0 48 48"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
                 <div className="flex text-sm text-gray-600">
                   <label
                     htmlFor="fileList"
                     className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
                   >
-                    <span className="font-bold">Upload a file</span>
+                    <span>Upload a file</span>
                     <input
                       id="fileList"
                       {...register("fileList")}
@@ -172,13 +179,11 @@ const New: NextPage = () => {
                 <p className="text-xs text-gray-500">.pdf files up to 2MB</p>
               </div>
             </div>
-            <div
-              className="absolute text-sm text-gray-500"
-              id="file-upload-filename"
-            ></div>
           </div>
+          <div id="file-upload-filename"></div>
+
           {/* Publish */}
-          <div className="mt-10">
+          <div className="mt-10 mb-6">
             <h3 className=" text-xl font-semibold">Publish</h3>
             <p className="mt-2 text-gray-500">
               Select the date range for the notice to be published and visible
@@ -186,7 +191,6 @@ const New: NextPage = () => {
               date, the notice will be unpublished as a draft.
             </p>
           </div>
-
           <Listbox value={selected} onChange={setSelected}>
             {({ open }) => (
               <>
@@ -275,7 +279,6 @@ const New: NextPage = () => {
               </>
             )}
           </Listbox>
-
           <div className="flex items-center justify-end">
             <ButtonLink className="mr-6" href={"/noticeboard"} fontSize="md">
               Cancel

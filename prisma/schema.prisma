@@ -44,6 +44,7 @@ model Notice {
   type      String?
   uploadUrl String?  @db.Text
   key       String?
+  state     String?
 
   @@index([authorId, title])
 }
