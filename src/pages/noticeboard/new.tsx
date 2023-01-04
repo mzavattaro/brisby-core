@@ -13,7 +13,8 @@ import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import Button from "../../components/Button";
 import ButtonLink from "../../components/ButtonLink";
-import Calendar from "../../components/Calendar";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const publishingOptions = [
   {
@@ -35,6 +36,8 @@ export const noticeSchema = z.object({
   type: z.string().optional(),
   key: z.string().optional(),
   state: z.string().optional(),
+  startDate: z.date().optional(),
+  endDate: z.date().optional(),
 });
 
 type NoticeSchema = z.infer<typeof noticeSchema>;
@@ -62,6 +65,9 @@ async function uploadToS3(data: FileList) {
 
 const New: NextPage = () => {
   const [selected, setSelected] = useState(publishingOptions[0]);
+  const [startDate, setStartDate] = useState<Date | null>(new Date());
+  const [endDate, setEndDate] = useState<Date | null>(new Date());
+
   const {
     register,
     handleSubmit,
@@ -86,6 +92,8 @@ const New: NextPage = () => {
     const payload = {
       title: data.title,
       state: selected?.state.toLowerCase(),
+      startDate: startDate,
+      endDate: endDate,
       ...transformedData,
     };
     mutateAsync(payload);
@@ -139,6 +147,7 @@ const New: NextPage = () => {
               </p>
             )}
           </div>
+
           {/* File upload */}
           <div className="mt-10 border-b-2 border-slate-200 pb-10 sm:col-span-6">
             <label className="text-base font-bold" htmlFor="fileList">
@@ -282,7 +291,29 @@ const New: NextPage = () => {
           </Listbox>
 
           {/* Datepicker */}
-          <Calendar />
+          <div className="flex">
+            <div className="mr-9">
+              <h3 className="text-base font-bold">Start date</h3>
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+                selectsStart
+                startDate={startDate}
+                endDate={endDate}
+              />
+            </div>
+            <div>
+              <h3 className="text-base font-bold">End date</h3>
+              <DatePicker
+                selected={endDate}
+                onChange={(date) => setEndDate(date)}
+                selectsEnd
+                startDate={startDate}
+                endDate={endDate}
+                minDate={startDate}
+              />
+            </div>
+          </div>
 
           {/* Submit form */}
           <div className="flex items-center justify-end">

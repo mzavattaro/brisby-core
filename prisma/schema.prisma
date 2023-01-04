@@ -33,18 +33,20 @@ model User {
 }
 
 model Notice {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   title     String
-  author    User     @relation(fields: [authorId], references: [id])
+  author    User      @relation(fields: [authorId], references: [id])
   authorId  String
   name      String?
   size      Int?
   type      String?
-  uploadUrl String?  @db.Text
+  uploadUrl String?   @db.Text
   key       String?
   state     String?
+  startDate DateTime?
+  endDate   DateTime?
 
   @@index([authorId, title])
 }

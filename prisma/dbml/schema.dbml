@@ -27,6 +27,8 @@ Table Notice {
   uploadUrl String
   key String
   state String
+  startDate DateTime
+  endDate DateTime
 }
 
 Table Account {
