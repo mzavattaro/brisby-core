@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.react-datepicker__input-container input {
+  @apply form-input block w-full rounded border border-slate-200 bg-slate-50 text-base shadow-sm md:text-sm;
+}
+
+.react-datepicker-popper {
+  @apply drop-shadow-lg;
+}

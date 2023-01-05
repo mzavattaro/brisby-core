@@ -18,12 +18,12 @@ import "react-datepicker/dist/react-datepicker.css";
 
 const publishingOptions = [
   {
-    state: "Published",
-    description: "This notice can be viewed by anyone who has the link.",
-  },
-  {
     state: "Draft",
     description: "This notice will no longer be publicly accessible.",
+  },
+  {
+    state: "Publish",
+    description: "This notice can be viewed by anyone who has the link.",
   },
 ];
 
@@ -205,22 +205,54 @@ const New: NextPage = () => {
             {({ open }) => (
               <>
                 <Listbox.Label className="sr-only">
-                  {" "}
                   Change published status{" "}
                 </Listbox.Label>
                 <div className="relative">
-                  <div className="inline-flex divide-x divide-indigo-600 rounded-md shadow-sm">
-                    <div className="inline-flex divide-x divide-indigo-600 rounded-md shadow-sm">
-                      <div className="inline-flex items-center rounded-l-md border border-transparent bg-indigo-500 py-2 pl-3 pr-4 text-white shadow-sm">
+                  <div
+                    className={classNames(
+                      "inline-flex divide-x rounded-md shadow-sm",
+                      selected?.state === "Draft"
+                        ? "divide-slate-400"
+                        : "bg-indigo-600"
+                    )}
+                  >
+                    <div
+                      className={classNames(
+                        "inline-flex divide-x rounded-md shadow-sm",
+                        selected?.state === "Draft"
+                          ? "divide-slate-400"
+                          : "bg-indigo-600"
+                      )}
+                    >
+                      <div
+                        className={classNames(
+                          "inline-flex items-center rounded-l-md border border-transparent py-2 pl-3 pr-4 shadow-sm",
+                          selected?.state === "Draft"
+                            ? "bg-slate-200"
+                            : "bg-indigo-500 text-white"
+                        )}
+                      >
                         <CheckIcon className="h-5 w-5" aria-hidden="true" />
                         <p className="ml-2.5 text-sm font-medium">
                           {selected?.state}
                         </p>
                       </div>
-                      <Listbox.Button className="inline-flex items-center rounded-l-none rounded-r-md bg-indigo-500 p-2 text-sm font-medium text-white hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">
+                      <Listbox.Button
+                        className={classNames(
+                          "inline-flex items-center rounded-l-none rounded-r-md p-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50",
+                          selected?.state === "Draft"
+                            ? "bg-slate-200 hover:bg-slate-300 focus:ring-slate-200"
+                            : "bg-indigo-500 text-white hover:bg-indigo-600 focus:ring-indigo-500"
+                        )}
+                      >
                         <span className="sr-only">Change published status</span>
                         <ChevronDownIcon
-                          className="h-5 w-5 text-white"
+                          className={classNames(
+                            "h-5 w-5",
+                            selected?.state === "Draft"
+                              ? "text-gray-900"
+                              : "text-white"
+                          )}
                           aria-hidden="true"
                         />
                       </Listbox.Button>
@@ -291,26 +323,56 @@ const New: NextPage = () => {
           </Listbox>
 
           {/* Datepicker */}
-          <div className="flex">
-            <div className="mr-9">
-              <h3 className="text-base font-bold">Start date</h3>
+          <div className="mt-6 flex flex-col sm:flex-row">
+            <div className="sm:mr-9">
+              <h3
+                className={classNames(
+                  "mb-2 text-base font-bold",
+                  selected?.state === "Draft"
+                    ? "text-gray-400"
+                    : "text-gray-900"
+                )}
+              >
+                Start date
+              </h3>
               <DatePicker
-                selected={startDate}
+                showPopperArrow={false}
+                selected={selected?.state === "Publish" ? startDate : null}
                 onChange={(date) => setStartDate(date)}
                 selectsStart
                 startDate={startDate}
                 endDate={endDate}
+                dateFormat="dd MMMM yyyy"
+                nextMonthButtonLabel=">"
+                previousMonthButtonLabel="<"
+                disabled={selected?.state === "Draft" ? true : false}
+                placeholderText="Unavailable for drafts"
               />
             </div>
-            <div>
-              <h3 className="text-base font-bold">End date</h3>
+            <div className="mt-6 sm:mt-0">
+              <h3
+                className={classNames(
+                  "mb-2 text-base font-bold",
+                  selected?.state === "Draft"
+                    ? "text-gray-400"
+                    : "text-gray-900"
+                )}
+              >
+                End date
+              </h3>
               <DatePicker
-                selected={endDate}
+                showPopperArrow={false}
+                selected={selected?.state === "Publish" ? endDate : null}
                 onChange={(date) => setEndDate(date)}
                 selectsEnd
                 startDate={startDate}
                 endDate={endDate}
                 minDate={startDate}
+                dateFormat="dd MMMM yyyy"
+                nextMonthButtonLabel=">"
+                previousMonthButtonLabel="<"
+                disabled={selected?.state === "Draft" ? true : false}
+                placeholderText="Unavailable for drafts"
               />
             </div>
           </div>
@@ -329,5 +391,4 @@ const New: NextPage = () => {
     </div>
   );
 };
-
 export default New;
