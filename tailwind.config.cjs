@@ -62,8 +62,15 @@ module.exports = {
       88: "22rem", //352px
       96: "24rem", //384px
       98: "30rem", //480px
+      100: "32rem", //512px
+      104: "34rem", //544px
+      108: "36rem", //576px
+      112: "38rem", //608px
+      116: "40rem", //640px
+      120: "42rem", //672px
+      122: "42.25rem", //676px
     },
     extend: {},
   },
-  plugins: [require("@tailwindcss/line-clamp"), require('@tailwindcss/forms')],
+  plugins: [require("@tailwindcss/line-clamp"), require("@tailwindcss/forms")],
 };
