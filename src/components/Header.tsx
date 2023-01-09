@@ -3,10 +3,12 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { classNames } from "../utils/classNames";
 import Home from "../../public/Home";
+import StyledLink from "../components/StyledLink";
+import Cog from "../../public/Cog";
 
-export default function Example() {
+const Header = () => {
   return (
-    <Disclosure as="nav" className="bg-white shadow">
+    <Disclosure as="nav" className="border-b-2 bg-white">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -43,40 +45,44 @@ export default function Example() {
                 {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
                 <a
                   href="#"
-                  className="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900"
+                  className="inline-flex items-center px-1 pt-1 text-sm font-bold text-indigo-600"
                 >
                   All notices
                 </a>
                 <a
                   href="#"
-                  className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                  className="inline-flex items-center px-1 pt-1 text-sm font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700"
                 >
                   Published
                 </a>
                 <a
                   href="#"
-                  className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                  className="inline-flex items-center px-1 pt-1 text-sm font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700"
                 >
                   Drafts
                 </a>
                 <a
                   href="#"
-                  className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                  className="inline-flex items-center px-1 pt-1 text-sm font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700"
                 >
                   Archived
                 </a>
               </div>
+
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 {/* Profile dropdown */}
+                <StyledLink
+                  fontSize="md"
+                  styleType="button"
+                  href="/noticeboard/new"
+                >
+                  Upload notice
+                </StyledLink>
                 <Menu as="div" className="relative ml-3">
                   <div>
                     <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                       <span className="sr-only">Open user menu</span>
-                      <img
-                        className="h-8 w-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt=""
-                      />
+                      <Cog />
                     </Menu.Button>
                   </div>
                   <Transition
@@ -159,4 +165,6 @@ export default function Example() {
       )}
     </Disclosure>
   );
-}
+};
+
+export default Header;
