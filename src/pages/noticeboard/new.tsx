@@ -49,7 +49,9 @@ async function uploadToS3(data: FileList) {
   }
 
   const fileType = encodeURIComponent(file.type);
-  const fileData = await axios.get(`/api/document?fileType=${fileType}`);
+  const fileData = await axios.get(
+    `/api/generateUploadUrl?fileType=${fileType}`
+  );
   const { uploadUrl } = fileData.data;
   await axios.put(uploadUrl, file);
 
