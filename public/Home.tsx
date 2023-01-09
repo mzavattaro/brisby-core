@@ -9,6 +9,7 @@ function Home(props: {
   const strokeWidth = props.strokeWidth || 1.5;
   const width = props.width || "24";
   const height = props.height || "24";
+  const className = props.className;
 
   return (
     <svg
@@ -17,7 +18,7 @@ function Home(props: {
       viewBox="0 0 24 24"
       strokeWidth={strokeWidth}
       stroke="currentColor"
-      className="h-6 w-6"
+      className={className}
       height={width}
       width={height}
     >

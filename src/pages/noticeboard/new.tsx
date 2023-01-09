@@ -12,7 +12,7 @@ import { Fragment, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import Button from "../../components/Button";
-import ButtonLink from "../../components/ButtonLink";
+import StyledLink from "../../components/StyledLink";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -381,9 +381,9 @@ const New: NextPage = () => {
 
           {/* Submit form */}
           <div className="flex items-center justify-end">
-            <ButtonLink className="mr-6" href={"/noticeboard"} fontSize="md">
+            <StyledLink className="mr-6" href={"/noticeboard"} fontSize="md">
               Cancel
-            </ButtonLink>
+            </StyledLink>
             <Button type="submit" buttonSize="md" buttonType="primary">
               Submit
             </Button>

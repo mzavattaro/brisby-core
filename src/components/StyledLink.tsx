@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { classNames } from "../utils/classNames";
 import Link from "next/link";
 
-const ButtonLink = (props: {
+const StyledLink = (props: {
   fontSize: "xs" | "sm" | "md" | "lg" | "xl";
   href: string;
   className?: string;
@@ -25,4 +25,4 @@ const ButtonLink = (props: {
   );
 };
 
-export default ButtonLink;
+export default StyledLink;
