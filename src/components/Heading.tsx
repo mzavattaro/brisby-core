@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 const Heading = (props: {
   headingSize: "h1" | "h2" | "h3" | "h4" | "h5";
-  weight?: "light" | "normal" | "medium" | "semibold" | "bold";
+  weight: "light" | "normal" | "medium" | "semibold" | "bold";
   className?: string;
   children: ReactNode;
 }) => {

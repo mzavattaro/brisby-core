@@ -1,19 +1,22 @@
-import Link from "next/link";
-import Heading from "./Heading";
-import ButtonLink from "./ButtonLink";
+import Home from "../../public/Home";
+import Button from "../components/Button";
 
 const Header = () => {
   return (
-    <div className="fixed left-0 right-0 z-20 mx-auto flex h-20 max-w-screen-2xl place-content-between items-center gap-y-0 border-b border-slate-200 bg-white px-6">
-      <div className="flex flex-col">
-        <span>KIMBERLY COURT</span>
-        <Heading className="font-medium" headingSize="h4">
-          Community notices
-        </Heading>
+    <div className="mx-auto flex h-20 place-content-between items-center gap-y-0 border-b border-slate-200 bg-white px-6">
+      <div className="flex">
+        <Home />
+        <h4 className="ml-2 text-lg font-bold">Kimberly Court</h4>
       </div>
-      <ButtonLink href="/noticeboard/settings" fontSize="xs">
-        Account settings
-      </ButtonLink>
+      <div className="flex">
+        <h4 className="mr-14">All</h4>
+        <h4 className="mr-14">Published</h4>
+        <h4 className="mr-14">Drafts</h4>
+        <h4>Archived</h4>
+      </div>
+      <Button buttonSize="lg" buttonType="primary" type={"button"}>
+        New notice
+      </Button>
     </div>
   );
 };

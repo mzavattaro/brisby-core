@@ -9,7 +9,7 @@ import Modal from "../../components/Modal";
 const Noticeboard: NextPage = () => {
   return (
     <div className="text-gray-900">
-      <div className="px-6">
+      <div>
         {/* <div className="relative">
           <Modal />
         </div> */}
