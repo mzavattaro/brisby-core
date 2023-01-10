@@ -1,129 +1,105 @@
-import { EnvelopeIcon, PhoneIcon } from "@heroicons/react/20/solid";
-
-const people = [
+const notices = [
   {
-    name: "Jane Cooper",
-    title: "Paradigm Representative",
-    role: "Admin",
-    email: "janecooper@example.com",
-    telephone: "+1-202-555-0170",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
+    id: "1",
+    startDate: "January 30 2023",
+    endDate: "December 22 2023",
+    title:
+      "Annual fire safety inspection notice for 123 Main Street is now available",
+    noticeStatus: "Published",
+    author: "John Doe",
   },
   {
-    name: "Jane Cooper",
-    title: "Paradigm Representative",
-    role: "Admin",
-    email: "janecooper@example.com",
-    telephone: "+1-202-555-0170",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
+    id: "1",
+    startDate: "January 30 2023",
+    endDate: "December 22 2023",
+    title:
+      "Annual fire safety inspection notice for 123 Main Street is now available",
+    noticeStatus: "Published",
+    author: "John Doe",
   },
   {
-    name: "Jane Cooper",
-    title: "Paradigm Representative",
-    role: "Admin",
-    email: "janecooper@example.com",
-    telephone: "+1-202-555-0170",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
+    id: "1",
+    startDate: "January 30 2023",
+    endDate: "December 22 2023",
+    title:
+      "Annual fire safety inspection notice for 123 Main Street is now available",
+    noticeStatus: "Published",
+    author: "John Doe",
   },
   {
-    name: "Jane Cooper",
-    title: "Paradigm Representative",
-    role: "Admin",
-    email: "janecooper@example.com",
-    telephone: "+1-202-555-0170",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
+    id: "1",
+    startDate: "January 30 2023",
+    endDate: "December 22 2023",
+    title:
+      "Annual fire safety inspection notice for 123 Main Street is now available",
+    noticeStatus: "Published",
+    author: "John Doe",
   },
   {
-    name: "Jane Cooper",
-    title: "Paradigm Representative",
-    role: "Admin",
-    email: "janecooper@example.com",
-    telephone: "+1-202-555-0170",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
-  },
-  {
-    name: "Jane Cooper",
-    title: "Paradigm Representative",
-    role: "Admin",
-    email: "janecooper@example.com",
-    telephone: "+1-202-555-0170",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
-  },
-  {
-    name: "Jane Cooper",
-    title: "Paradigm Representative",
-    role: "Admin",
-    email: "janecooper@example.com",
-    telephone: "+1-202-555-0170",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
+    id: "1",
+    startDate: "January 30 2023",
+    endDate: "December 22 2023",
+    title:
+      "Annual fire safety inspection notice for 123 Main Street is now available",
+    noticeStatus: "Published",
+    author: "John Doe",
   },
 ];
 
-export default function Example() {
+export default function GridLayout() {
   return (
     <ul
       role="list"
       className="grid grid-cols-1 gap-6 px-8 pt-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
     >
-      {people.map((person) => (
+      {notices.map((notice) => (
         <li
-          key={person.email}
-          className="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow"
+          key={notice.id}
+          className="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg border bg-white"
         >
-          <div className="flex flex-1 flex-col p-8">
-            <img
-              className="mx-auto h-32 w-32 flex-shrink-0 rounded-full"
-              src={person.imageUrl}
-              alt=""
-            />
+          <div className="-mt-px flex divide-x divide-gray-200 text-center">
+            <div className="flex w-0 flex-1">
+              <div className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center rounded-bl-lg border border-transparent py-2 text-sm font-medium text-gray-700 hover:text-gray-500">
+                <div className="flex flex-col">
+                  <span className="text-xs font-bold">Start date</span>
+                  <span className="text-xs text-gray-400">
+                    {notice.startDate}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="-ml-px flex w-0 flex-1">
+              <div className="relative inline-flex w-0 flex-1 items-center justify-center rounded-br-lg border border-transparent py-2 text-sm font-medium text-gray-700 hover:text-gray-500">
+                <div className="flex flex-col">
+                  <span className="text-xs font-bold">End date</span>
+                  <span className="text-xs text-gray-400">
+                    {notice.endDate}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-1 flex-col p-4">
+            <span className="mx-auto h-32 w-32 flex-shrink-0 rounded-full">
+              {" "}
+              PDF PREVIEW
+            </span>
             <h3 className="mt-6 text-sm font-medium text-gray-900">
-              {person.name}
+              {notice.title}
             </h3>
             <dl className="mt-1 flex flex-grow flex-col justify-between">
               <dt className="sr-only">Title</dt>
-              <dd className="text-sm text-gray-500">{person.title}</dd>
-              <dt className="sr-only">Role</dt>
-              <dd className="mt-3">
-                <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
-                  {person.role}
+              <dd className="">
+                <span className="rounded bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
+                  {notice.noticeStatus}
                 </span>
               </dd>
+              <dt className="sr-only">Uploaded by</dt>
+              <dd className="mt-4 flex flex-col text-xs">
+                <span className=" font-bold text-gray-900">Uploaded by</span>
+                <span className="text-gray-500">{notice.author}</span>
+              </dd>
             </dl>
-          </div>
-          <div>
-            <div className="-mt-px flex divide-x divide-gray-200">
-              <div className="flex w-0 flex-1">
-                <a
-                  href={`mailto:${person.email}`}
-                  className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center rounded-bl-lg border border-transparent py-4 text-sm font-medium text-gray-700 hover:text-gray-500"
-                >
-                  <EnvelopeIcon
-                    className="h-5 w-5 text-gray-400"
-                    aria-hidden="true"
-                  />
-                  <span className="ml-3">Email</span>
-                </a>
-              </div>
-              <div className="-ml-px flex w-0 flex-1">
-                <a
-                  href={`tel:${person.telephone}`}
-                  className="relative inline-flex w-0 flex-1 items-center justify-center rounded-br-lg border border-transparent py-4 text-sm font-medium text-gray-700 hover:text-gray-500"
-                >
-                  <PhoneIcon
-                    className="h-5 w-5 text-gray-400"
-                    aria-hidden="true"
-                  />
-                  <span className="ml-3">Call</span>
-                </a>
-              </div>
-            </div>
           </div>
         </li>
       ))}
