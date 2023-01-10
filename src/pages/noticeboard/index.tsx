@@ -1,4 +1,5 @@
 import { type NextPage } from "next";
+import GridLayout from "../../components/GridLayout";
 import Header from "../../components/Header";
 import Modal from "../../components/Modal";
 
@@ -10,6 +11,7 @@ const Noticeboard: NextPage = () => {
           <Modal />
         </div> */}
         <Header />
+        <GridLayout />
       </div>
     </div>
   );
