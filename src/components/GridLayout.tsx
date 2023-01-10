@@ -46,7 +46,7 @@ const notices = [
   },
 ];
 
-export default function GridLayout() {
+const GridLayour = () => {
   return (
     <ul
       role="list"
@@ -105,4 +105,6 @@ export default function GridLayout() {
       ))}
     </ul>
   );
-}
+};
+
+export default GridLayour;
