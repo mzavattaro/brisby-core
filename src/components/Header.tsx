@@ -41,43 +41,43 @@ const Header = () => {
                 </div>
               </div>
               {/* tabs */}
-              <div className="hidden sm:flex sm:space-x-8">
+              <div className="hidden space-x-4 sm:flex md:space-x-8">
                 {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
                 <a
                   href="#"
-                  className="inline-flex items-center px-1 pt-1 text-sm font-bold text-indigo-600"
+                  className="inline-flex items-center px-1 pt-1 text-xs font-bold text-indigo-600 md:text-sm"
                 >
                   All notices
                 </a>
                 <a
                   href="#"
-                  className="inline-flex items-center px-1 pt-1 text-sm font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                  className="inline-flex items-center px-1 pt-1 text-xs font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700 md:text-sm"
                 >
                   Published
                 </a>
                 <a
                   href="#"
-                  className="inline-flex items-center px-1 pt-1 text-sm font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                  className="inline-flex items-center px-1 pt-1 text-xs font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700 md:text-sm"
                 >
                   Drafts
                 </a>
                 <a
                   href="#"
-                  className="inline-flex items-center px-1 pt-1 text-sm font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                  className="inline-flex items-center px-1 pt-1 text-xs font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700 md:text-sm"
                 >
                   Archived
                 </a>
               </div>
 
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                {/* Profile dropdown */}
                 <StyledLink
-                  fontSize="md"
+                  className="hidden px-4 text-xs sm:block md:text-sm"
                   styleType="button"
                   href="/noticeboard/new"
                 >
                   Upload notice
                 </StyledLink>
+                {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
                   <div>
                     <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
@@ -129,7 +129,7 @@ const Header = () => {
           </div>
 
           <Disclosure.Panel className="sm:hidden">
-            <div className="space-y-1 pt-2 pb-4">
+            <div className="space-y-1 pt-2">
               {/* Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" */}
               <Disclosure.Button
                 as="a"
@@ -159,6 +159,15 @@ const Header = () => {
               >
                 Archived
               </Disclosure.Button>
+            </div>
+            <div className="flex justify-end border-slate-200 pb-4">
+              <StyledLink
+                className="mr-4 px-2 text-xs sm:block md:text-sm"
+                styleType="button"
+                href="/noticeboard/new"
+              >
+                Upload notice
+              </StyledLink>
             </div>
           </Disclosure.Panel>
         </>
