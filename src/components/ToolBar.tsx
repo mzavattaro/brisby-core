@@ -5,7 +5,7 @@ import Publish from "../../public/Publish";
 import Archive from "../../public/Archive";
 import Delete from "../../public/Delete";
 
-const options = [
+const tools = [
   {
     icon: <Edit />,
     text: "Edit",
@@ -34,13 +34,17 @@ const options = [
 
 const ToolBar = () => {
   return (
-    <div className="relative z-10 mx-auto flex w-fit rounded-md border bg-white py-2 shadow-lg">
-      {options.map((option) => (
-        <div className="flex items-center border-r px-4">
-          <div className="mr-1">{option.icon}</div>
-          <span className="text-gray-500">{option.text}</span>
-        </div>
-      ))}
+    <div>
+      <div className="relative z-10 mx-auto flex w-fit divide-x divide-slate-200 rounded-md border bg-white py-2 shadow-lg">
+        {tools.map((tool) => (
+          <div className="flex items-center px-4">
+            <div className="mr-1">{tool.icon}</div>
+            <span className="text-sm font-semibold text-gray-500">
+              {tool.text}
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

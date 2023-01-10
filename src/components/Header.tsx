@@ -8,7 +8,7 @@ import Cog from "../../public/Cog";
 
 const Header = () => {
   return (
-    <Disclosure as="nav" className="border-b-2 bg-white">
+    <Disclosure as="nav" className="border-b bg-white">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
