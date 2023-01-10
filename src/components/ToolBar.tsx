@@ -34,7 +34,7 @@ const tools = [
 
 const ToolBar = () => {
   return (
-    <div className="mx-2 flex max-w-max divide-x divide-slate-200 overflow-auto rounded-md border bg-white py-2 shadow-xl sm:mx-auto">
+    <div className="mx-4 flex max-w-max divide-x divide-slate-200 overflow-auto rounded-md border bg-white py-2 shadow-xl sm:mx-auto">
       {tools.map((tool) => (
         <div className="flex items-center px-4">
           <div className="mr-1">{tool.icon}</div>
