@@ -2,6 +2,7 @@ import { type NextPage } from "next";
 import GridLayout from "../../components/GridLayout";
 import Header from "../../components/Header";
 import Modal from "../../components/Modal";
+import ToolBar from "../../components/ToolBar";
 
 const Noticeboard: NextPage = () => {
   return (
@@ -12,6 +13,7 @@ const Noticeboard: NextPage = () => {
         </div> */}
         <Header />
         <GridLayout />
+        <ToolBar />
       </div>
     </div>
   );
