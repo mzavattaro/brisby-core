@@ -1,4 +1,6 @@
 import ToolBar from "./ToolBar";
+import PdfViewer from "./PdfViewer";
+
 const notices = [
   {
     id: "1",
@@ -103,10 +105,10 @@ const notices = [
 
 const GridLayout = () => {
   return (
-    <div className="">
+    <>
       <ul
         role="list"
-        className="grid grid-cols-1 gap-6 px-8 pt-6 pb-12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+        className="mx-auto grid max-w-7xl grid-cols-1 gap-6 px-8 pt-6 pb-12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
       >
         {notices.map((notice) => (
           <li
@@ -135,27 +137,30 @@ const GridLayout = () => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-1 flex-col p-4">
-              <span className="mx-auto h-32 w-32 flex-shrink-0 rounded-full">
-                {" "}
-                PDF PREVIEW
-              </span>
-              <h3 className="mt-6 text-sm font-medium text-gray-900">
-                {notice.title}
-              </h3>
-              <dl className="mt-1 flex flex-grow flex-col justify-between">
-                <dt className="sr-only">Title</dt>
-                <dd>
-                  <span className="rounded bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
-                    {notice.noticeStatus}
-                  </span>
-                </dd>
-                <dt className="sr-only">Uploaded by</dt>
-                <dd className="mt-4 flex flex-col text-xs">
-                  <span className=" font-bold text-gray-900">Uploaded by</span>
-                  <span className="text-gray-500">{notice.author}</span>
-                </dd>
-              </dl>
+            <div className="flex flex-1 flex-col">
+              <div className="flex-shrink-0">
+                <PdfViewer />
+              </div>
+              <div className="p-4">
+                <h3 className="mt-6 text-sm font-medium text-gray-900">
+                  {notice.title}
+                </h3>
+                <dl className="mt-1 flex flex-grow flex-col justify-between">
+                  <dt className="sr-only">Title</dt>
+                  <dd>
+                    <span className="rounded bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
+                      {notice.noticeStatus}
+                    </span>
+                  </dd>
+                  <dt className="sr-only">Uploaded by</dt>
+                  <dd className="mt-4 flex flex-col text-xs">
+                    <span className=" font-bold text-gray-900">
+                      Uploaded by
+                    </span>
+                    <span className="text-gray-500">{notice.author}</span>
+                  </dd>
+                </dl>
+              </div>
             </div>
           </li>
         ))}
@@ -163,7 +168,7 @@ const GridLayout = () => {
       <div className="fixed bottom-4 w-full">
         <ToolBar />
       </div>
-    </div>
+    </>
   );
 };
 
