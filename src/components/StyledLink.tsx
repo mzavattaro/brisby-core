@@ -2,15 +2,21 @@ import type { ReactNode } from "react";
 import { classNames } from "../utils/classNames";
 import Link from "next/link";
 
-const StyledLink = (props: {
+type StyledLink = {
   styleType: "button" | "link";
   href: string;
   className?: string;
   onClick?: () => void;
   children: ReactNode;
-}) => {
-  const { className, href, styleType, children } = props;
+};
 
+const StyledLink: React.FC<StyledLink> = ({
+  styleType,
+  href,
+  className,
+  onClick,
+  children,
+}) => {
   return (
     <Link
       href={href}

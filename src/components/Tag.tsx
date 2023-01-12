@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
 import { classNames } from "../utils/classNames";
 
-const Tag = (props: {
+type Tag = {
   type: "draft" | "published" | "archived";
   children: ReactNode;
-}) => {
-  const { type, children } = props;
+};
 
+const Tag: React.FC<Tag> = ({ type, children }) => {
   return (
     <div
       className={classNames(

@@ -1,13 +1,11 @@
 import type { ReactNode } from "react";
 
-const Heading = (props: {
+type Heading = {
   headingSize: "h1" | "h2" | "h3" | "h4" | "h5";
-  weight: "light" | "normal" | "medium" | "semibold" | "bold";
-  className?: string;
   children: ReactNode;
-}) => {
-  const { headingSize, children } = props;
+};
 
+const Heading: React.FC<Heading> = ({ headingSize, children }) => {
   function HeadingSize() {
     if (headingSize === "h1") {
       return <h1 className="text-4xl font-bold">{children}</h1>;

@@ -381,7 +381,7 @@ const New: NextPage = () => {
 
           {/* Submit form */}
           <div className="flex items-center justify-end">
-            <StyledLink className="mr-6" href={"/noticeboard"} fontSize="md">
+            <StyledLink className="mr-6" href={"/noticeboard"} styleType="link">
               Cancel
             </StyledLink>
             <Button type="submit" buttonSize="md" buttonType="primary">
