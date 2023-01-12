@@ -1,11 +1,12 @@
 import ToolBar from "./ToolBar";
 import PdfViewer from "./PdfViewer";
+import Tag from "./Tag";
 
 const notices = [
   {
     id: "1",
     startDate: "January 30 2023",
-    endDate: "December 22 2023",
+    endivate: "December 22 2023",
     title:
       "Annual fire safety inspection notice for 123 Main Street is now available",
     noticeStatus: "Published",
@@ -14,7 +15,7 @@ const notices = [
   {
     id: "1",
     startDate: "January 30 2023",
-    endDate: "December 22 2023",
+    endivate: "December 22 2023",
     title:
       "Annual fire safety inspection notice for 123 Main Street is now available",
     noticeStatus: "Published",
@@ -23,7 +24,7 @@ const notices = [
   {
     id: "1",
     startDate: "January 30 2023",
-    endDate: "December 22 2023",
+    endivate: "December 22 2023",
     title:
       "Annual fire safety inspection notice for 123 Main Street is now available",
     noticeStatus: "Published",
@@ -32,7 +33,7 @@ const notices = [
   {
     id: "1",
     startDate: "January 30 2023",
-    endDate: "December 22 2023",
+    endivate: "December 22 2023",
     title:
       "Annual fire safety inspection notice for 123 Main Street is now available",
     noticeStatus: "Published",
@@ -41,7 +42,7 @@ const notices = [
   {
     id: "1",
     startDate: "January 30 2023",
-    endDate: "December 22 2023",
+    endivate: "December 22 2023",
     title:
       "Annual fire safety inspection notice for 123 Main Street is now available",
     noticeStatus: "Published",
@@ -50,7 +51,7 @@ const notices = [
   {
     id: "1",
     startDate: "January 30 2023",
-    endDate: "December 22 2023",
+    endivate: "December 22 2023",
     title:
       "Annual fire safety inspection notice for 123 Main Street is now available",
     noticeStatus: "Published",
@@ -59,7 +60,7 @@ const notices = [
   {
     id: "1",
     startDate: "January 30 2023",
-    endDate: "December 22 2023",
+    endivate: "December 22 2023",
     title:
       "Annual fire safety inspection notice for 123 Main Street is now available",
     noticeStatus: "Published",
@@ -68,7 +69,7 @@ const notices = [
   {
     id: "1",
     startDate: "January 30 2023",
-    endDate: "December 22 2023",
+    endivate: "December 22 2023",
     title:
       "Annual fire safety inspection notice for 123 Main Street is now available",
     noticeStatus: "Published",
@@ -77,7 +78,7 @@ const notices = [
   {
     id: "1",
     startDate: "January 30 2023",
-    endDate: "December 22 2023",
+    endivate: "December 22 2023",
     title:
       "Annual fire safety inspection notice for 123 Main Street is now available",
     noticeStatus: "Published",
@@ -86,7 +87,7 @@ const notices = [
   {
     id: "1",
     startDate: "January 30 2023",
-    endDate: "December 22 2023",
+    endivate: "December 22 2023",
     title:
       "Annual fire safety inspection notice for 123 Main Street is now available",
     noticeStatus: "Published",
@@ -95,7 +96,7 @@ const notices = [
   {
     id: "1",
     startDate: "January 30 2023",
-    endDate: "December 22 2023",
+    endivate: "December 22 2023",
     title:
       "Annual fire safety inspection notice for 123 Main Street is now available",
     noticeStatus: "Published",
@@ -131,7 +132,7 @@ const GridLayout = () => {
                   <div className="flex flex-col">
                     <span className="text-xs font-bold">End date</span>
                     <span className="text-xs text-gray-400">
-                      {notice.endDate}
+                      {notice.endivate}
                     </span>
                   </div>
                 </div>
@@ -145,21 +146,17 @@ const GridLayout = () => {
                 <h3 className="mt-6 text-sm font-medium text-gray-900">
                   {notice.title}
                 </h3>
-                <dl className="mt-1 flex flex-grow flex-col justify-between">
-                  <dt className="sr-only">Title</dt>
-                  <dd>
-                    <span className="rounded bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
-                      {notice.noticeStatus}
-                    </span>
-                  </dd>
-                  <dt className="sr-only">Uploaded by</dt>
-                  <dd className="mt-4 flex flex-col text-xs">
+                <div className="mt-1 flex flex-grow flex-col justify-between">
+                  <h3 className="sr-only">Title</h3>
+                  <Tag type="published">Published</Tag>
+                  <span className="sr-only">Uploaded by</span>
+                  <div className="mt-4 flex flex-col text-xs">
                     <span className=" font-bold text-gray-900">
                       Uploaded by
                     </span>
                     <span className="text-gray-500">{notice.author}</span>
-                  </dd>
-                </dl>
+                  </div>
+                </div>
               </div>
             </div>
           </li>
