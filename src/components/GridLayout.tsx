@@ -141,7 +141,7 @@ const GridLayout = () => {
               <div className="flex-shrink-0">
                 <PdfViewer />
               </div>
-              <div className="p-4">
+              <div className="mt-4 border-t px-4 pb-4">
                 <h3 className="mt-6 text-sm font-medium text-gray-900">
                   {notice.title}
                 </h3>

@@ -1,42 +1,21 @@
-import { useEffect, useRef } from "react";
+import { Document, Page } from "react-pdf";
+import pdfServiceWorker from "../utils/pdfServiceWorker";
 
 const PdfViewer = () => {
-  // const viewer = useRef(null);
-
-  // useEffect(() => {
-  //   const loadWebViewer = async () => {
-  //     const WebViewer = (await import("@pdftron/webviewer")).default;
-  //     if (viewer.current) {
-  //       WebViewer(
-  //         {
-  //           path: "/webviewer/lib",
-  //           initialDoc: "/sample.pdf",
-  //           disabledElements: [
-  //             "viewControlsButton",
-  //             "viewControlsOverlay",
-  //             "toolsOverlay",
-  //             "ribbonsDropdown",
-  //             "selectToolButton",
-  //             "panToolButton",
-  //             "leftPanelButton",
-  //             "toggleNotesButton",
-  //             "toolsHeader",
-  //           ],
-  //         },
-  //         viewer.current
-  //       );
-  //     }
-  //   };
-  //   loadWebViewer();
-  // }, []);
+  pdfServiceWorker();
 
   return (
     <>
-      <embed
-        type="application/pdf"
-        className="aspect-[1/1.11] w-full"
-        src="/sample.pdf#page=1"
-      />
+      <Document file="/sample.pdf">
+        <Page
+          scale={0.4}
+          renderTextLayer={false}
+          renderAnnotationLayer={false}
+          pageNumber={1}
+          renderMode="canvas"
+          className="aspect-[1/1.414]"
+        />
+      </Document>
     </>
   );
 };
