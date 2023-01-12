@@ -6,97 +6,43 @@ const notices = [
   {
     id: "1",
     startDate: "January 30 2023",
-    endivate: "December 22 2023",
+    endDate: "December 22 2023",
     title:
       "Annual fire safety inspection notice for 123 Main Street is now available",
     noticeStatus: "Published",
     author: "John Doe",
   },
   {
-    id: "1",
+    id: "2",
     startDate: "January 30 2023",
-    endivate: "December 22 2023",
+    endDate: "December 22 2023",
     title:
       "Annual fire safety inspection notice for 123 Main Street is now available",
     noticeStatus: "Published",
     author: "John Doe",
   },
   {
-    id: "1",
+    id: "3",
     startDate: "January 30 2023",
-    endivate: "December 22 2023",
+    endDate: "December 22 2023",
     title:
       "Annual fire safety inspection notice for 123 Main Street is now available",
     noticeStatus: "Published",
     author: "John Doe",
   },
   {
-    id: "1",
+    id: "4",
     startDate: "January 30 2023",
-    endivate: "December 22 2023",
+    endDate: "December 22 2023",
     title:
       "Annual fire safety inspection notice for 123 Main Street is now available",
     noticeStatus: "Published",
     author: "John Doe",
   },
   {
-    id: "1",
+    id: "5",
     startDate: "January 30 2023",
-    endivate: "December 22 2023",
-    title:
-      "Annual fire safety inspection notice for 123 Main Street is now available",
-    noticeStatus: "Published",
-    author: "John Doe",
-  },
-  {
-    id: "1",
-    startDate: "January 30 2023",
-    endivate: "December 22 2023",
-    title:
-      "Annual fire safety inspection notice for 123 Main Street is now available",
-    noticeStatus: "Published",
-    author: "John Doe",
-  },
-  {
-    id: "1",
-    startDate: "January 30 2023",
-    endivate: "December 22 2023",
-    title:
-      "Annual fire safety inspection notice for 123 Main Street is now available",
-    noticeStatus: "Published",
-    author: "John Doe",
-  },
-  {
-    id: "1",
-    startDate: "January 30 2023",
-    endivate: "December 22 2023",
-    title:
-      "Annual fire safety inspection notice for 123 Main Street is now available",
-    noticeStatus: "Published",
-    author: "John Doe",
-  },
-  {
-    id: "1",
-    startDate: "January 30 2023",
-    endivate: "December 22 2023",
-    title:
-      "Annual fire safety inspection notice for 123 Main Street is now available",
-    noticeStatus: "Published",
-    author: "John Doe",
-  },
-  {
-    id: "1",
-    startDate: "January 30 2023",
-    endivate: "December 22 2023",
-    title:
-      "Annual fire safety inspection notice for 123 Main Street is now available",
-    noticeStatus: "Published",
-    author: "John Doe",
-  },
-  {
-    id: "1",
-    startDate: "January 30 2023",
-    endivate: "December 22 2023",
+    endDate: "December 22 2023",
     title:
       "Annual fire safety inspection notice for 123 Main Street is now available",
     noticeStatus: "Published",
@@ -114,9 +60,9 @@ const GridLayout = () => {
         {notices.map((notice) => (
           <li
             key={notice.id}
-            className="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg border bg-white"
+            className="col-span-1 flex flex-col rounded border bg-white"
           >
-            <div className="-mt-px flex divide-x divide-gray-200 text-center">
+            <div className="-mt-px flex divide-x divide-gray-200 border-b text-center">
               <div className="flex w-0 flex-1">
                 <div className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center rounded-bl-lg border border-transparent py-2 text-sm font-medium text-gray-700 hover:text-gray-500">
                   <div className="flex flex-col">
@@ -132,11 +78,14 @@ const GridLayout = () => {
                   <div className="flex flex-col">
                     <span className="text-xs font-bold">End date</span>
                     <span className="text-xs text-gray-400">
-                      {notice.endivate}
+                      {notice.endDate}
                     </span>
                   </div>
                 </div>
               </div>
+            </div>
+            <div className="mx-auto">
+              <Tag type="published">Published</Tag>
             </div>
             <div className="flex flex-1 flex-col">
               <div className="flex-shrink-0">
@@ -148,7 +97,6 @@ const GridLayout = () => {
                 </h3>
                 <div className="mt-1 flex flex-grow flex-col justify-between">
                   <h3 className="sr-only">Title</h3>
-                  <Tag type="published">Published</Tag>
                   <span className="sr-only">Uploaded by</span>
                   <div className="mt-4 flex flex-col text-xs">
                     <span className=" font-bold text-gray-900">
