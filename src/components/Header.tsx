@@ -2,8 +2,8 @@ import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { classNames } from "../utils/classNames";
-import Home from "../../public/Home";
 import StyledLink from "../components/StyledLink";
+import Home from "../../public/Home";
 import Cog from "../../public/Cog";
 
 const Header = () => {
@@ -121,6 +121,17 @@ const Header = () => {
                           </a>
                         )}
                       </Menu.Item>
+                      <Menu.Item>
+                        <div className="mt-4 flex justify-center border-slate-200 pb-4 md:hidden">
+                          <StyledLink
+                            className="px-2 text-xs sm:block md:text-sm"
+                            styleType="button"
+                            href="/noticeboard/new"
+                          >
+                            Upload notice
+                          </StyledLink>
+                        </div>
+                      </Menu.Item>
                     </Menu.Items>
                   </Transition>
                 </Menu>
@@ -163,15 +174,6 @@ const Header = () => {
               >
                 Archived
               </Disclosure.Button>
-            </div>
-            <div className="flex justify-end border-slate-200 pb-4">
-              <StyledLink
-                className="mr-4 px-2 text-xs sm:block md:text-sm"
-                styleType="button"
-                href="/noticeboard/new"
-              >
-                Upload notice
-              </StyledLink>
             </div>
           </Disclosure.Panel>
         </>

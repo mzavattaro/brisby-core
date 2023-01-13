@@ -8,7 +8,7 @@ const notices = [
     startDate: "January 30 2023",
     endDate: "December 22 2023",
     title:
-      "Annual fire safety inspection notice for 123 Main Street is now available",
+      "Annual fire safety inspection notice for 123 Main Street is now available available available available",
     noticeStatus: "Published",
     author: "John Doe",
   },
@@ -92,7 +92,7 @@ const GridLayout = () => {
                 <PdfViewer />
               </div>
               <div className="mt-4 border-t px-4 pb-4">
-                <h3 className="mt-3 text-sm font-medium text-gray-900">
+                <h3 className="mt-3 text-sm font-medium text-gray-900 line-clamp-2">
                   {notice.title}
                 </h3>
                 <div className="mt-1 flex flex-grow flex-col justify-between">
