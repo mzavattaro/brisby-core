@@ -8,7 +8,6 @@ const NoticeItem = ({
 }: {
   notice: RouterOutputs["notice"]["list"]["notices"][number];
 }) => {
-  console.log(typeof notice);
   return (
     <>
       <div

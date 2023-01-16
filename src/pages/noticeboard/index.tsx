@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { type NextPage } from "next";
 import { trpc } from "../../utils/trpc";
+import useScrollPosition from "../../utils/useScrollPosition";
 import Header from "../../components/Header";
 import GridLayout from "../../components/GridLayout";
 import NoticeItem from "../../components/NoticeItem";
 import Modal from "../../components/Modal";
-import useScrollPosition from "../../utils/useScrollPosition";
+import Container from "../../components/Container";
 
 const Noticeboard: NextPage = () => {
   const { data, hasNextPage, fetchNextPage, isFetching } =
@@ -25,7 +26,7 @@ const Noticeboard: NextPage = () => {
   }, [scrollPosition, hasNextPage, isFetching, fetchNextPage]);
 
   return (
-    <div className="text-gray-900">
+    <Container className="text-gray-900">
       {/* <div className="relative">
           <Modal />
         </div> */}
@@ -35,8 +36,8 @@ const Noticeboard: NextPage = () => {
           <NoticeItem key={notice.id} notice={notice} />
         ))}
       </GridLayout>
-      {!hasNextPage && <span>NO MORE NOTICES</span>}
-    </div>
+      {/* {!hasNextPage && <span className="mx-auto">NO MORE NOTICES</span>} */}
+    </Container>
   );
 };
 
