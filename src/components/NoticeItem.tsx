@@ -8,7 +8,7 @@ const NoticeItem = ({
 }: {
   notice: RouterOutputs["notice"]["list"]["notices"][number];
 }) => {
-  console.log(notice.startDate);
+  console.log(typeof notice);
   return (
     <>
       <div
@@ -21,7 +21,7 @@ const NoticeItem = ({
               <div className="flex flex-col">
                 <span className="text-xs font-bold">Start date</span>
                 <span className="text-xs text-gray-400">
-                  {/* {notice.startDate} */}
+                  {dayjs(notice.startDate).format("D MMMM YYYY")}
                 </span>
               </div>
             </div>
@@ -30,7 +30,9 @@ const NoticeItem = ({
             <div className="indivne-flex relative w-0 flex-1 items-center justify-center rounded-br-lg border border-transparent py-2 text-sm font-medium text-gray-700 hover:text-gray-500">
               <div className="flex flex-col">
                 <span className="text-xs font-bold">End date</span>
-                {/* <span className="text-xs text-gray-400">{item.endDate}</span> */}
+                <span className="text-xs text-gray-400">
+                  {dayjs(notice.endDate).format("D MMMM YYYY")}
+                </span>
               </div>
             </div>
           </div>

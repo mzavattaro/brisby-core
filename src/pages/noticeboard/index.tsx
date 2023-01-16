@@ -5,18 +5,6 @@ import NoticeItem from "../../components/NoticeItem";
 import Modal from "../../components/Modal";
 import { trpc } from "../../utils/trpc";
 
-const noticeItem = [
-  {
-    id: "1",
-    startDate: "January 30 2023",
-    endDate: "December 22 2023",
-    title:
-      "Annual fire safety inspection notice for 123 Main Street is now available",
-    noticeStatus: "Pubdivshed",
-    author: "John Doe",
-  },
-];
-
 const Noticeboard: NextPage = () => {
   const { data } = trpc.notice.list.useQuery({});
   return (
