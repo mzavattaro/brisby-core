@@ -3,6 +3,7 @@ import Header from "../../components/Header";
 import GridLayout from "../../components/GridLayout";
 import NoticeItem from "../../components/NoticeItem";
 import Modal from "../../components/Modal";
+import { trpc } from "../../utils/trpc";
 
 const noticeItem = [
   {
@@ -17,6 +18,7 @@ const noticeItem = [
 ];
 
 const Noticeboard: NextPage = () => {
+  const { data } = trpc.notice.list.useQuery({});
   return (
     <div className="text-gray-900">
       {/* <div className="relative">
@@ -24,7 +26,9 @@ const Noticeboard: NextPage = () => {
         </div> */}
       <Header />
       <GridLayout>
-        <NoticeItem noticeItem={noticeItem} />
+        {data?.notices.map((notice) => (
+          <NoticeItem key={notice.id} notice={notice} />
+        ))}
       </GridLayout>
     </div>
   );
