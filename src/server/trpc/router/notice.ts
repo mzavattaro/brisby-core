@@ -45,14 +45,16 @@ export const noticeRouter = router({
     .input(
       z.object({
         limit: z.number().min(1).max(100).default(5),
+        cursor: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
       const { prisma } = ctx;
-      const { limit } = input;
+      const { limit, cursor } = input;
       const notices = await prisma.notice.findMany({
         take: limit + 1,
         orderBy: [{ createdAt: "desc" }],
+        cursor: cursor ? { id: cursor } : undefined,
         include: {
           author: {
             select: {
@@ -62,8 +64,15 @@ export const noticeRouter = router({
         },
       });
 
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (notices.length > limit) {
+        const nextItem = notices.pop() as (typeof notices)[number];
+        nextCursor = nextItem.id;
+      }
+
       return {
         notices,
+        nextCursor,
       };
     }),
 });
