@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import ToolBar from "./ToolBar";
+import Container from "./Container";
 
 type GridLayout = {
   children: ReactNode;
@@ -14,7 +15,7 @@ const GridLayout: React.FC<GridLayout> = ({ children }) => {
       >
         {children}
       </div>
-      <div className="fixed bottom-4 w-full">
+      <div className="sticky bottom-12 w-full">
         <ToolBar />
       </div>
     </>

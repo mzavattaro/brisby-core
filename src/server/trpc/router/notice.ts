@@ -44,7 +44,7 @@ export const noticeRouter = router({
   list: publicProcedure
     .input(
       z.object({
-        limit: z.number().min(1).max(100).default(5),
+        limit: z.number().min(1).max(100).default(10),
         cursor: z.string().optional(),
       })
     )

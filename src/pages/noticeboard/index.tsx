@@ -7,6 +7,7 @@ import GridLayout from "../../components/GridLayout";
 import NoticeItem from "../../components/NoticeItem";
 import Modal from "../../components/Modal";
 import Container from "../../components/Container";
+import ScrollVertical from "../../../public/ScrollVertical";
 
 const Noticeboard: NextPage = () => {
   const { data, hasNextPage, fetchNextPage, isFetching } =
@@ -35,8 +36,20 @@ const Noticeboard: NextPage = () => {
         {notices.map((notice) => (
           <NoticeItem key={notice.id} notice={notice} />
         ))}
+        {hasNextPage && (
+          <div className="flex flex-col items-center justify-center font-bold text-slate-200">
+            <ScrollVertical />
+            <span>Scroll for more notices</span>
+          </div>
+        )}
       </GridLayout>
-      {/* {!hasNextPage && <span className="mx-auto">NO MORE NOTICES</span>} */}
+      {!hasNextPage && (
+        <div className="mx-auto flex flex-col items-center pb-4 text-slate-300">
+          <span className="mx-auto">
+            Congratulations, you've reached the bottom!
+          </span>
+        </div>
+      )}
     </Container>
   );
 };
