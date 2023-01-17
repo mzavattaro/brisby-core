@@ -104,8 +104,8 @@ const New: NextPage = () => {
   };
 
   const getFileParameters = (event: any) => {
-    setFileName(event.target.files[0].name);
-    setFileSize(event.target.files[0].size / 1000000);
+    setFileName(event?.target.files[0]?.name);
+    setFileSize(event?.target.files[0]?.size / 1000000);
   };
 
   return (
