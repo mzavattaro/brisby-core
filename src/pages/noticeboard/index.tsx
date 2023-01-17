@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { type NextPage } from "next";
 import { trpc } from "../../utils/trpc";
 import useScrollPosition from "../../utils/useScrollPosition";
