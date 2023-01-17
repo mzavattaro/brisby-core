@@ -201,7 +201,7 @@ const New: NextPage = () => {
                 id="file-upload-filename"
               >
                 File size exceeds 1MB limit (
-                {(fileSize / 1000000).toPrecision(3)} MB).
+                {(fileSize / 1000000).toPrecision(3)} MB)
               </span>
             )}
           </div>
