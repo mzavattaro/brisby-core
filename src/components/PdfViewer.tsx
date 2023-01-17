@@ -8,8 +8,6 @@ type PdfViewer = {
 const PdfViewer: React.FC<PdfViewer> = ({ uploadUrl }) => {
   pdfServiceWorker();
 
-  console.log("uploadUrl", uploadUrl);
-
   return (
     <>
       <Document file={uploadUrl}>

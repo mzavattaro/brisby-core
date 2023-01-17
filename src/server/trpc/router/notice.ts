@@ -68,10 +68,9 @@ export const noticeRouter = router({
       for (const notice of notices) {
         const url = s3.getSignedUrl("getObject", {
           Bucket: process.env.AWS_S3_BUCKET,
-          Key: notice.uploadUrl,
+          Key: notice.key,
           Expires: 3600,
         });
-        console.log(url);
         notice.uploadUrl = url;
       }
 

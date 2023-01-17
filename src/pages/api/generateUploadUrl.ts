@@ -16,7 +16,7 @@ const handler: NextApiHandler<PresignedUrlResponse> = (req, res) => {
   const s3Params = {
     Bucket: process.env.AWS_S3_BUCKET,
     Key,
-    Expires: 60,
+    Expires: 3600,
     ContentType: `application/${ex}`,
   };
 
