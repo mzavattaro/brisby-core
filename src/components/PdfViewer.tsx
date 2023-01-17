@@ -1,12 +1,18 @@
 import { Document, Page } from "react-pdf";
 import pdfServiceWorker from "../utils/pdfServiceWorker";
 
-const PdfViewer = () => {
+type PdfViewer = {
+  uploadUrl: string | null;
+};
+
+const PdfViewer: React.FC<PdfViewer> = ({ uploadUrl }) => {
   pdfServiceWorker();
+
+  console.log("uploadUrl", uploadUrl);
 
   return (
     <>
-      <Document file="/sample.pdf">
+      <Document file={uploadUrl}>
         <Page
           scale={0.4}
           renderTextLayer={false}

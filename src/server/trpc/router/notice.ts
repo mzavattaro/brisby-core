@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { noticeSchema } from "../../../pages/noticeboard/new";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
+import s3 from "../../../utils/s3";
 
 export const noticeRouter = router({
   // create /api/bulding notice
@@ -63,6 +64,16 @@ export const noticeRouter = router({
           },
         },
       });
+
+      for (const notice of notices) {
+        const url = s3.getSignedUrl("getObject", {
+          Bucket: process.env.AWS_S3_BUCKET,
+          Key: notice.uploadUrl,
+          Expires: 3600,
+        });
+        console.log(url);
+        notice.uploadUrl = url;
+      }
 
       let nextCursor: typeof cursor | undefined = undefined;
       if (notices.length > limit) {
