@@ -8,11 +8,13 @@ const Button = (props: {
   onClick?: () => void;
   children: ReactNode;
   type: "button" | "submit" | "reset";
+  disabled?: boolean;
 }) => {
-  const { className, buttonType, buttonSize, type, children } = props;
+  const { className, buttonType, buttonSize, type, children, disabled } = props;
 
   return (
     <button
+      disabled={disabled}
       type={type}
       className={classNames(
         "inline-flex items-center rounded border border-transparent font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2",
@@ -27,7 +29,8 @@ const Button = (props: {
         buttonSize === "sm" && "px-3 py-2 text-sm",
         buttonSize === "md" && "px-4 py-2 text-sm",
         buttonSize === "lg" && "px-4 py-2 text-base",
-        buttonSize === "xl" && "px-6 py-3 text-base"
+        buttonSize === "xl" && "px-6 py-3 text-base",
+        disabled && "cursor-not-allowed opacity-50"
       )}
     >
       {children}

@@ -1,14 +1,14 @@
+import { Fragment, useState } from "react";
 import { type NextPage } from "next";
+import Link from "next/link";
+import axios from "axios";
 import { trpc } from "../../utils/trpc";
+import { classNames } from "../../utils/classNames";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
-import axios from "axios";
 import Close from "../../../public/Close";
-import Link from "next/link";
-import { classNames } from "../../utils/classNames";
-import { Fragment, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import Button from "../../components/Button";
@@ -69,6 +69,8 @@ const New: NextPage = () => {
   const [selected, setSelected] = useState(publishingOptions[0]);
   const [startDate, setStartDate] = useState<Date | null>(new Date());
   const [endDate, setEndDate] = useState<Date | null>(new Date());
+  const [fileName, setFileName] = useState<string>("");
+  const [fileSize, setFileSize] = useState<number>(0);
 
   const {
     register,
@@ -101,12 +103,9 @@ const New: NextPage = () => {
     mutateAsync(payload);
   };
 
-  const handleChange = (event: any) => {
-    const infoArea = document.getElementById("file-upload-filename");
-    const fileName = infoArea
-      ? (infoArea.textContent = event.target.files[0].name)
-      : "";
-    return fileName;
+  const getFileParameters = (event: any) => {
+    setFileName(event.target.files[0].name);
+    setFileSize(event.target.files[0].size);
   };
 
   return (
@@ -183,16 +182,29 @@ const New: NextPage = () => {
                       accept="application/pdf"
                       type="file"
                       className="sr-only"
-                      onChange={handleChange}
+                      onChange={getFileParameters}
                     />
                   </label>
                   <p className="pl-1">or drag and drop</p>
                 </div>
-                <p className="text-xs text-gray-500">.pdf files up to 2MB</p>
+                <p className="text-xs text-gray-500">.pdf files up to 1MB</p>
               </div>
             </div>
+            {fileName && fileSize < 1000000 && (
+              <div className="absolute text-gray-500" id="file-upload-filename">
+                File: {fileName}
+              </div>
+            )}
+            {fileSize > 1000000 && (
+              <span
+                className="absolute text-sm font-bold text-red-500"
+                id="file-upload-filename"
+              >
+                File size exceeds 1MB limit (
+                {(fileSize / 1000000).toPrecision(3)} MB).
+              </span>
+            )}
           </div>
-          <div id="file-upload-filename"></div>
 
           {/* Publish */}
           <div className="mt-10 mb-6">
@@ -384,7 +396,12 @@ const New: NextPage = () => {
             <StyledLink className="mr-6" href={"/noticeboard"} styleType="link">
               Cancel
             </StyledLink>
-            <Button type="submit" buttonSize="md" buttonType="primary">
+            <Button
+              disabled={fileSize > 1000000 ? true : false}
+              type="submit"
+              buttonSize="md"
+              buttonType="primary"
+            >
               Submit
             </Button>
           </div>
