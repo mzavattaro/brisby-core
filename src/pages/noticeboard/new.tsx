@@ -105,7 +105,7 @@ const New: NextPage = () => {
 
   const getFileParameters = (event: any) => {
     setFileName(event.target.files[0].name);
-    setFileSize(event.target.files[0].size);
+    setFileSize(event.target.files[0].size / 1000000);
   };
 
   return (
@@ -190,18 +190,17 @@ const New: NextPage = () => {
                 <p className="text-xs text-gray-500">.pdf files up to 1MB</p>
               </div>
             </div>
-            {fileName && fileSize < 1000000 && (
+            {fileName && fileSize < 1 && (
               <div className="absolute text-gray-500" id="file-upload-filename">
                 File: {fileName}
               </div>
             )}
-            {fileSize > 1000000 && (
+            {fileSize > 1 && (
               <span
                 className="absolute text-sm font-bold text-red-500"
                 id="file-upload-filename"
               >
-                File size exceeds 1MB limit (
-                {(fileSize / 1000000).toPrecision(3)} MB)
+                File size exceeds 1MB limit ({fileSize.toPrecision(3)} MB)
               </span>
             )}
           </div>
@@ -397,7 +396,7 @@ const New: NextPage = () => {
               Cancel
             </StyledLink>
             <Button
-              disabled={fileSize > 1000000 ? true : false}
+              disabled={fileSize > 1 ? true : false}
               type="submit"
               buttonSize="md"
               buttonType="primary"
