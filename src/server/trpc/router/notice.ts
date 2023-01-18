@@ -3,14 +3,7 @@ import { z } from "zod";
 import { noticeSchema } from "../../../pages/noticeboard/new";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 import s3 from "../../../utils/s3";
-import {
-  S3Client,
-  CreateBucketCommand,
-  DeleteObjectCommand,
-  PutObjectCommand,
-  DeleteBucketCommand,
-  GetObjectCommand,
-} from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 export const noticeRouter = router({
@@ -130,7 +123,6 @@ export const noticeRouter = router({
         Bucket: process.env.AWS_S3_BUCKET,
         Key: notices.key as string,
       };
-      console.log("params: ", params);
 
       await s3.send(new DeleteObjectCommand(params));
 
