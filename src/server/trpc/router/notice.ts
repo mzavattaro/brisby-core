@@ -4,7 +4,6 @@ import { noticeSchema } from "../../../pages/noticeboard/new";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 import s3 from "../../../utils/s3";
 import { DeleteObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 export const noticeRouter = router({
   // create /api/bulding notice
@@ -69,7 +68,7 @@ export const noticeRouter = router({
       });
 
       for (let notice of notices) {
-        const url = "https://d15jb2eo9wjl09.cloudfront.net/" + notice.key;
+        const url = "https://d1ve2d1xbf677h.cloudfront.net/" + notice.key;
         notice.uploadUrl = url;
       }
 

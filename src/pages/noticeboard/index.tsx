@@ -8,7 +8,6 @@ import NoticeItem from "../../components/NoticeItem";
 import Modal from "../../components/Modal";
 import Container from "../../components/Container";
 import ScrollVertical from "../../../public/ScrollVertical";
-import axios from "axios";
 
 const Noticeboard: NextPage = () => {
   const { data, hasNextPage, fetchNextPage, isFetching } =
