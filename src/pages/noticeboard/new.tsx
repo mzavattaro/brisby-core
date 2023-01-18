@@ -1,5 +1,6 @@
 import { Fragment, useState } from "react";
 import { type NextPage } from "next";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import axios from "axios";
 import { trpc } from "../../utils/trpc";
@@ -72,6 +73,8 @@ const New: NextPage = () => {
   const [fileName, setFileName] = useState<string>("");
   const [fileSize, setFileSize] = useState<number>(0);
 
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -101,6 +104,7 @@ const New: NextPage = () => {
       ...transformedData,
     };
     mutateAsync(payload);
+    router.push("/noticeboard");
   };
 
   const getFileParameters = (event: any) => {
