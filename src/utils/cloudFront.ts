@@ -1,6 +1,6 @@
-import { S3Client } from "@aws-sdk/client-s3";
+import { CloudFrontClient } from "@aws-sdk/client-cloudfront";
 
-const s3 = new S3Client({
+const cloudFront = new CloudFrontClient({
   region: process.env.AWS_S3_REGION,
   credentials: {
     accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID as string,
@@ -8,4 +8,4 @@ const s3 = new S3Client({
   },
 });
 
-export default s3;
+export default cloudFront;

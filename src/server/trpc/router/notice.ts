@@ -3,7 +3,9 @@ import { z } from "zod";
 import { noticeSchema } from "../../../pages/noticeboard/new";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 import s3 from "../../../utils/s3";
-import { DeleteObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import cloudFront from "../../../utils/cloudFront";
+import { DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { CreateInvalidationCommand } from "@aws-sdk/client-cloudfront";
 
 export const noticeRouter = router({
   // create /api/bulding notice
@@ -105,8 +107,27 @@ export const noticeRouter = router({
         Bucket: process.env.AWS_S3_BUCKET,
         Key: notices.key as string,
       };
-
+      // Delete from s3 bucket
       await s3.send(new DeleteObjectCommand(params));
+
+      // Invalidate the CloudFront cache
+      const invalidationParams = {
+        DistributionId: process.env.AWS_CLOUDFRONT_DISTRIBUTION_ID,
+        InvalidationBatch: {
+          CallerReference: notices.key as string,
+          Paths: {
+            Quantity: 1,
+            Items: [`/${notices.key}`],
+          },
+        },
+      };
+
+      const invalidationCommand = new CreateInvalidationCommand(
+        invalidationParams
+      );
+      await cloudFront.send(invalidationCommand);
+
+      // Delete from database
       await prisma.notice.delete({ where: { id } });
 
       return notices;
