@@ -69,18 +69,7 @@ export const noticeRouter = router({
       });
 
       for (let notice of notices) {
-        const params = {
-          Bucket: process.env.AWS_S3_BUCKET,
-          Key: notice.key as string,
-        };
-
-        // https://aws.amazon.com/blogs/developer/generate-presigned-url-modular-aws-sdk-javascript/
-        const command = new GetObjectCommand(params);
-        const seconds = 60;
-        const url = await getSignedUrl(s3, command, {
-          expiresIn: seconds,
-        });
-
+        const url = "https://d15jb2eo9wjl09.cloudfront.net/" + notice.key;
         notice.uploadUrl = url;
       }
 
