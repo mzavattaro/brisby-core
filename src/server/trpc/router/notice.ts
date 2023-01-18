@@ -69,12 +69,6 @@ export const noticeRouter = router({
       });
 
       for (let notice of notices) {
-        // const url = s3.getSignedUrl("getObject", {
-        //   Bucket: process.env.AWS_S3_BUCKET,
-        //   Key: notice.key,
-        //   Expires: 3600,
-        // });
-
         const params = {
           Bucket: process.env.AWS_S3_BUCKET,
           Key: notice.key as string,
@@ -88,7 +82,6 @@ export const noticeRouter = router({
         });
 
         notice.uploadUrl = url;
-        console.log("notice.key: ", notice.key);
       }
 
       let nextCursor: typeof cursor | undefined = undefined;
@@ -112,6 +105,7 @@ export const noticeRouter = router({
       const notices = await prisma.notice.findUnique({
         where: { id },
       });
+
       if (!notices) {
         throw new TRPCError({
           code: "NOT_FOUND",
@@ -125,7 +119,6 @@ export const noticeRouter = router({
       };
 
       await s3.send(new DeleteObjectCommand(params));
-
       await prisma.notice.delete({ where: { id } });
 
       return notices;
