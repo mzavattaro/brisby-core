@@ -8,8 +8,15 @@ import NoticeItem from "../../components/NoticeItem";
 import Modal from "../../components/Modal";
 import Container from "../../components/Container";
 import ScrollVertical from "../../../public/ScrollVertical";
+import axios from "axios";
 
 const Noticeboard: NextPage = () => {
+  // console.log(trpc.notice.delete.useMutation());
+  // const deletePostClicked = async ({ id }) => {
+  //   console.log(`deletePostClicked = (${id})`);
+  //   await axios.delete("/api/posts/" + id);
+  // };
+
   const { data, hasNextPage, fetchNextPage, isFetching } =
     trpc.notice.list.useInfiniteQuery(
       { limit: 10 },

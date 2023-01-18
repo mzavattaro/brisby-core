@@ -1,7 +1,17 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { noticeSchema } from "../../../pages/noticeboard/new";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 import s3 from "../../../utils/s3";
+import {
+  S3Client,
+  CreateBucketCommand,
+  DeleteObjectCommand,
+  PutObjectCommand,
+  DeleteBucketCommand,
+  GetObjectCommand,
+} from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 export const noticeRouter = router({
   // create /api/bulding notice
@@ -65,13 +75,27 @@ export const noticeRouter = router({
         },
       });
 
-      for (const notice of notices) {
-        const url = s3.getSignedUrl("getObject", {
+      for (let notice of notices) {
+        // const url = s3.getSignedUrl("getObject", {
+        //   Bucket: process.env.AWS_S3_BUCKET,
+        //   Key: notice.key,
+        //   Expires: 3600,
+        // });
+
+        const params = {
           Bucket: process.env.AWS_S3_BUCKET,
-          Key: notice.key,
-          Expires: 3600,
+          Key: notice.key as string,
+        };
+
+        // https://aws.amazon.com/blogs/developer/generate-presigned-url-modular-aws-sdk-javascript/
+        const command = new GetObjectCommand(params);
+        const seconds = 60;
+        const url = await getSignedUrl(s3, command, {
+          expiresIn: seconds,
         });
+
         notice.uploadUrl = url;
+        console.log("notice.key: ", notice.key);
       }
 
       let nextCursor: typeof cursor | undefined = undefined;
@@ -84,5 +108,47 @@ export const noticeRouter = router({
         notices,
         nextCursor,
       };
+    }),
+
+  // delete /api/notice
+  delete: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input: id }) => {
+      const { prisma } = ctx;
+
+      const notices = await prisma.notice.findUnique({
+        where: { id },
+      });
+      if (!notices) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Notice not found",
+        });
+      }
+
+      const params = {
+        Bucket: process.env.AWS_S3_BUCKET,
+        Key: notices.key as string,
+      };
+      console.log("params: ", params);
+
+      await s3.send(new DeleteObjectCommand(params));
+
+      // try {
+      //   await s3.getSignedUrl("headObject", params);
+      //   console.log("File Found in S3");
+      //   try {
+      //     await s3.getSignedUrl("deleteObject", params);
+      //     console.log("file deleted Successfully");
+      //   } catch (err) {
+      //     console.log("ERROR in file Deleting : " + JSON.stringify(err));
+      //   }
+      // } catch (err) {
+      //   console.log("File not Found ERROR : " + err.code);
+      // }
+
+      await prisma.notice.delete({ where: { id } });
+
+      return notices;
     }),
 });

@@ -2,18 +2,25 @@ import { RouterOutputs } from "../utils/trpc";
 import dayjs from "dayjs";
 import PdfViewer from "./PdfViewer";
 import Tag from "./Tag";
+import { trpc } from "../utils/trpc";
 
 const NoticeItem = ({
   notice,
 }: {
   notice: RouterOutputs["notice"]["list"]["notices"][number];
 }) => {
+  const mutation = trpc.notice.delete.useMutation();
+  const handleDelete = async () => {
+    mutation.mutate(notice.id);
+  };
+
   return (
     <>
       <div
         key={notice.id}
         className="col-span-1 flex flex-col rounded border bg-white shadow"
       >
+        <button onClick={handleDelete}>delete</button>
         <div className="-mt-px flex divide-x divide-gray-200 border-b text-center">
           <div className="flex w-0 flex-1">
             <div className="indivne-flex relative -mr-px w-0 flex-1 items-center justify-center rounded-bl-lg border border-transparent py-2 text-sm font-medium text-gray-700 hover:text-gray-500">
