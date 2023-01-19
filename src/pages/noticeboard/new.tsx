@@ -130,7 +130,7 @@ const New: NextPage = () => {
         {/* Title */}
         <form onSubmit={handleSubmit(onSubmit)}>
           <label className="text-base font-bold" htmlFor="title">
-            Notice title
+            Notice title*
           </label>
           <input
             className={classNames(
@@ -156,7 +156,7 @@ const New: NextPage = () => {
           {/* File upload */}
           <div className="mt-10 border-b-2 border-slate-200 pb-10 sm:col-span-6">
             <label className="text-base font-bold" htmlFor="fileList">
-              File upload
+              File upload*
             </label>
             <div className="mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
               <div className="space-y-1 text-center">
@@ -400,7 +400,7 @@ const New: NextPage = () => {
               Cancel
             </StyledLink>
             <Button
-              disabled={fileSize > 1 ? true : false}
+              disabled={fileSize > 1 || !fileName ? true : false}
               type="submit"
               buttonSize="md"
               buttonType="primary"
