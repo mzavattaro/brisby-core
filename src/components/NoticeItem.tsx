@@ -1,15 +1,20 @@
-import { RouterOutputs } from "../utils/trpc";
+import { RouterOutputs, trpc } from "../utils/trpc";
 import dayjs from "dayjs";
 import PdfViewer from "./PdfViewer";
 import Tag from "./Tag";
-import { trpc } from "../utils/trpc";
+import { useQueryClient } from "@tanstack/react-query";
 
 const NoticeItem = ({
   notice,
 }: {
   notice: RouterOutputs["notice"]["list"]["notices"][number];
 }) => {
-  const mutation = trpc.notice.delete.useMutation();
+  const queryClient = useQueryClient();
+  const mutation = trpc.notice.delete.useMutation({
+    onSuccess: () => {
+      queryClient.invalidateQueries();
+    },
+  });
   const handleDelete = async () => {
     mutation.mutate(notice.id);
   };

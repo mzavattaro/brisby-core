@@ -1,6 +1,7 @@
 import { Fragment, useState } from "react";
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
+import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import axios from "axios";
 import { trpc } from "../../utils/trpc";
@@ -74,6 +75,7 @@ const New: NextPage = () => {
   const [fileSize, setFileSize] = useState<number>(0);
 
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -83,7 +85,11 @@ const New: NextPage = () => {
     resolver: zodResolver(noticeSchema),
   });
 
-  const { mutateAsync } = trpc.notice.create.useMutation();
+  const { mutateAsync } = trpc.notice.create.useMutation({
+    onSuccess: () => {
+      queryClient.invalidateQueries();
+    },
+  });
 
   const onSubmit: SubmitHandler<NoticeSchema> = async (data) => {
     try {

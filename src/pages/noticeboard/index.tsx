@@ -9,22 +9,25 @@ import Modal from "../../components/Modal";
 import Container from "../../components/Container";
 import ScrollVertical from "../../../public/ScrollVertical";
 
-const Noticeboard: NextPage = () => {
-  const { data, hasNextPage, fetchNextPage, isFetching } =
+const Noticeboard = () => {
+  const { data, hasNextPage, fetchNextPage, isFetching, error } =
     trpc.notice.list.useInfiniteQuery(
       { limit: 10 },
       {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
       }
     );
-  const notices = data?.pages.flatMap((page) => page.notices) ?? [];
 
+  const notices = data?.pages.flatMap((page) => page.notices) ?? [];
   const scrollPosition = useScrollPosition();
+
   useEffect(() => {
     if (scrollPosition > 90 && hasNextPage && !isFetching) {
       fetchNextPage();
     }
   }, [scrollPosition, hasNextPage, isFetching, fetchNextPage]);
+
+  if (error) return `An error has occurred: ${error.message}`;
 
   return (
     <Container className="text-gray-900">
@@ -32,7 +35,7 @@ const Noticeboard: NextPage = () => {
           <Modal />
         </div> */}
       <Header />
-      <GridLayout>
+      <GridLayout isFetching={isFetching}>
         {notices.map((notice) => (
           <NoticeItem key={notice.id} notice={notice} />
         ))}

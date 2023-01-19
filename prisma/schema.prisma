@@ -42,7 +42,7 @@ model Notice {
   name      String?
   size      Int?
   type      String?
-  uploadUrl String    @db.Text
+  uploadUrl String?   @db.Text
   key       String?
   state     String?
   startDate DateTime?

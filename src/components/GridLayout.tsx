@@ -3,9 +3,12 @@ import ToolBar from "./ToolBar";
 
 type GridLayout = {
   children: ReactNode;
+  isFetching: boolean;
 };
 
-const GridLayout: React.FC<GridLayout> = ({ children }) => {
+const GridLayout: React.FC<GridLayout> = ({ children, isFetching }) => {
+  if (isFetching) return <>Loading...</>;
+
   return (
     <>
       <div
