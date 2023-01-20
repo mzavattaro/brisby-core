@@ -80,12 +80,12 @@ const New: NextPage = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<NoticeSchema>({
     resolver: zodResolver(noticeSchema),
   });
 
-  const { mutateAsync } = trpc.notice.create.useMutation({
+  const { mutateAsync, isLoading } = trpc.notice.create.useMutation({
     onSuccess: (data) => {
       queryClient.setQueryData([["notice"], data.id], data);
       queryClient.invalidateQueries();
@@ -120,10 +120,10 @@ const New: NextPage = () => {
   };
 
   return (
-    <div className="mx-auto max-w-screen-2xl text-gray-900">
-      <div className="mx-auto max-w-screen-md px-6">
+    <div className="mx-auto max-w-screen-md text-gray-900">
+      <div className="mx-6">
         <div className="my-6 flex flex-col">
-          <div className="content-ceter flex place-content-between">
+          <div className="flex place-content-between items-center">
             <h3 className=" text-xl font-semibold">Upload new strata notice</h3>
             <Link href={"/noticeboard"}>
               <Close />
@@ -161,7 +161,7 @@ const New: NextPage = () => {
           </div>
 
           {/* File upload */}
-          <div className="mt-10 border-b-2 border-slate-200 pb-10 sm:col-span-6">
+          <div className="mt-10 w-full border-b-2 border-slate-200 pb-10 sm:col-span-6">
             <label className="text-base font-bold" htmlFor="fileList">
               File upload*
             </label>
@@ -202,15 +202,12 @@ const New: NextPage = () => {
               </div>
             </div>
             {fileName && fileSize < 1 && (
-              <div className="absolute text-gray-500" id="file-upload-filename">
+              <div className="absolute mr-6 text-xs text-gray-500 sm:text-base">
                 File: {fileName}
               </div>
             )}
             {fileSize > 1 && (
-              <span
-                className="absolute text-sm font-bold text-red-500"
-                id="file-upload-filename"
-              >
+              <span className="absolute text-sm font-bold text-red-500">
                 File size exceeds 1MB limit ({fileSize.toPrecision(3)} MB)
               </span>
             )}
@@ -402,17 +399,19 @@ const New: NextPage = () => {
           </div>
 
           {/* Submit form */}
-          <div className="flex items-center justify-end">
+          <div className="mt-6 flex items-center justify-end">
             <StyledLink className="mr-6" href={"/noticeboard"} styleType="link">
               Cancel
             </StyledLink>
             <Button
-              disabled={fileSize > 1 || !fileName ? true : false}
+              disabled={
+                fileSize > 1 || !fileName || isSubmitting ? true : false
+              }
               type="submit"
               buttonSize="md"
               buttonType="primary"
             >
-              Submit
+              {isSubmitting ? "Uploading..." : "Submit"}
             </Button>
           </div>
         </form>
