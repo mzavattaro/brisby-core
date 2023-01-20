@@ -86,7 +86,8 @@ const New: NextPage = () => {
   });
 
   const { mutateAsync } = trpc.notice.create.useMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
+      queryClient.setQueryData([["notice"], data.id], data);
       queryClient.invalidateQueries();
     },
   });
