@@ -9,10 +9,10 @@ import Modal from "../../components/Modal";
 import Container from "../../components/Container";
 import ScrollVertical from "../../../public/ScrollVertical";
 
-const Noticeboard = () => {
+const Noticeboard: NextPage = () => {
   const { data, hasNextPage, fetchNextPage, isFetching, error } =
     trpc.notice.list.useInfiniteQuery(
-      { limit: 10 },
+      { limit: 5 },
       {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
       }
@@ -27,7 +27,7 @@ const Noticeboard = () => {
     }
   }, [scrollPosition, hasNextPage, isFetching, fetchNextPage]);
 
-  if (error) return `An error has occurred: ${error.message}`;
+  if (error) return <>`An error has occurred: ${error.message}`</>;
 
   return (
     <Container className="text-gray-900">
@@ -35,22 +35,27 @@ const Noticeboard = () => {
           <Modal />
         </div> */}
       <Header />
-      <GridLayout isFetching={isFetching}>
-        {notices.map((notice) => (
-          <NoticeItem key={notice.id} notice={notice} />
-        ))}
-        {hasNextPage && (
-          <div className="flex flex-col items-center justify-center font-bold text-slate-200">
-            <ScrollVertical />
-            <span>Scroll for more notices</span>
-          </div>
-        )}
-      </GridLayout>
-      {!hasNextPage && (
-        <div className="mx-auto flex flex-col items-center pb-4 text-slate-300">
-          <span className="mx-auto">
-            Congratulations, you've reached the bottom!
-          </span>
+      {notices.length > 0 ? (
+        <GridLayout isFetching={isFetching}>
+          {notices.map((notice) => (
+            <NoticeItem key={notice.id} notice={notice} />
+          ))}
+          {hasNextPage && (
+            <div className="flex flex-col items-center justify-center font-bold text-slate-300">
+              <ScrollVertical />
+              <span>Scroll for more notices</span>
+            </div>
+          )}
+        </GridLayout>
+      ) : (
+        <div className="flex flex-col items-center justify-center font-bold text-slate-300">
+          <span>Start by uploading a notice</span>
+        </div>
+      )}
+
+      {notices.length > 0 && !hasNextPage && (
+        <div className="mx-auto mt-4 flex flex-col items-center pb-4 font-bold text-slate-300">
+          <span className="mx-auto">There are no more notices</span>
         </div>
       )}
     </Container>

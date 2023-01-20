@@ -42,7 +42,7 @@ export const noticeSchema = z.object({
   endDate: z.date().optional(),
 });
 
-type NoticeSchema = z.infer<typeof noticeSchema>;
+export type NoticeSchema = z.infer<typeof noticeSchema>;
 
 async function uploadToS3(data: FileList) {
   const file = data[0];
