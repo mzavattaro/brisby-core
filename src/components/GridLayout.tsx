@@ -4,10 +4,15 @@ import ToolBar from "./ToolBar";
 type GridLayout = {
   children: ReactNode;
   isFetching: boolean;
+  isFetchingNextPage: boolean;
 };
 
-const GridLayout: React.FC<GridLayout> = ({ children, isFetching }) => {
-  if (isFetching) return <>Loading...</>;
+const GridLayout: React.FC<GridLayout> = ({
+  children,
+  isFetching,
+  isFetchingNextPage,
+}) => {
+  if (isFetching && !isFetchingNextPage) return <>Fetching notices</>;
 
   return (
     <>

@@ -10,13 +10,19 @@ import Container from "../../components/Container";
 import ScrollVertical from "../../../public/ScrollVertical";
 
 const Noticeboard: NextPage = () => {
-  const { data, hasNextPage, fetchNextPage, isFetching, error } =
-    trpc.notice.list.useInfiniteQuery(
-      { limit: 5 },
-      {
-        getNextPageParam: (lastPage) => lastPage.nextCursor,
-      }
-    );
+  const {
+    data,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isFetching,
+    error,
+  } = trpc.notice.list.useInfiniteQuery(
+    { limit: 5 },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
+  );
 
   const notices = data?.pages.flatMap((page) => page.notices) ?? [];
   const scrollPosition = useScrollPosition();
@@ -35,15 +41,24 @@ const Noticeboard: NextPage = () => {
           <Modal />
         </div> */}
       <Header />
+
       {notices.length > 0 ? (
-        <GridLayout isFetching={isFetching}>
+        <GridLayout
+          isFetching={isFetching}
+          isFetchingNextPage={isFetchingNextPage}
+        >
           {notices.map((notice) => (
             <NoticeItem key={notice.id} notice={notice} />
           ))}
-          {hasNextPage && (
+          {hasNextPage && !isFetchingNextPage && (
             <div className="flex flex-col items-center justify-center font-bold text-slate-300">
               <ScrollVertical />
               <span>Scroll for more notices</span>
+            </div>
+          )}
+          {isFetchingNextPage && (
+            <div className="flex flex-col items-center justify-center font-bold text-slate-300">
+              Fetching notices...
             </div>
           )}
         </GridLayout>
