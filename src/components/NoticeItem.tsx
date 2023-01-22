@@ -1,6 +1,7 @@
 import { RouterOutputs, trpc } from "../utils/trpc";
 import dayjs from "dayjs";
 import PdfViewer from "./PdfViewer";
+import DropdownMenu from "./DropdownMenu";
 import Tag from "./Tag";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -51,7 +52,7 @@ const NoticeItem = ({
         <div className="mx-auto">
           <Tag type="published">Published</Tag>
         </div>
-        <div className="flex flex-1 flex-col">
+        <div className="relative flex flex-1 flex-col">
           <div className="flex-shrink-0">
             <PdfViewer uploadUrl={notice.uploadUrl} />
           </div>
@@ -59,13 +60,16 @@ const NoticeItem = ({
             <h3 className="divne-clamp-2 mt-3 text-sm font-medium text-gray-900">
               {notice.title}
             </h3>
-            <div className="mt-1 flex flex-grow flex-col justify-between">
-              <h3 className="sr-only">Title</h3>
-              <span className="sr-only">Uploaded by</span>
-              <div className="mt-4 flex flex-col text-xs">
-                <span className=" font-bold text-gray-900">Uploaded by</span>
-                <span className="text-gray-500">{notice.author.id}</span>
+            <div className="mt-4 flex items-center">
+              <div className="mt-1 flex flex-grow flex-col justify-between">
+                <h3 className="sr-only">Title</h3>
+                <span className="sr-only">Uploaded by</span>
+                <div className="flex flex-col text-xs">
+                  <span className=" font-bold text-gray-900">Uploaded by</span>
+                  <span className="text-gray-500">{notice.author.id}</span>
+                </div>
               </div>
+              <DropdownMenu />
             </div>
           </div>
         </div>
