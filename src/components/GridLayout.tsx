@@ -22,9 +22,6 @@ const GridLayout: React.FC<GridLayout> = ({
       >
         {children}
       </div>
-      <div className="sticky bottom-12 w-full">
-        <ToolBar />
-      </div>
     </>
   );
 };
