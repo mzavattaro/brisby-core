@@ -24,7 +24,7 @@ Table Notice {
   name String
   size Int
   type String
-  uploadUrl String
+  uploadUrl String [not null]
   key String
   state String
   startDate DateTime

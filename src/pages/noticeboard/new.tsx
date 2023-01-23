@@ -29,20 +29,16 @@ const publishingOptions = [
   },
 ];
 
-export const noticeSchema = z.object({
+const noticeSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
   fileList: typeof window === "undefined" ? z.any() : z.instanceof(FileList),
-  uploadUrl: z.string().optional(),
   name: z.string().optional(),
-  size: z.number().optional(),
-  type: z.string().optional(),
-  key: z.string().optional(),
   state: z.string().optional(),
   startDate: z.date().optional(),
   endDate: z.date().optional(),
 });
 
-export type NoticeSchema = z.infer<typeof noticeSchema>;
+type NoticeSchema = z.infer<typeof noticeSchema>;
 
 async function uploadToS3(data: FileList) {
   const file = data[0];

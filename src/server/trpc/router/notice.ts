@@ -1,6 +1,5 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { noticeSchema } from "../../../pages/noticeboard/new";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 import s3 from "../../../utils/s3";
 import cloudFront from "../../../utils/cloudFront";
@@ -9,24 +8,25 @@ import { CreateInvalidationCommand } from "@aws-sdk/client-cloudfront";
 
 export const noticeRouter = router({
   // create /api/bulding notice
-  create: protectedProcedure.input(noticeSchema).mutation(({ ctx, input }) => {
-    const { prisma, session } = ctx;
-    const {
-      title,
-      uploadUrl,
-      name,
-      size,
-      type,
-      key,
-      state,
-      startDate,
-      endDate,
-    } = input;
-
-    const userId = session.user.id;
-
-    return prisma.notice.create({
-      data: {
+  create: protectedProcedure
+    .input(
+      z.object({
+        title: z.string().min(1, { message: "Title is required" }),
+        fileList:
+          typeof window === "undefined" ? z.any() : z.instanceof(FileList),
+        uploadUrl: z.string(),
+        name: z.string().optional(),
+        size: z.number().optional(),
+        type: z.string().optional(),
+        key: z.string().optional(),
+        state: z.string().optional(),
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      const { prisma, session } = ctx;
+      const {
         title,
         uploadUrl,
         name,
@@ -36,14 +36,29 @@ export const noticeRouter = router({
         state,
         startDate,
         endDate,
-        author: {
-          connect: {
-            id: userId,
+      } = input;
+
+      const userId = session.user.id;
+
+      return prisma.notice.create({
+        data: {
+          title,
+          uploadUrl,
+          name,
+          size,
+          type,
+          key,
+          state,
+          startDate,
+          endDate,
+          author: {
+            connect: {
+              id: userId,
+            },
           },
         },
-      },
-    });
-  }),
+      });
+    }),
 
   // list /api/notice
   list: publicProcedure

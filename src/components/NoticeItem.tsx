@@ -11,11 +11,13 @@ const NoticeItem = ({
   notice: RouterOutputs["notice"]["list"]["notices"][number];
 }) => {
   const queryClient = useQueryClient();
+
   const mutation = trpc.notice.delete.useMutation({
     onSuccess: () => {
       queryClient.invalidateQueries();
     },
   });
+
   const handleDelete = async () => {
     mutation.mutate(notice.id);
   };
@@ -69,7 +71,10 @@ const NoticeItem = ({
                   <span className="text-gray-500">{notice.author.id}</span>
                 </div>
               </div>
-              <DropdownMenu />
+              <DropdownMenu
+                handleDelete={handleDelete}
+                uploadUrl={notice.uploadUrl}
+              />
             </div>
           </div>
         </div>
