@@ -24,7 +24,7 @@ const publishingOptions = [
     description: "This notice will no longer be publicly accessible.",
   },
   {
-    state: "Publish",
+    state: "Published",
     description: "This notice can be viewed by anyone who has the link.",
   },
 ];
@@ -81,7 +81,7 @@ const New: NextPage = () => {
     resolver: zodResolver(noticeSchema),
   });
 
-  const { mutateAsync, isLoading } = trpc.notice.create.useMutation({
+  const { mutateAsync } = trpc.notice.create.useMutation({
     onSuccess: (data) => {
       queryClient.setQueryData([["notice"], data.id], data);
       queryClient.invalidateQueries();
@@ -354,7 +354,7 @@ const New: NextPage = () => {
               </h3>
               <DatePicker
                 showPopperArrow={false}
-                selected={selected?.state === "Publish" ? startDate : null}
+                selected={selected?.state === "Published" ? startDate : null}
                 onChange={(date) => setStartDate(date)}
                 selectsStart
                 startDate={startDate}
@@ -379,7 +379,7 @@ const New: NextPage = () => {
               </h3>
               <DatePicker
                 showPopperArrow={false}
-                selected={selected?.state === "Publish" ? endDate : null}
+                selected={selected?.state === "Published" ? endDate : null}
                 onChange={(date) => setEndDate(date)}
                 selectsEnd
                 startDate={startDate}

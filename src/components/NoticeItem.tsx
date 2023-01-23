@@ -33,7 +33,7 @@ const NoticeItem = ({
   });
 
   const handlePublishChange = async () => {
-    const state = "publish";
+    const state = "published";
     updateMutation.mutate({ data: { state: state }, id: id });
   };
 
@@ -71,7 +71,9 @@ const NoticeItem = ({
           </div>
         </div>
         <div className="mx-auto">
-          <Tag type="published">{state}</Tag>
+          <Tag state={state} type="published">
+            {state?.toUpperCase()}
+          </Tag>
         </div>
         <div className="relative flex flex-1 flex-col">
           <div className="flex-shrink-0">
