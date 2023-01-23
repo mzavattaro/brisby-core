@@ -5,12 +5,16 @@ import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 
 type DropdownMenuProps = {
   handleDelete: () => void;
+  handlePublishChange: () => void;
+  handleDraftChange: () => void;
   uploadUrl: string;
 };
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({
-  handleDelete,
   uploadUrl,
+  handleDelete,
+  handlePublishChange,
+  handleDraftChange,
 }) => {
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -63,28 +67,28 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
             <div>
               <Menu.Item>
                 {({ active }) => (
-                  <a
-                    href="#"
+                  <button
+                    onClick={handlePublishChange}
                     className={classNames(
                       active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                      "block px-4 py-2 text-sm"
+                      "block w-full px-4 py-2 text-left text-sm"
                     )}
                   >
                     Publish
-                  </a>
+                  </button>
                 )}
               </Menu.Item>
               <Menu.Item>
                 {({ active }) => (
-                  <a
-                    href="#"
+                  <button
+                    onClick={handleDraftChange}
                     className={classNames(
                       active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                      "block px-4 py-2 text-sm"
+                      "block w-full px-4 py-2 text-left text-sm"
                     )}
                   >
                     Draft
-                  </a>
+                  </button>
                 )}
               </Menu.Item>
             </div>

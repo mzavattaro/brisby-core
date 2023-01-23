@@ -99,6 +99,40 @@ export const noticeRouter = router({
       };
     }),
 
+  // update /api/notice
+  updateState: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        data: z.object({
+          state: z.string(),
+        }),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { prisma } = ctx;
+      const { id, data } = input;
+
+      const notices = await prisma.notice.findUnique({
+        where: { id },
+      });
+
+      if (!notices) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Notice not found!",
+        });
+      }
+
+      const notice = await prisma.notice.update({
+        where: {
+          id,
+        },
+        data,
+      });
+      return notice;
+    }),
+
   // delete /api/notice
   delete: protectedProcedure
     .input(z.string())

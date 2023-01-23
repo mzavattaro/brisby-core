@@ -12,14 +12,33 @@ const NoticeItem = ({
 }) => {
   const queryClient = useQueryClient();
 
-  const mutation = trpc.notice.delete.useMutation({
+  const deleteMutation = trpc.notice.delete.useMutation({
     onSuccess: () => {
       queryClient.invalidateQueries();
     },
   });
 
   const handleDelete = async () => {
-    mutation.mutate(notice.id);
+    deleteMutation.mutate(notice.id);
+  };
+
+  const updateMutation = trpc.notice.updateState.useMutation({
+    onSuccess: () => {
+      queryClient.invalidateQueries();
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const handlePublishChange = async () => {
+    const state = "publish";
+    updateMutation.mutate({ data: { state: state }, id: notice.id });
+  };
+
+  const handleDraftChange = async () => {
+    const state = "draft";
+    updateMutation.mutate({ data: { state: state }, id: notice.id });
   };
 
   return (
@@ -28,7 +47,6 @@ const NoticeItem = ({
         key={notice.id}
         className="col-span-1 flex flex-col rounded border bg-white shadow"
       >
-        <button onClick={handleDelete}>delete</button>
         <div className="-mt-px flex divide-x divide-gray-200 border-b text-center">
           <div className="flex w-0 flex-1">
             <div className="indivne-flex relative -mr-px w-0 flex-1 items-center justify-center rounded-bl-lg border border-transparent py-2 text-sm font-medium text-gray-700 hover:text-gray-500">
@@ -52,7 +70,7 @@ const NoticeItem = ({
           </div>
         </div>
         <div className="mx-auto">
-          <Tag type="published">Published</Tag>
+          <Tag type="published">{notice.state}</Tag>
         </div>
         <div className="relative flex flex-1 flex-col">
           <div className="flex-shrink-0">
@@ -73,6 +91,8 @@ const NoticeItem = ({
               </div>
               <DropdownMenu
                 handleDelete={handleDelete}
+                handlePublishChange={handlePublishChange}
+                handleDraftChange={handleDraftChange}
                 uploadUrl={notice.uploadUrl}
               />
             </div>
