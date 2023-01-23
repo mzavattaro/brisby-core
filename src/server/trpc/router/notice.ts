@@ -12,8 +12,6 @@ export const noticeRouter = router({
     .input(
       z.object({
         title: z.string().min(1, { message: "Title is required" }),
-        fileList:
-          typeof window === "undefined" ? z.any() : z.instanceof(FileList),
         uploadUrl: z.string(),
         name: z.string().optional(),
         size: z.number().optional(),
