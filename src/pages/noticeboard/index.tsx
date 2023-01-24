@@ -64,8 +64,8 @@ const Noticeboard: NextPage = () => {
           )}
         </GridLayout>
       ) : (
-        <div className="flex flex-col items-center justify-center font-bold text-slate-300">
-          <span>Start by uploading a notice</span>
+        <div className="mt-20 flex flex-col items-center justify-center font-bold text-slate-300">
+          <span>You don't have any notices!</span>
         </div>
       )}
 
