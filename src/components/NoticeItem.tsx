@@ -5,12 +5,14 @@ import DropdownMenu from "./DropdownMenu";
 import Tag from "./Tag";
 import { useQueryClient } from "@tanstack/react-query";
 
-const NoticeItem = ({
-  notice,
-}: {
+type NoticeItem = {
   notice: RouterOutputs["notice"]["list"]["notices"][number];
-}) => {
+  hide: () => void;
+};
+
+const NoticeItem: React.FC<NoticeItem> = ({ notice, hide }) => {
   const { id, title, startDate, endDate, state, uploadUrl, author } = notice;
+
   const queryClient = useQueryClient();
 
   const deleteMutation = trpc.notice.delete.useMutation({
@@ -28,6 +30,7 @@ const NoticeItem = ({
   const updateMutation = trpc.notice.updateState.useMutation({
     onSuccess: () => {
       queryClient.invalidateQueries();
+      setTimeout(hide, 200);
     },
     onError: (error) => {
       console.log(error);
