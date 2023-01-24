@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import ToolBar from "./ToolBar";
 
 type GridLayout = {
   children: ReactNode;

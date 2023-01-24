@@ -1,11 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { type NextPage } from "next";
 import { trpc } from "../../utils/trpc";
 import useScrollPosition from "../../utils/useScrollPosition";
 import Header from "../../components/Header";
 import GridLayout from "../../components/GridLayout";
 import NoticeItem from "../../components/NoticeItem";
-import Modal from "../../components/Modal";
 import Container from "../../components/Container";
 import ScrollVertical from "../../../public/ScrollVertical";
 
@@ -26,6 +25,7 @@ const Noticeboard: NextPage = () => {
 
   const notices = data?.pages.flatMap((page) => page.notices) ?? [];
   const scrollPosition = useScrollPosition();
+  0;
 
   useEffect(() => {
     if (scrollPosition > 90 && hasNextPage && !isFetching) {
@@ -37,9 +37,6 @@ const Noticeboard: NextPage = () => {
 
   return (
     <Container className="text-gray-900">
-      {/* <div className="relative">
-          <Modal />
-        </div> */}
       <Header />
 
       {notices.length > 0 ? (
@@ -48,7 +45,11 @@ const Noticeboard: NextPage = () => {
           isFetchingNextPage={isFetchingNextPage}
         >
           {notices.map((notice) => (
-            <NoticeItem key={notice.id} notice={notice} />
+            <NoticeItem
+              // handleModal={handleModal}
+              key={notice.id}
+              notice={notice}
+            />
           ))}
           {hasNextPage && !isFetchingNextPage && (
             <div className="flex flex-col items-center justify-center font-bold text-slate-300">

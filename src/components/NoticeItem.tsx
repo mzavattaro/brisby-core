@@ -10,8 +10,8 @@ const NoticeItem = ({
 }: {
   notice: RouterOutputs["notice"]["list"]["notices"][number];
 }) => {
-  const queryClient = useQueryClient();
   const { id, title, startDate, endDate, state, uploadUrl, author } = notice;
+  const queryClient = useQueryClient();
 
   const deleteMutation = trpc.notice.delete.useMutation({
     onSuccess: () => {
