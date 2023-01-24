@@ -45,11 +45,7 @@ const Noticeboard: NextPage = () => {
           isFetchingNextPage={isFetchingNextPage}
         >
           {notices.map((notice) => (
-            <NoticeItem
-              // handleModal={handleModal}
-              key={notice.id}
-              notice={notice}
-            />
+            <NoticeItem key={notice.id} notice={notice} />
           ))}
           {hasNextPage && !isFetchingNextPage && (
             <div className="flex flex-col items-center justify-center font-bold text-slate-300">
