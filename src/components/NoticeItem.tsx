@@ -19,6 +19,8 @@ const NoticeItem = ({
     },
   });
 
+  const deleteMutationLoadingState = deleteMutation.isLoading;
+
   const handleDelete = async () => {
     deleteMutation.mutate(id);
   };
@@ -97,6 +99,7 @@ const NoticeItem = ({
                 handlePublishChange={handlePublishChange}
                 handleDraftChange={handleDraftChange}
                 uploadUrl={uploadUrl}
+                deleteMutationLoadingState={deleteMutationLoadingState}
               />
             </div>
           </div>

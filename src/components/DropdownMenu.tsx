@@ -10,6 +10,7 @@ type DropdownMenuProps = {
   handlePublishChange: () => void;
   handleDraftChange: () => void;
   uploadUrl: string;
+  deleteMutationLoadingState: boolean;
 };
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({
@@ -17,11 +18,17 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   handleDelete,
   handlePublishChange,
   handleDraftChange,
+  deleteMutationLoadingState,
 }) => {
   const { isShowing, toggle } = useModal();
   return (
     <>
-      <Modal isShowing={isShowing} hide={toggle} />
+      <Modal
+        deleteMutationLoadingState={deleteMutationLoadingState}
+        handleDelete={handleDelete}
+        isShowing={isShowing}
+        hide={toggle}
+      />
       <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button className="flex items-center rounded-md bg-white text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
@@ -116,7 +123,6 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                 <Menu.Item>
                   {({ active }) => (
                     <button
-                      // onClick={handleDelete} // this will need to move to modal
                       onClick={toggle}
                       className={classNames(
                         active ? "bg-gray-100 text-gray-900" : "text-gray-700",
