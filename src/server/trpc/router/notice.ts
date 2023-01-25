@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
@@ -6,8 +7,28 @@ import cloudFront from "../../../utils/cloudFront";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { CreateInvalidationCommand } from "@aws-sdk/client-cloudfront";
 
+/**
+ * Default selector for Post.
+ * It's important to always explicitly say which fields you want to return in order to not leak extra information
+ * @see https://github.com/prisma/prisma/issues/9353
+ */
+const defaultNoticeSelect = Prisma.validator<Prisma.NoticeSelect>()({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  title: true,
+  uploadUrl: true,
+  size: false,
+  type: false,
+  key: false,
+  name: true,
+  state: true,
+  startDate: true,
+  endDate: true,
+});
+
 export const noticeRouter = router({
-  // create /api/bulding notice
+  // create /api/notice
   create: protectedProcedure
     .input(
       z.object({
@@ -70,6 +91,7 @@ export const noticeRouter = router({
       const { prisma } = ctx;
       const { limit, cursor } = input;
       const notices = await prisma.notice.findMany({
+        where: {},
         take: limit + 1,
         orderBy: [{ createdAt: "desc" }],
         cursor: cursor ? { id: cursor } : undefined,
@@ -97,6 +119,30 @@ export const noticeRouter = router({
         notices,
         nextCursor,
       };
+    }),
+
+  // get single /api/notice by id
+  byId: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { prisma } = ctx;
+      const { id } = input;
+
+      const post = await prisma.notice.findUnique({
+        where: { id },
+        select: defaultNoticeSelect,
+      });
+      if (!post) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: `No post with id '${id}'`,
+        });
+      }
+      return post;
     }),
 
   // update /api/notice
