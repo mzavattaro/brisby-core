@@ -12,20 +12,20 @@ import { CreateInvalidationCommand } from "@aws-sdk/client-cloudfront";
  * It's important to always explicitly say which fields you want to return in order to not leak extra information
  * @see https://github.com/prisma/prisma/issues/9353
  */
-const defaultNoticeSelect = Prisma.validator<Prisma.NoticeSelect>()({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-  title: true,
-  uploadUrl: true,
-  size: false,
-  type: false,
-  key: false,
-  name: true,
-  state: true,
-  startDate: true,
-  endDate: true,
-});
+// const defaultNoticeSelect = Prisma.validator<Prisma.NoticeSelect>()({
+//   id: true,
+//   createdAt: true,
+//   updatedAt: true,
+//   title: true,
+//   uploadUrl: true,
+//   size: false,
+//   type: false,
+//   key: false,
+//   name: true,
+//   state: true,
+//   startDate: true,
+//   endDate: true,
+// });
 
 export const noticeRouter = router({
   // create /api/notice
@@ -134,14 +134,19 @@ export const noticeRouter = router({
 
       const post = await prisma.notice.findUnique({
         where: { id },
-        select: defaultNoticeSelect,
+        select: {
+          id: true,
+          createdAt: true,
+        },
       });
+
       if (!post) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: `No post with id '${id}'`,
         });
       }
+
       return post;
     }),
 
