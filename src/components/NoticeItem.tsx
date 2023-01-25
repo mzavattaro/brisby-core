@@ -7,10 +7,10 @@ import { useQueryClient } from "@tanstack/react-query";
 
 type NoticeItem = {
   notice: RouterOutputs["notice"]["list"]["notices"][number];
-  hide: () => void;
+  toggle: () => void;
 };
 
-const NoticeItem: React.FC<NoticeItem> = ({ notice, hide }) => {
+const NoticeItem: React.FC<NoticeItem> = ({ notice, toggle }) => {
   const { id, title, startDate, endDate, state, uploadUrl, author } = notice;
 
   const queryClient = useQueryClient();
@@ -30,7 +30,7 @@ const NoticeItem: React.FC<NoticeItem> = ({ notice, hide }) => {
   const updateMutation = trpc.notice.updateState.useMutation({
     onSuccess: () => {
       queryClient.invalidateQueries();
-      setTimeout(hide, 200);
+      setTimeout(toggle, 220);
     },
     onError: (error) => {
       console.log(error);

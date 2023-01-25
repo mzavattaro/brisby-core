@@ -42,7 +42,7 @@ const ToastNofication: React.FC<Notification> = ({ isShowing, hide }) => {
                       The notice was successfully updated!
                     </p>
                     <p className="mt-1 text-sm text-gray-500">
-                      Anyone with a link can now view this file.
+                      The changes have been saved.
                     </p>
                   </div>
                   <div className="ml-4 flex flex-shrink-0">
