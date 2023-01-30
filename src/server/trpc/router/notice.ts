@@ -121,6 +121,90 @@ export const noticeRouter = router({
       };
     }),
 
+  // get multiple notices /api/notice by when state is published
+  published: protectedProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100).default(10),
+        cursor: z.string().optional(),
+        state: z.string().optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { limit, cursor, state } = input;
+      const notices = await ctx.prisma.notice.findMany({
+        where: { state: "published" },
+        take: limit + 1,
+        orderBy: [{ createdAt: "desc" }],
+        cursor: cursor ? { id: cursor } : undefined,
+        include: {
+          author: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      });
+
+      for (let notice of notices) {
+        const url = "https://d1ve2d1xbf677h.cloudfront.net/" + notice.key;
+        notice.uploadUrl = url;
+      }
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (notices.length > limit) {
+        const nextItem = notices.pop() as (typeof notices)[number];
+        nextCursor = nextItem.id;
+      }
+
+      return {
+        notices,
+        nextCursor,
+      };
+    }),
+
+  // get multiple notices /api/notice by when state is draft
+  draft: protectedProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100).default(10),
+        cursor: z.string().optional(),
+        state: z.string().optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { limit, cursor, state } = input;
+      const notices = await ctx.prisma.notice.findMany({
+        where: { state: "draft" },
+        take: limit + 1,
+        orderBy: [{ createdAt: "desc" }],
+        cursor: cursor ? { id: cursor } : undefined,
+        include: {
+          author: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      });
+
+      for (let notice of notices) {
+        const url = "https://d1ve2d1xbf677h.cloudfront.net/" + notice.key;
+        notice.uploadUrl = url;
+      }
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (notices.length > limit) {
+        const nextItem = notices.pop() as (typeof notices)[number];
+        nextCursor = nextItem.id;
+      }
+
+      return {
+        notices,
+        nextCursor,
+      };
+    }),
+
   // get single /api/notice by id
   byId: protectedProcedure
     .input(
