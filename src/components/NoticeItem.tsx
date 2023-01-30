@@ -103,6 +103,7 @@ const NoticeItem: React.FC<NoticeItem> = ({ notice, toggle }) => {
                 handleDraftChange={handleDraftChange}
                 uploadUrl={uploadUrl}
                 deleteMutationLoadingState={deleteMutationLoadingState}
+                state={state}
               />
             </div>
           </div>

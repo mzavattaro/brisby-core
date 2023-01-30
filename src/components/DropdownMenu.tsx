@@ -11,6 +11,7 @@ type DropdownMenuProps = {
   handleDraftChange: () => void;
   uploadUrl: string;
   deleteMutationLoadingState: boolean;
+  state: string | null;
 };
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({
@@ -19,6 +20,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   handlePublishChange,
   handleDraftChange,
   deleteMutationLoadingState,
+  state,
 }) => {
   const { isShowing, toggle } = useModal();
   return (
@@ -54,8 +56,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                     <a
                       href={uploadUrl}
                       className={classNames(
-                        active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        "block px-4 py-2 text-sm"
+                        "block px-4 py-2 text-sm",
+                        active ? "bg-gray-100 text-gray-900" : "text-gray-700"
                       )}
                     >
                       Download
@@ -67,10 +69,13 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                 <Menu.Item>
                   {({ active }) => (
                     <button
+                      type="button"
+                      disabled={state === "published"}
                       onClick={handlePublishChange}
                       className={classNames(
+                        "block w-full px-4 py-2 text-left text-sm",
                         active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        "block w-full px-4 py-2 text-left text-sm"
+                        state === "published" && "cursor-not-allowed opacity-50"
                       )}
                     >
                       Publish
@@ -80,10 +85,13 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                 <Menu.Item>
                   {({ active }) => (
                     <button
+                      type="button"
+                      disabled={state === "draft"}
                       onClick={handleDraftChange}
                       className={classNames(
+                        "block w-full px-4 py-2 text-left text-sm",
                         active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        "block w-full px-4 py-2 text-left text-sm"
+                        state === "draft" && "cursor-not-allowed opacity-50"
                       )}
                     >
                       Draft
@@ -97,8 +105,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                     <a
                       href="#"
                       className={classNames(
-                        active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        "block px-4 py-2 text-sm"
+                        "block px-4 py-2 text-sm",
+                        active ? "bg-gray-100 text-gray-900" : "text-gray-700"
                       )}
                     >
                       Archive
@@ -112,8 +120,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                     <button
                       onClick={toggle}
                       className={classNames(
-                        active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        "block w-full px-4 py-2 text-left text-sm"
+                        "block w-full px-4 py-2 text-left text-sm",
+                        active ? "bg-gray-100 text-gray-900" : "text-gray-700"
                       )}
                     >
                       Delete
