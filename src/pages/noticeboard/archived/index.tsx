@@ -10,7 +10,7 @@ import ToastNofication from "../../../components/ToastNotification";
 import useModal from "../../../utils/useModal";
 import ScrollVertical from "../../../../public/ScrollVertical";
 
-const Drafts: NextPage = () => {
+const Archived: NextPage = () => {
   const {
     data,
     hasNextPage,
@@ -18,7 +18,7 @@ const Drafts: NextPage = () => {
     isFetchingNextPage,
     isFetching,
     error,
-  } = trpc.notice.drafts.useInfiniteQuery(
+  } = trpc.notice.archived.useInfiniteQuery(
     { limit: 5 },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -77,4 +77,4 @@ const Drafts: NextPage = () => {
   );
 };
 
-export default Drafts;
+export default Archived;
