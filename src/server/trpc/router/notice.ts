@@ -131,7 +131,7 @@ export const noticeRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      const { limit, cursor, state } = input;
+      const { limit, cursor } = input;
       const notices = await ctx.prisma.notice.findMany({
         where: { state: "published" },
         take: limit + 1,
@@ -173,7 +173,7 @@ export const noticeRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      const { limit, cursor, state } = input;
+      const { limit, cursor } = input;
       const notices = await ctx.prisma.notice.findMany({
         where: { state: "draft" },
         take: limit + 1,
@@ -214,7 +214,7 @@ export const noticeRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      const { limit, cursor, state } = input;
+      const { limit, cursor } = input;
       const notices = await ctx.prisma.notice.findMany({
         where: { state: "archived" },
         take: limit + 1,
