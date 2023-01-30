@@ -5,9 +5,14 @@ import { classNames } from "../utils/classNames";
 import StyledLink from "../components/StyledLink";
 import Home from "../../public/Home";
 import Cog from "../../public/Cog";
-import Container from "./Container";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 const Header = () => {
+  const router = useRouter();
+  const { asPath } = router;
+  console.log(asPath);
+
   return (
     <Disclosure as="nav" className="bg-white">
       {({ open }) => (
@@ -41,30 +46,50 @@ const Header = () => {
             {/* tabs */}
             <div className="hidden space-x-4 sm:flex md:space-x-8">
               {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
-              <a
-                href="#"
-                className="inline-flex items-center px-1 pt-1 text-xs font-bold text-indigo-600 md:text-sm"
+              <Link
+                href="/noticeboard"
+                className={classNames(
+                  "inline-flex items-center px-1 pt-1 text-xs md:text-sm",
+                  asPath.match("/noticeboard$")
+                    ? "font-bold text-indigo-600"
+                    : "font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700 md:text-sm"
+                )}
               >
                 All notices
-              </a>
-              <a
-                href="#"
-                className="inline-flex items-center px-1 pt-1 text-xs font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700 md:text-sm"
+              </Link>
+              <Link
+                href="/noticeboard/published"
+                className={classNames(
+                  "inline-flex items-center px-1 pt-1 text-xs md:text-sm",
+                  asPath.includes("/published")
+                    ? "font-bold text-indigo-600"
+                    : "font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700 md:text-sm"
+                )}
               >
                 Published
-              </a>
-              <a
-                href="#"
-                className="inline-flex items-center px-1 pt-1 text-xs font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700 md:text-sm"
+              </Link>
+              <Link
+                href="/noticeboard/drafts"
+                className={classNames(
+                  "inline-flex items-center px-1 pt-1 text-xs md:text-sm",
+                  asPath.includes("/drafts")
+                    ? "font-bold text-indigo-600"
+                    : "font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700 md:text-sm"
+                )}
               >
                 Drafts
-              </a>
-              <a
-                href="#"
-                className="inline-flex items-center px-1 pt-1 text-xs font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700 md:text-sm"
+              </Link>
+              <Link
+                href="/noticeboard/archived"
+                className={classNames(
+                  "inline-flex items-center px-1 pt-1 text-xs md:text-sm",
+                  asPath.includes("/archived")
+                    ? "font-bold text-indigo-600"
+                    : "font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700 md:text-sm"
+                )}
               >
                 Archived
-              </a>
+              </Link>
             </div>
 
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
@@ -143,34 +168,27 @@ const Header = () => {
           >
             <div className="space-y-1 pt-2">
               {/* Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" */}
-              <Disclosure.Button
-                as="a"
-                href="#"
-                className="block border-l-4 border-indigo-500 bg-indigo-50 py-2 pl-3 pr-4 text-base font-medium text-indigo-700"
-              >
-                All notices
-              </Disclosure.Button>
-              <Disclosure.Button
-                as="a"
-                href="#"
-                className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700"
-              >
-                Published
-              </Disclosure.Button>
-              <Disclosure.Button
-                as="a"
-                href="#"
-                className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700"
-              >
-                Drafts
-              </Disclosure.Button>
-              <Disclosure.Button
-                as="a"
-                href="#"
-                className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700"
-              >
-                Archived
-              </Disclosure.Button>
+              <Link className="w-full" href="/noticeboard">
+                <Disclosure.Button className="block w-full border-l-4 border-indigo-500 bg-indigo-50 py-2 pl-3 pr-4 text-left text-base font-medium text-indigo-700">
+                  All notices
+                </Disclosure.Button>
+              </Link>
+              <Link href="/noticeboard/published">
+                <Disclosure.Button className="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700">
+                  Published
+                </Disclosure.Button>
+              </Link>
+
+              <Link href="/noticeboard/drafts">
+                <Disclosure.Button className="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700">
+                  Drafts
+                </Disclosure.Button>
+              </Link>
+              <Link href="/noticeboard/archived">
+                <Disclosure.Button className="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700">
+                  Archived
+                </Disclosure.Button>
+              </Link>
             </div>
           </Disclosure.Panel>
         </>
