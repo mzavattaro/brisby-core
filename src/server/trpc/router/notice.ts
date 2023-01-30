@@ -137,6 +137,11 @@ export const noticeRouter = router({
         select: {
           id: true,
           createdAt: true,
+          title: true,
+          state: true,
+          startDate: true,
+          endDate: true,
+          name: true,
         },
       });
 
