@@ -405,8 +405,8 @@ const New: NextPage = () => {
                 fileSize > 1 || !fileName || isSubmitting ? true : false
               }
               type="submit"
-              buttonSize="md"
-              buttonType="primary"
+              size="md"
+              style="primary"
             >
               {isSubmitting ? "Uploading..." : "Submit"}
             </Button>
