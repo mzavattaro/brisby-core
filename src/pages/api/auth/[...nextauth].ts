@@ -1,7 +1,5 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
-// import nodemailer from "nodemailer";
-import DiscordProvider from "next-auth/providers/discord";
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
@@ -32,10 +30,6 @@ export const authOptions: NextAuthOptions = {
       },
       from: "no-reply@getbrisby.com",
       maxAge: 10 * 60, // Magic links are valid for 10 min only
-    }),
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
     }),
     // ...add more providers here
   ],
