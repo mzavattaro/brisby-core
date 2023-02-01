@@ -34,7 +34,7 @@ export const authOptions: NextAuthOptions = {
     // ...add more providers here
   ],
   pages: {
-    signIn: "/auth/signin",
+    signIn: "/auth/sign-in",
     verifyRequest: "/auth/verify-request",
   },
   secret: process.env.NEXTAUTH_SECRET,

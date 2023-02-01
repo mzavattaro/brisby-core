@@ -61,7 +61,7 @@ const SignIn: React.FC<SignInSchema> = ({ csrfToken }) => {
                 className={classNames(
                   "mt-1 block h-12 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
                   errors.email
-                    ? "focus:border-rose-500 focus:ring-rose-500"
+                    ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
                     : "focus:border-blue-600 focus:ring-blue-600"
                 )}
                 type="text"
@@ -71,7 +71,7 @@ const SignIn: React.FC<SignInSchema> = ({ csrfToken }) => {
               />
               <div className="absolute max-w-xl">
                 {errors.email && (
-                  <p className="mt-2 h-10 text-sm font-bold text-rose-500">
+                  <p className="mt-1 h-10 text-sm font-bold text-rose-500">
                     {" "}
                     {errors.email?.message}
                   </p>
@@ -81,7 +81,7 @@ const SignIn: React.FC<SignInSchema> = ({ csrfToken }) => {
             <button
               disabled={isSubmitting}
               className={classNames(
-                "mt-20 flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+                "mt-26 flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
                 isSubmitting && "cursor-not-allowed opacity-50"
               )}
               type="submit"
@@ -100,11 +100,11 @@ const SignIn: React.FC<SignInSchema> = ({ csrfToken }) => {
               experience.
             </p>
           </div>
-          <div className="mt-2 text-xs sm:text-sm">
+          <div className="mt-1 text-xs sm:text-sm">
             <p>
-              Need to create an accrount? You can can{" "}
+              Need to create an account? You can{" "}
               <Link
-                href={"/"}
+                href={"/auth/sign-up"}
                 className="font-bold text-indigo-600 hover:underline"
               >
                 sign up here.
