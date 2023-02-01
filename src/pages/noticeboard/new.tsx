@@ -130,8 +130,8 @@ const New: NextPage = () => {
             building community can view them.
           </p>
         </div>
-        {/* Title */}
         <form onSubmit={handleSubmit(onSubmit)}>
+          {/* Title */}
           <label className="text-base font-bold" htmlFor="title">
             Notice title*
           </label>

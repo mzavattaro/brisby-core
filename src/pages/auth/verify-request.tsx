@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const VerifyRequest = () => {
   return (
-    <div className="flex h-screen flex-col bg-gray-100">
+    <div className="flex h-screen flex-col">
       <div className="mx-4 mt-8 text-center sm:mx-auto sm:w-full sm:max-w-lg">
         <div className="text-center">
           <h4 className="text-3xl font-bold text-gray-900">Brisby</h4>

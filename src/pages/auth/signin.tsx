@@ -1,36 +1,89 @@
 import { getCsrfToken } from "next-auth/react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { SubmitHandler } from "react-hook-form";
+import axios from "axios";
+import { useRouter } from "next/router";
+import { classNames } from "../../utils/classNames";
 
-type SignInProps = {
-  csrfToken: string;
-};
+const signInSchema = z.object({
+  csrfToken: z.string(),
+  email: z.string().email({ message: "Invalid email address" }),
+});
 
-const SignIn: React.FC<SignInProps> = ({ csrfToken }) => {
+type SignInSchema = z.infer<typeof signInSchema>;
+
+const SignIn: React.FC<SignInSchema> = ({ csrfToken }) => {
+  const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignInSchema>({
+    resolver: zodResolver(signInSchema),
+  });
+
+  const onSubmit: SubmitHandler<SignInSchema> = async (data) => {
+    try {
+      await axios.post("/api/auth/signin/email", data);
+      router.push("/auth/verify-request");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
-    <div className="flex h-screen flex-col bg-gray-100">
-      <div className="mx-4 mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="mt-24 text-center">
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in
+    <div className="flex h-screen flex-col">
+      <div className="mx-4 mt-8 text-center sm:mx-auto sm:w-full sm:max-w-xl">
+        <div className="text-center">
+          <h4 className="text-3xl font-bold text-gray-900">Brisby</h4>
+          <h2 className="mt-6 text-center text-5xl font-extrabold text-gray-900">
+            Let's start with your email address
           </h2>
+          <p className="mt-4 text-xl">
+            We suggest using the <b>email address that you use at work.</b>
+          </p>
         </div>
-        <div className="mt-8 rounded-lg bg-white py-8 px-4 shadow-lg sm:px-10">
-          <form method="post" action="/api/auth/signin/email">
-            <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
-            <label className="block text-sm font-semibold text-gray-900">
+        <div className="mt-20 sm:px-10">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <input
+              type="hidden"
+              defaultValue={csrfToken}
+              {...register("csrfToken", { required: true })}
+            />
+            <label className="block text-left text-sm font-semibold text-gray-900">
               Email address
               <input
-                className="mt-2 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
+                className="mt-1 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 type="text"
                 id="email"
-                name="email"
                 placeholder="you@company.com"
+                {...register("email", { required: true })}
               />
+              <div className="absolute">
+                {errors.email && (
+                  <p className="mt-2 text-sm font-bold text-red-500">
+                    {" "}
+                    {errors.email?.message}
+                  </p>
+                )}
+              </div>
             </label>
             <button
-              className="mt-2 flex w-full justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              disabled={isSubmitting}
+              className={classNames(
+                "mt-20 flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+                isSubmitting && "cursor-not-allowed opacity-50"
+              )}
               type="submit"
             >
-              Sign in with Email
+              {isSubmitting ? (
+                <span>Signing in...</span>
+              ) : (
+                <span>Continue</span>
+              )}
             </button>
           </form>
         </div>
