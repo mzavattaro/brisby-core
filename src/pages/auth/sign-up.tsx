@@ -67,7 +67,7 @@ const SignUp: React.FC<SignUpSchema> = ({ csrfToken }) => {
                 <input
                   className={classNames(
                     "mt-1 block h-12 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
-                    errors.email
+                    errors.firstName
                       ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
                       : "focus:border-blue-600 focus:ring-blue-600"
                   )}
