@@ -4,11 +4,11 @@
 
 Table User {
   id String [pk]
-  firstName String
-  lastName String
-  email String [unique]
+  firstName String [not null]
+  lastName String [not null]
+  email String [unique, not null]
   emailVerified DateTime
-  image String
+  organisation String [not null]
   accounts Account [not null]
   sessions Session [not null]
   notices Notice [not null]

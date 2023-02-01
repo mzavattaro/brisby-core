@@ -22,14 +22,16 @@ datasource db {
 
 model User {
   id            String    @id @default(cuid())
-  firstName     String?
-  lastName      String?
-  email         String?   @unique
+  firstName     String
+  lastName      String
+  email         String    @unique
   emailVerified DateTime?
-  image         String?
+  organisation  String
   accounts      Account[]
   sessions      Session[]
   notices       Notice[]
+
+  @@index([email])
 }
 
 model Notice {
@@ -48,7 +50,7 @@ model Notice {
   startDate DateTime?
   endDate   DateTime?
 
-  @@index([authorId, title])
+  @@index([authorId])
 }
 
 // Necessary for Next auth
