@@ -149,7 +149,7 @@ const New: NextPage = () => {
           />
           <div className="absolute">
             {errors.title && (
-              <p className="mt-2 text-sm font-bold text-red-500">
+              <p className="mt-2 text-sm font-bold text-rose-500">
                 {" "}
                 {errors.title?.message}
               </p>

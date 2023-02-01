@@ -6,6 +6,8 @@ import type { SubmitHandler } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { classNames } from "../../utils/classNames";
+import Email from "../../../public/Email";
+import Link from "next/link";
 
 const signInSchema = z.object({
   csrfToken: z.string(),
@@ -40,13 +42,13 @@ const SignIn: React.FC<SignInSchema> = ({ csrfToken }) => {
         <div className="text-center">
           <h4 className="text-3xl font-bold text-gray-900">Brisby</h4>
           <h2 className="mt-6 text-center text-5xl font-extrabold text-gray-900">
-            Let's start with your email address
+            Sign into your account
           </h2>
-          <p className="mt-4 text-xl">
-            We suggest using the <b>email address that you use at work.</b>
+          <p className="mt-6 text-xl text-gray-900">
+            Sign in with your existing email address
           </p>
         </div>
-        <div className="mt-20 sm:px-10">
+        <div className="mt-10 sm:mx-10">
           <form onSubmit={handleSubmit(onSubmit)}>
             <input
               type="hidden"
@@ -56,15 +58,20 @@ const SignIn: React.FC<SignInSchema> = ({ csrfToken }) => {
             <label className="block text-left text-sm font-semibold text-gray-900">
               Email address
               <input
-                className="mt-1 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                className={classNames(
+                  "mt-1 block h-12 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
+                  errors.email
+                    ? "focus:border-rose-500 focus:ring-rose-500"
+                    : "focus:border-blue-600 focus:ring-blue-600"
+                )}
                 type="text"
                 id="email"
                 placeholder="you@company.com"
                 {...register("email", { required: true })}
               />
-              <div className="absolute">
+              <div className="absolute max-w-xl">
                 {errors.email && (
-                  <p className="mt-2 text-sm font-bold text-red-500">
+                  <p className="mt-2 h-10 text-sm font-bold text-rose-500">
                     {" "}
                     {errors.email?.message}
                   </p>
@@ -74,7 +81,7 @@ const SignIn: React.FC<SignInSchema> = ({ csrfToken }) => {
             <button
               disabled={isSubmitting}
               className={classNames(
-                "mt-20 flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+                "mt-20 flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
                 isSubmitting && "cursor-not-allowed opacity-50"
               )}
               type="submit"
@@ -86,6 +93,24 @@ const SignIn: React.FC<SignInSchema> = ({ csrfToken }) => {
               )}
             </button>
           </form>
+          <div className="mt-6 flex h-14 items-center rounded bg-zinc-200 px-4 text-left text-xs sm:text-sm">
+            <Email />
+            <p className="ml-2">
+              We'll email you a magic link for a password-free sign in
+              experience.
+            </p>
+          </div>
+          <div className="mt-2 text-xs sm:text-sm">
+            <p>
+              Need to create an accrount? You can can{" "}
+              <Link
+                href={"/"}
+                className="font-bold text-indigo-600 hover:underline"
+              >
+                sign up here.
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>
