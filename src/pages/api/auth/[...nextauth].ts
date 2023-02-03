@@ -10,7 +10,12 @@ import { createTransport } from "nodemailer";
 
 declare module "next-auth" {
   interface Session {
-    user?: DefaultUser & { id: string; firstName: string };
+    user?: DefaultUser & {
+      id: string;
+      firstName: string;
+      lastName: string;
+      organisation: string;
+    };
   }
   interface User extends DefaultUser {
     firstName?: string;
@@ -49,7 +54,7 @@ export const authOptions: NextAuthOptions = {
   ],
   pages: {
     signIn: "/auth/signin",
-    verifyRequest: "/auth/verify",
+    // verifyRequest: "/auth/verify",
     newUser: "/auth/new-user",
   },
   secret: process.env.NEXTAUTH_SECRET,

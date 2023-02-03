@@ -2,28 +2,52 @@ import { protectedProcedure, publicProcedure, router } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { object, z } from "zod";
 
-const userSchema = object({
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
-  email: z.string(),
-  organisation: z.string().optional(),
-});
+// const userSchema = object({
+//   id: z.string(),
+//   firstName: z.string().optional(),
+//   lastName: z.string().optional(),
+//   email: z.string(),
+//   organisation: z.string().optional(),
+// });
 
 export const userRouter = router({
   // create /api/user
-  // create: protectedProcedure.input(userSchema).mutation(({ ctx, input }) => {
-  //   const { prisma, session } = ctx;
-  //   const { firstName, lastName, email, organisation } = input;
-  //   const userId = session.user.id;
-  //   return prisma.user.create({
-  //     data: {
-  //       firstName,
-  //       lastName,
-  //       email,
-  //       organisation,
-  //     },
-  //   });
-  // }),
+  updateUser: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().optional(),
+        data: z.object({
+          firstName: z.string().optional(),
+          lastName: z.string().optional(),
+          organisation: z.string().optional(),
+        }),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { prisma, session } = ctx;
+      const { data } = input;
+
+      const userId = session.user.id;
+
+      const users = await prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
+      });
+
+      if (!users) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found!",
+        });
+      }
+
+      const user = await prisma.user.update({
+        where: { id: userId },
+        data,
+      });
+      return user;
+    }),
 
   byEmail: publicProcedure
     .input(z.object({ email: z.string().optional() }))
