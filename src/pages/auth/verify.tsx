@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const VerifyRequest = () => {
+const Verify = () => {
   return (
     <div className="flex h-screen flex-col">
       <div className="mx-4 mt-8 text-center sm:mx-auto sm:w-full sm:max-w-lg">
@@ -26,4 +26,4 @@ const VerifyRequest = () => {
   );
 };
 
-export default VerifyRequest;
+export default Verify;

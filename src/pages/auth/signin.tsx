@@ -1,3 +1,7 @@
+import { useState } from "react";
+import { RouterOutputs, trpc } from "../../utils/trpc";
+import { type AppRouter } from "../../server/trpc/router/_app";
+import type { inferRouterOutputs } from "@trpc/server";
 import { getCsrfToken } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -14,11 +18,14 @@ const signInSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
 });
 
-type SignInSchema = z.infer<typeof signInSchema>;
+type SignInSchema = z.infer<typeof signInSchema> & {
+  UserEmailOutput: RouterOutputs["user"]["byEmail"];
+};
 
-const SignIn: React.FC<SignInSchema> = ({ csrfToken }) => {
+const SignIn: React.FC<SignInSchema> = ({ csrfToken, UserEmailOutput }) => {
+  const [email, setEmail] = useState<string | undefined>(undefined);
+
   const router = useRouter();
-
   const {
     register,
     handleSubmit,
@@ -27,13 +34,43 @@ const SignIn: React.FC<SignInSchema> = ({ csrfToken }) => {
     resolver: zodResolver(signInSchema),
   });
 
+  // const {
+  //   data: user,
+  //   error,
+  //   refetch,
+  // } = trpc.user.byEmail.useQuery(
+  //   { email: email },
+  //   {
+  //     enabled: false,
+  //     refetchOnMount: false,
+  //     refetchOnWindowFocus: false,
+  //     retry: false,
+  //     refetchOnReconnect: false,
+  //     refetchInterval: false,
+  //     staleTime: 0,
+  //   }
+  // );
+
+  // const userEmail = user?.email;
+
+  // console.log(userEmail);
+
   const onSubmit: SubmitHandler<SignInSchema> = async (data) => {
     try {
       await axios.post("/api/auth/signin/email", data);
-      router.push("/auth/verify-request");
+      router.push("/auth/verify");
     } catch (error) {
       console.error(error);
     }
+    // const { email } = data;
+    // setEmail(email);
+    // if (!error) {
+    //   await axios.post("/api/auth/signin/email", data);
+    //   refetch();
+    //   // router.push("/auth/verify-request");
+    // } else {
+    //   console.error(error.message);
+    // }
   };
 
   return (
@@ -76,6 +113,17 @@ const SignIn: React.FC<SignInSchema> = ({ csrfToken }) => {
                     {errors.email?.message}
                   </p>
                 )}
+                {/* {error && (
+                  <p className="mt-1 h-10 text-sm font-bold">
+                    {error?.message}{" "}
+                    <Link
+                      className="font-bold text-indigo-600 hover:underline"
+                      href={"/auth/sign-up"}
+                    >
+                      sign up for an account?
+                    </Link>
+                  </p>
+                )} */}
               </div>
             </label>
             <button
