@@ -26,8 +26,6 @@ const NewUser: React.FC<NewUserSchema> = () => {
 
   const { data: sessionData } = useSession();
 
-  console.log(sessionData?.user?.id);
-
   const {
     register,
     handleSubmit,
@@ -95,6 +93,7 @@ const NewUser: React.FC<NewUserSchema> = () => {
                   )}
                 </div>
               </label>
+
               {/* Last name */}
               <label className="text-gray-90 mt-8 block w-full text-left text-sm font-semibold sm:mt-0 sm:w-72">
                 Last name
@@ -154,11 +153,7 @@ const NewUser: React.FC<NewUserSchema> = () => {
               )}
               type="submit"
             >
-              {isSubmitting ? (
-                <span>Signing in...</span>
-              ) : (
-                <span>Continue</span>
-              )}
+              {isSubmitting ? <span>Creating...</span> : <span>Continue</span>}
             </button>
           </form>
         </div>

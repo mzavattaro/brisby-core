@@ -44,10 +44,10 @@ const SignIn: React.FC<SignInSchema> = ({ csrfToken }) => {
         <div className="text-center">
           <h4 className="text-3xl font-bold text-gray-900">Brisby</h4>
           <h2 className="mt-6 text-center text-5xl font-extrabold text-gray-900">
-            Sign into your account
+            Create or sign into your account
           </h2>
           <p className="mt-6 text-xl text-gray-900">
-            Sign in with your existing email address
+            We suggest using the <b>email address that you use at work.</b>
           </p>
         </div>
         <div className="mt-10 sm:mx-10">
@@ -100,17 +100,6 @@ const SignIn: React.FC<SignInSchema> = ({ csrfToken }) => {
             <p className="ml-2">
               We'll email you a magic link for a password-free sign in
               experience.
-            </p>
-          </div>
-          <div className="mt-1 text-xs sm:text-sm">
-            <p>
-              Need to create an account? You can{" "}
-              <Link
-                href={"/auth/sign-up"}
-                className="font-bold text-indigo-600 hover:underline"
-              >
-                sign up here.
-              </Link>
             </p>
           </div>
         </div>
