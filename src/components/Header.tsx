@@ -1,3 +1,4 @@
+import { signIn, signOut, useSession } from "next-auth/react";
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -9,9 +10,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 const Header = () => {
+  const { data: sessionData } = useSession();
   const router = useRouter();
   const { asPath } = router;
-  console.log(asPath);
 
   return (
     <Disclosure as="nav" className="bg-white">
@@ -133,15 +134,22 @@ const Header = () => {
                     </Menu.Item>
                     <Menu.Item>
                       {({ active }) => (
-                        <a
-                          href="#"
+                        <button
                           className={classNames(
                             active ? "bg-gray-100" : "",
-                            "block px-4 py-2 text-sm text-gray-700"
+                            "block w-full px-4 py-2 text-left text-sm text-gray-700"
                           )}
+                          onClick={
+                            sessionData
+                              ? () => signOut({ callbackUrl: "/" })
+                              : () =>
+                                  signIn("email", {
+                                    callbackUrl: "/noticeboard",
+                                  })
+                          }
                         >
-                          Sign out
-                        </a>
+                          {sessionData ? "Sign out" : "Sign in"}
+                        </button>
                       )}
                     </Menu.Item>
                     <Menu.Item>
@@ -161,11 +169,7 @@ const Header = () => {
             </div>
           </div>
 
-          <Disclosure.Panel
-            className="absolute z-10 w-full rounded-b-lg bg-white shadow-md sm:hidden
-
-"
-          >
+          <Disclosure.Panel className="absolute z-10 w-full rounded-b-lg bg-white shadow-md sm:hidden">
             <div className="space-y-1 pt-2">
               {/* Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" */}
               <Link className="w-full" href="/noticeboard">

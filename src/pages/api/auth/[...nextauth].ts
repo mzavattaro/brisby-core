@@ -1,7 +1,7 @@
 import NextAuth, { Theme, type NextAuthOptions } from "next-auth";
 import { DefaultUser } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
-// Prisma adapter for NextAuth, optional and can be removed
+
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 import { env } from "../../../env/server.mjs";
@@ -28,13 +28,6 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-    // async redirect({ url, baseUrl }) {
-    //   // Allows relative callback URLs
-    //   if (url.startsWith("/")) return `${baseUrl}${url}/noticeboard`;
-    //   // Allows callback URLs on the same origin
-    //   else if (new URL(url).origin === baseUrl) return url;
-    //   return baseUrl;
-    // },
   },
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
