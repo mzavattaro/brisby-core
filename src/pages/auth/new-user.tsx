@@ -82,6 +82,7 @@ const NewUser: React.FC<NewUserSchema> = () => {
                 id="firstName"
                 placeholder="Joe"
                 {...register("firstName", { required: true })}
+                autoComplete="given-name"
               />
               <div className="absolute max-w-xl">
                 {errors.firstName && (
@@ -107,6 +108,7 @@ const NewUser: React.FC<NewUserSchema> = () => {
                 id="lastName"
                 placeholder="Bloggs"
                 {...register("lastName", { required: true })}
+                autoComplete="family-name"
               />
               <div className="absolute max-w-xl">
                 {errors.lastName && (
@@ -133,6 +135,7 @@ const NewUser: React.FC<NewUserSchema> = () => {
               id="organisation"
               placeholder="Acme Inc."
               {...register("organisation", { required: true })}
+              autoComplete="organization"
             />
             <div className="absolute max-w-xl">
               {errors.organisation && (

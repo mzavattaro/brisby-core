@@ -180,6 +180,7 @@ const NewUser: React.FC<NewCommunitySchema> = () => {
             type="text"
             id="streetAddress"
             {...register("streetAddress", { required: true })}
+            autoComplete="street-address"
           />
           <div className="absolute max-w-xl">
             {errors.streetAddress && (
@@ -252,6 +253,7 @@ const NewUser: React.FC<NewCommunitySchema> = () => {
             type="text"
             id="postcode"
             {...register("postcode", { required: true })}
+            autoComplete="postal-code"
           />
           <div className="absolute max-w-xl">
             {errors.postcode && (
