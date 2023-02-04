@@ -15,7 +15,7 @@ const newCommunitySchema = z.object({
     .string()
     .min(1, { message: "Community or building complex name is required" }),
   buildingType: z.string().min(1, { message: "Building type is required" }),
-  totalOccupancies: z.number(),
+  totalOccupancies: z.coerce.number().nonnegative(),
   streetAddress: z.string().min(1, { message: "Street address is required" }),
   suburb: z.string().min(1, { message: "Suburb address is required" }),
   state: z.string().min(1, { message: "State address is required" }),
@@ -38,38 +38,40 @@ const NewUser: React.FC<NewCommunitySchema> = () => {
     resolver: zodResolver(newCommunitySchema),
   });
 
-  const updateMutation = trpc.user.updateUser.useMutation({
-    onSuccess: (data) => {
-      queryClient.setQueryData([["user"], data.id], data);
-      queryClient.invalidateQueries();
-    },
-  });
+  //   const updateMutation = trpc.user.updateUser.useMutation({
+  //     onSuccess: (data) => {
+  //       queryClient.setQueryData([["user"], data.id], data);
+  //       queryClient.invalidateQueries();
+  //     },
+  //   });
 
   const onSubmit: SubmitHandler<NewCommunitySchema> = async (data) => {
-    const {
-      complexName,
-      buildingType,
-      totalOccupancies,
-      streetAddress,
-      suburb,
-      state,
-      postcode,
-    } = data;
+    // const {
+    //   complexName,
+    //   buildingType,
+    //   totalOccupancies,
+    //   streetAddress,
+    //   suburb,
+    //   state,
+    //   postcode,
+    // } = data;
 
-    updateMutation.mutate({
-      data: {
-        complexName: complexName,
-        buildingType: buildingType,
-        totalOccupancies: totalOccupancies,
-        streetAddress: streetAddress,
-        suburb: suburb,
-        state: state,
-        postcode: postcode,
-      },
-      id: sessionData?.user?.id,
-    });
+    console.log(data);
 
-    router.push("/noticeboard");
+    // updateMutation.mutate({
+    //   data: {
+    //     complexName: complexName,
+    //     buildingType: buildingType,
+    //     totalOccupancies: totalOccupancies,
+    //     streetAddress: streetAddress,
+    //     suburb: suburb,
+    //     state: state,
+    //     postcode: postcode,
+    //   },
+    //   id: sessionData?.user?.id,
+    // });
+
+    // router.push("/noticeboard");
   };
 
   return (
@@ -150,7 +152,7 @@ const NewUser: React.FC<NewCommunitySchema> = () => {
                 ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
                 : "focus:border-blue-600 focus:ring-blue-600"
             )}
-            type="text"
+            type="number"
             id="totalOccupancies"
             {...register("totalOccupancies", { required: true })}
           />
