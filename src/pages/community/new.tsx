@@ -14,10 +14,10 @@ const newCommunitySchema = z.object({
   complexName: z
     .string()
     .min(1, { message: "Community or building complex name is required" }),
-  buildingType: z.string().min(1, { message: "Building type is required" }),
+  buildingType: z.string(),
   totalOccupancies: z.coerce.number().nonnegative(),
   streetAddress: z.string().min(1, { message: "Street address is required" }),
-  suburb: z.string().min(1, { message: "Suburb address is required" }),
+  suburb: z.string(),
   state: z.string().min(1, { message: "State address is required" }),
   postcode: z.string().min(1, { message: "Postcode address is required" }),
 });
@@ -118,28 +118,25 @@ const NewUser: React.FC<NewCommunitySchema> = () => {
           </div>
         </label>
 
-        {/* Residential or commercial */}
+        {/* Building type */}
         <label className="col-span-6 mt-2 block w-full text-left text-sm font-semibold text-gray-900 sm:col-span-2">
-          Residential or commercial
-          <input
+          Building type
+          <select
             className={classNames(
               "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
               errors.buildingType
                 ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
                 : "focus:border-blue-600 focus:ring-blue-600"
             )}
-            type="text"
             id="buildingType"
             {...register("buildingType", { required: true })}
-          />
-          <div className="absolute max-w-xl">
-            {errors.buildingType && (
-              <p className="mt-1 h-10 text-sm font-bold text-rose-500">
-                {" "}
-                {errors.buildingType?.message}
-              </p>
-            )}
-          </div>
+          >
+            <option value="residential">Residential</option>
+            <option value="commercial">Commercial</option>
+            <option value="government">Government</option>
+            <option value="education">Education</option>
+            <option value="health">Health</option>
+          </select>
         </label>
 
         {/* No. of units or apartments */}
@@ -221,25 +218,25 @@ const NewUser: React.FC<NewCommunitySchema> = () => {
         {/* State/territory */}
         <label className="col-span-6 mt-2 block w-full text-left text-sm font-semibold text-gray-900 sm:col-span-2">
           State/Territory
-          <input
+          <select
             className={classNames(
               "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
               errors.state
                 ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
                 : "focus:border-blue-600 focus:ring-blue-600"
             )}
-            type="text"
             id="state"
             {...register("state", { required: true })}
-          />
-          <div className="absolute max-w-xl">
-            {errors.state && (
-              <p className="mt-1 h-10 text-sm font-bold text-rose-500">
-                {" "}
-                {errors.state?.message}
-              </p>
-            )}
-          </div>
+          >
+            <option value="australian capital terriorty">ACT</option>
+            <option value="new south wales">NSW</option>
+            <option value="northern territory">NT</option>
+            <option value="queensland">QLD</option>
+            <option value="south australia">SA</option>
+            <option value="tasmania">TAS</option>
+            <option value="victoria">VIC</option>
+            <option value="western australia">WA</option>
+          </select>
         </label>
 
         {/* Postcode */}
