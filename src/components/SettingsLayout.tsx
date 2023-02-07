@@ -20,25 +20,22 @@ type SetttingsLayout = {
 };
 
 const navigation = [
-  { name: "Account", href: "/settings/account", icon: UserIcon, current: true },
-  { name: "Team", href: "/settings/team", icon: UsersIcon, current: false },
+  { name: "Account", href: "/settings/account", icon: UserIcon },
+  { name: "Team", href: "/settings/team", icon: UsersIcon },
   {
     name: "Building complexes",
     href: "/settings/building-complexes",
     icon: BuildingOffice2Icon,
-    current: false,
   },
   {
     name: "Notices",
     href: "/settings/notices",
     icon: InboxIcon,
-    current: false,
   },
   {
     name: "Billing",
     href: "/settings/billing",
     icon: CreditCardIcon,
-    current: false,
   },
 ];
 
