@@ -2,12 +2,12 @@ import SettingsLayout from "../../components/SettingsLayout";
 import type { ReactElement } from "react";
 import type { NextPageWithLayout } from "../_app";
 
-const Team: NextPageWithLayout = () => {
-  return <p>Team page</p>;
+const Notices: NextPageWithLayout = () => {
+  return <p>Notices page</p>;
 };
 
-Team.getLayout = function getLayout(page: ReactElement) {
+Notices.getLayout = function getLayout(page: ReactElement) {
   return <SettingsLayout>{page}</SettingsLayout>;
 };
 
-export default Team;
+export default Notices;
