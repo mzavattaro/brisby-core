@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Fragment, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { classNames } from "../utils/classNames";
 import { Dialog, Transition } from "@headlessui/react";
 import {
@@ -19,20 +20,33 @@ type SetttingsLayout = {
 };
 
 const navigation = [
-  { name: "Account", href: "#", icon: UserIcon, current: true },
-  { name: "Team", href: "#", icon: UsersIcon, current: false },
+  { name: "Account", href: "/settings/account", icon: UserIcon, current: true },
+  { name: "Team", href: "/settings/team", icon: UsersIcon, current: false },
   {
     name: "Building complexes",
-    href: "#",
+    href: "/settings/building-complexes",
     icon: BuildingOffice2Icon,
     current: false,
   },
-  { name: "Notices", href: "#", icon: InboxIcon, current: false },
-  { name: "Billing", href: "#", icon: CreditCardIcon, current: false },
+  {
+    name: "Notices",
+    href: "/settings/notices",
+    icon: InboxIcon,
+    current: false,
+  },
+  {
+    name: "Billing",
+    href: "/settings/billing",
+    icon: CreditCardIcon,
+    current: false,
+  },
 ];
 
 const SettingsLayout: React.FC<SetttingsLayout> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const router = useRouter();
+  const { asPath } = router;
+
   return (
     <>
       <div>
@@ -107,7 +121,7 @@ const SettingsLayout: React.FC<SetttingsLayout> = ({ children }) => {
                           key={item.name}
                           href={item.href}
                           className={classNames(
-                            item.current
+                            asPath === item.href
                               ? "bg-gray-100 text-gray-900"
                               : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
                             "group flex items-center rounded-md px-2 py-2 text-base font-medium"
@@ -115,7 +129,7 @@ const SettingsLayout: React.FC<SetttingsLayout> = ({ children }) => {
                         >
                           <item.icon
                             className={classNames(
-                              item.current
+                              asPath === item.href
                                 ? "text-gray-500"
                                 : "text-gray-400 group-hover:text-gray-500",
                               "mr-4 h-6 w-6 flex-shrink-0"
@@ -169,7 +183,7 @@ const SettingsLayout: React.FC<SetttingsLayout> = ({ children }) => {
                     key={item.name}
                     href={item.href}
                     className={classNames(
-                      item.current
+                      asPath === item.href
                         ? "bg-gray-100 text-gray-900"
                         : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
                       "group flex items-center rounded-md px-2 py-2 text-sm font-medium"
@@ -177,7 +191,7 @@ const SettingsLayout: React.FC<SetttingsLayout> = ({ children }) => {
                   >
                     <item.icon
                       className={classNames(
-                        item.current
+                        asPath === item.href
                           ? "text-gray-500"
                           : "text-gray-400 group-hover:text-gray-500",
                         "mr-3 h-6 w-6 flex-shrink-0"
