@@ -65,6 +65,7 @@ const Team: NextPageWithLayout<TeamSchema> = () => {
           className="grid max-w-7xl grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-12"
           onSubmit={handleSubmit(onSubmit)}
         >
+          {/* New user */}
           <label className="block w-full text-left text-sm font-semibold text-gray-900 sm:col-span-12">
             Add new user email
             <input
@@ -104,7 +105,9 @@ const Team: NextPageWithLayout<TeamSchema> = () => {
           <div key={user.email} className="mt-4">
             <div className="flex place-content-between">
               <h3 className="font-bold text-indigo-600">{user.name}</h3>
-              <span className="text-gray-900">{user.joined}</span>
+              <span className="text-sm text-gray-900 sm:text-base">
+                Joined on {user.joined}
+              </span>
             </div>
             <div className="mt-1 flex place-content-between border-b pb-4">
               <div className="flex content-center">
