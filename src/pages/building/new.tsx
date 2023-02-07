@@ -17,7 +17,7 @@ const newCommunitySchema = z.object({
   buildingType: z.string(),
   totalOccupancies: z.coerce.number().nonnegative(),
   streetAddress: z.string().min(1, { message: "Street address is required" }),
-  suburb: z.string(),
+  suburb: z.string().min(1, { message: "Suburb address is required" }),
   state: z.string().min(1, { message: "State address is required" }),
   postcode: z.string().min(1, { message: "Postcode address is required" }),
 });
