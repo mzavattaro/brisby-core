@@ -195,7 +195,7 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
             <button
               disabled={isSubmitting}
               className={classNames(
-                "mt-10 flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+                "col-span-1 mt-4 flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:col-span-2 sm:col-end-13",
                 isSubmitting && "cursor-not-allowed opacity-50"
               )}
               type="submit"
