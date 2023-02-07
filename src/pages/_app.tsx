@@ -25,7 +25,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
       <Component {...pageProps} />
       <ReactQueryDevtools initialIsOpen={false} />
     </SessionProvider>
-  );
+  ) as unknown as JSX.Element;
 };
 
 export default trpc.withTRPC(MyApp);
