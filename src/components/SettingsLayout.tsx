@@ -112,7 +112,9 @@ const SettingsLayout: React.FC<SetttingsLayout> = ({ children }) => {
                         Back to noticeboard
                       </Link>
                     </div>
-                    <nav className="mt-5 space-y-1 px-2">
+
+                    <nav className="mt-4 space-y-1 px-2">
+                      <h1 className="pl-2 text-xl font-semibold">Settings</h1>
                       {navigation.map((item) => (
                         <Link
                           key={item.name}
@@ -174,7 +176,8 @@ const SettingsLayout: React.FC<SetttingsLayout> = ({ children }) => {
                   Back to noticeboard
                 </Link>
               </div>
-              <nav className="mt-5 flex-1 space-y-1 bg-white px-2">
+              <nav className="mt-4 flex-1 space-y-1 bg-white px-2">
+                <h1 className="pl-2 text-xl font-semibold">Settings</h1>
                 {navigation.map((item) => (
                   <Link
                     key={item.name}
