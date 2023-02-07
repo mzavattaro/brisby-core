@@ -41,6 +41,7 @@ const navigation = [
 
 const SettingsLayout: React.FC<SetttingsLayout> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
   const router = useRouter();
   const { asPath } = router;
 

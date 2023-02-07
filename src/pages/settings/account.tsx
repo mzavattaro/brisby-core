@@ -114,7 +114,7 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
               </div>
             </label>
 
-            <h2 className="col-span-1 pt-4 text-lg font-semibold sm:col-span-12">
+            <h2 className="col-span-1 pt-1 text-lg font-semibold sm:col-span-12">
               Organisation information
             </h2>
             {/* Company or organisation */}
