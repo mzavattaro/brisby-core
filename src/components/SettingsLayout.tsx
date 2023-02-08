@@ -9,6 +9,7 @@ import {
   Bars3Icon,
   BuildingOffice2Icon,
   CreditCardIcon,
+  HomeIcon,
   InboxIcon,
   UserIcon,
   UsersIcon,
@@ -21,11 +22,16 @@ type SetttingsLayout = {
 
 const navigation = [
   { name: "Account", href: "/settings/account", icon: UserIcon },
+  {
+    name: "Organisation",
+    href: "/settings/organisation",
+    icon: BuildingOffice2Icon,
+  },
   { name: "Team", href: "/settings/team", icon: UsersIcon },
   {
     name: "Building complexes",
     href: "/settings/building-complexes",
-    icon: BuildingOffice2Icon,
+    icon: HomeIcon,
   },
   {
     name: "Notices",

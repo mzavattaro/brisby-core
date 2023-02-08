@@ -13,11 +13,6 @@ const accountSettingsSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   email: z.string().email({ message: "Invalid email address" }).optional(),
-  organisation: z.string().optional(),
-  streetAddress: z.string().optional(),
-  suburb: z.string().optional(),
-  state: z.string().optional(),
-  postcode: z.string().optional(),
 });
 
 type AccountSettingsSchema = z.infer<typeof accountSettingsSchema>;
@@ -46,8 +41,7 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
 
         <div className="col-span-1 sm:col-span-12">
           <p className="text-gray-500">
-            These settings control your personal and organisastion’s account
-            information.
+            These settings control your personal account information.
           </p>
         </div>
 
@@ -90,7 +84,7 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
             </label>
 
             {/* Email address */}
-            <label className="block border-b pb-10 text-left text-sm font-semibold text-gray-900 sm:col-span-12">
+            <label className="block text-left text-sm font-semibold text-gray-900 sm:col-span-12">
               Email address
               <input
                 className={classNames(
@@ -114,84 +108,7 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
               </div>
             </label>
 
-            <h2 className="col-span-1 pt-1 text-lg font-semibold sm:col-span-12">
-              Organisation information
-            </h2>
-            {/* Company or organisation */}
-            <label className="-mt-6 block text-left text-sm font-semibold text-gray-900 sm:col-span-12">
-              Company or organisastion
-              <input
-                className={classNames(
-                  "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
-                )}
-                type="text"
-                id="organisation"
-                {...register("organisation")}
-              />
-            </label>
-
-            {/* Street address */}
-            <label className="block text-left text-sm font-semibold text-gray-900 sm:col-span-12">
-              Street address
-              <input
-                className={classNames(
-                  "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
-                )}
-                type="text"
-                id="streetAddress"
-                {...register("streetAddress")}
-                autoComplete="street-address"
-              />
-            </label>
-
-            {/* Suburb */}
-            <label className="block text-left text-sm font-semibold text-gray-900 sm:col-span-4">
-              Suburb
-              <input
-                className={classNames(
-                  "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
-                )}
-                type="text"
-                id="suburb"
-                {...register("suburb")}
-              />
-            </label>
-
-            {/* State */}
-            <label className="block text-left text-sm font-semibold text-gray-900 sm:col-span-4">
-              State
-              <select
-                className={classNames(
-                  "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
-                )}
-                id="state"
-                {...register("state")}
-              >
-                <option value="australian capital terriorty">ACT</option>
-                <option value="new south wales">NSW</option>
-                <option value="northern territory">NT</option>
-                <option value="queensland">QLD</option>
-                <option value="south australia">SA</option>
-                <option value="tasmania">TAS</option>
-                <option value="victoria">VIC</option>
-                <option value="western australia">WA</option>
-              </select>
-            </label>
-
-            {/* Postcode */}
-            <label className="block text-left text-sm font-semibold text-gray-900 sm:col-span-4">
-              Postcode
-              <input
-                className={classNames(
-                  "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
-                )}
-                type="text"
-                id="postcode"
-                {...register("postcode")}
-                autoComplete="postal-code"
-              />
-            </label>
-
+            {/* Save button */}
             <button
               disabled={isSubmitting}
               className={classNames(
