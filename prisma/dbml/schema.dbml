@@ -2,16 +2,44 @@
 //// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 //// ------------------------------------------------------
 
+Table Organisation {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  name String [unique, not null]
+  streetAddress String
+  suburb String
+  state String
+  postcode String
+  users User [not null]
+}
+
+Table BuildingComplex {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  name String [not null]
+  type String [not null]
+  totalOccupancies Int [not null]
+  streetAddress String [not null]
+  suburb String [not null]
+  state String [not null]
+  postcode String [not null]
+}
+
 Table User {
   id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
   firstName String
   lastName String
   email String [unique, not null]
   emailVerified DateTime
-  organisation String
   accounts Account [not null]
   sessions Session [not null]
   notices Notice [not null]
+  Organisation Organisation
+  organisationId String
 }
 
 Table Notice {
@@ -29,6 +57,20 @@ Table Notice {
   status String
   startDate DateTime
   endDate DateTime
+}
+
+Table Billing {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  firstName String [not null]
+  lastName String [not null]
+  phone String [not null]
+  email String [not null]
+  streetAddress String [not null]
+  suburb String [not null]
+  state String [not null]
+  postcode String [not null]
 }
 
 Table Account {
@@ -70,6 +112,8 @@ Table VerificationToken {
     (identifier, token) [unique]
   }
 }
+
+Ref: User.organisationId > Organisation.id
 
 Ref: Notice.authorId > User.id
 

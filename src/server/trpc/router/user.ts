@@ -19,7 +19,6 @@ export const userRouter = router({
         data: z.object({
           firstName: z.string().optional(),
           lastName: z.string().optional(),
-          organisation: z.string().optional(),
         }),
       })
     )

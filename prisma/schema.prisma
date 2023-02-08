@@ -20,18 +20,61 @@ datasource db {
   // shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
+model Organisation {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  name          String   @unique
+  streetAddress String?
+  suburb        String?
+  state         String?
+  postcode      String?
+  users         User[]
+  // billing       Billing  @relation(fields: [billingId], references: [id])
+  // billingId     String
+  // Notice        Notice[]
+
+  // @@index([billingId])
+}
+
+model BuildingComplex {
+  id               String   @id @default(cuid())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  name             String
+  type             String
+  totalOccupancies Int
+  streetAddress    String
+  suburb           String
+  state            String
+  postcode         String
+  // notice           Notice[]
+  // User             User?    @relation(fields: [userId], references: [id])
+  // userId           String?
+
+  // @@index([userId])
+}
+
 model User {
-  id            String    @id @default(cuid())
-  firstName     String?   @db.Text
-  lastName      String?   @db.Text
-  email         String    @unique
-  emailVerified DateTime?
-  organisation  String?   @db.Text
-  accounts      Account[]
-  sessions      Session[]
-  notices       Notice[]
+  id             String        @id @default(cuid())
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  firstName      String?       @db.Text
+  lastName       String?       @db.Text
+  email          String        @unique
+  emailVerified  DateTime?
+  accounts       Account[]
+  sessions       Session[]
+  notices        Notice[]
+  // buildingComplexes BuildingComplex[]
+  // organisation      Organisation?     @relation(fields: [organisationId], references: [id])
+  // organisationId    String?
+  // @@index([organisationId])
+  Organisation   Organisation? @relation(fields: [organisationId], references: [id])
+  organisationId String?
 
   @@index([email])
+  @@index([organisationId])
 }
 
 model Notice {
@@ -49,8 +92,29 @@ model Notice {
   status    String?
   startDate DateTime?
   endDate   DateTime?
+  // organisation      Organisation     @relation(fields: [organisationId], references: [id])
+  // organisationId    String
+  // BuildingComplex   BuildingComplex? @relation(fields: [buildingComplexId], references: [id])
+  // buildingComplexId String?
+  // @@index([organisationId])
+  // @@index([buildingComplexId])
 
   @@index([authorId])
+}
+
+model Billing {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  firstName     String
+  lastName      String
+  phone         String
+  email         String
+  streetAddress String
+  suburb        String
+  state         String
+  postcode      String
+  // organisations Organisation[]
 }
 
 // Necessary for Next auth

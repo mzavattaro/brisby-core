@@ -11,9 +11,6 @@ import { useRouter } from "next/router";
 const newUserSchema = z.object({
   firstName: z.string().min(1, { message: "First name is required" }),
   lastName: z.string().min(1, { message: "Last name is required" }),
-  organisation: z
-    .string()
-    .min(1, { message: "Company or organisation is required" }),
 });
 
 type NewUserSchema = z.infer<typeof newUserSchema>;
@@ -40,23 +37,23 @@ const NewUser: React.FC<NewUserSchema> = () => {
   });
 
   const onSubmit: SubmitHandler<NewUserSchema> = async (data) => {
-    const { firstName, lastName, organisation } = data;
+    const { firstName, lastName } = data;
 
     updateMutation.mutate({
       data: {
         firstName: firstName,
         lastName: lastName,
-        organisation: organisation,
       },
       id: sessionData?.user?.id,
     });
 
-    router.push("/noticeboard");
+    router.push("/organisation/new");
   };
 
   return (
     <div className="mx-4 mt-6 text-center sm:mx-auto sm:w-full sm:max-w-2xl">
       <div className="text-center">
+        <h4>Step 1 of 2</h4>
         <h4 className="text-3xl font-bold text-gray-900">Brisby</h4>
         <h2 className="mt-6 text-center text-4xl font-extrabold text-gray-900">
           Let's setup your new account
@@ -120,32 +117,6 @@ const NewUser: React.FC<NewUserSchema> = () => {
               </div>
             </label>
           </div>
-
-          {/* Organisation */}
-          <label className="mt-6 block text-left text-sm font-semibold text-gray-900">
-            Company or organisation
-            <input
-              className={classNames(
-                "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
-                errors.organisation
-                  ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
-                  : "focus:border-blue-600 focus:ring-blue-600"
-              )}
-              type="text"
-              id="organisation"
-              placeholder="Acme Inc."
-              {...register("organisation", { required: true })}
-              autoComplete="organization"
-            />
-            <div className="absolute max-w-xl">
-              {errors.organisation && (
-                <p className="mt-1 h-10 text-sm font-bold text-rose-500">
-                  {" "}
-                  {errors.organisation?.message}
-                </p>
-              )}
-            </div>
-          </label>
 
           <button
             disabled={isSubmitting}
