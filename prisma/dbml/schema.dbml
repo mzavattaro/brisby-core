@@ -21,12 +21,12 @@ Table Notice {
   title String [not null]
   author User [not null]
   authorId String [not null]
-  name String
-  size Int
-  type String
+  fileName String
+  fileSize Int
+  fileType String
   uploadUrl String [not null]
   key String
-  state String
+  status String
   startDate DateTime
   endDate DateTime
 }

@@ -20,11 +20,11 @@ import "react-datepicker/dist/react-datepicker.css";
 
 const publishingOptions = [
   {
-    state: "draft",
+    status: "draft",
     description: "This notice will no longer be publicly accessible.",
   },
   {
-    state: "published",
+    status: "published",
     description: "This notice can be viewed by anyone who has the link.",
   },
 ];
@@ -32,8 +32,8 @@ const publishingOptions = [
 const noticeSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
   fileList: typeof window === "undefined" ? z.any() : z.instanceof(FileList),
-  name: z.string().optional(),
-  state: z.string().optional(),
+  fileName: z.string().optional(),
+  status: z.string().optional(),
   startDate: z.date().optional(),
   endDate: z.date().optional(),
 });
@@ -55,9 +55,9 @@ async function uploadToS3(data: FileList) {
 
   const transformedData = {
     ...fileData.data,
-    name: file.name,
-    size: file.size,
-    type: file.type,
+    fileName: file.name,
+    fileSize: file.size,
+    fileType: file.type,
   };
 
   return transformedData;
@@ -101,7 +101,7 @@ const New: NextPage = () => {
     const transformedData = await uploadToS3(data.fileList);
     const payload = {
       title: data.title,
-      state: selected?.state,
+      status: selected?.status,
       startDate: startDate,
       endDate: endDate,
       ...transformedData,
@@ -228,7 +228,7 @@ const New: NextPage = () => {
                   <div
                     className={classNames(
                       "inline-flex divide-x rounded-md capitalize shadow-sm",
-                      selected?.state === "draft"
+                      selected?.status === "draft"
                         ? "divide-slate-400"
                         : "bg-indigo-600"
                     )}
@@ -236,7 +236,7 @@ const New: NextPage = () => {
                     <div
                       className={classNames(
                         "inline-flex divide-x rounded-md shadow-sm",
-                        selected?.state === "draft"
+                        selected?.status === "draft"
                           ? "divide-slate-400"
                           : "bg-indigo-600"
                       )}
@@ -244,20 +244,20 @@ const New: NextPage = () => {
                       <div
                         className={classNames(
                           "inline-flex items-center rounded-l-md border border-transparent py-2 pl-3 pr-4 shadow-sm",
-                          selected?.state === "draft"
+                          selected?.status === "draft"
                             ? "bg-slate-200"
                             : "bg-indigo-500 text-white"
                         )}
                       >
                         <CheckIcon className="h-5 w-5" aria-hidden="true" />
                         <p className="ml-2.5 text-sm font-medium">
-                          {selected?.state}
+                          {selected?.status}
                         </p>
                       </div>
                       <Listbox.Button
                         className={classNames(
                           "inline-flex items-center rounded-l-none rounded-r-md p-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50",
-                          selected?.state === "draft"
+                          selected?.status === "draft"
                             ? "bg-slate-200 hover:bg-slate-300 focus:ring-slate-200"
                             : "bg-indigo-500 text-white hover:bg-indigo-600 focus:ring-indigo-500"
                         )}
@@ -266,7 +266,7 @@ const New: NextPage = () => {
                         <ChevronDownIcon
                           className={classNames(
                             "h-5 w-5",
-                            selected?.state === "draft"
+                            selected?.status === "draft"
                               ? "text-gray-900"
                               : "text-white"
                           )}
@@ -286,7 +286,7 @@ const New: NextPage = () => {
                     <Listbox.Options className="absolute z-10 mt-2 w-72 origin-top-right divide-y divide-gray-200 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       {publishingOptions.map((option) => (
                         <Listbox.Option
-                          key={option.state}
+                          key={option.status}
                           className={({ active }) =>
                             classNames(
                               active
@@ -306,7 +306,7 @@ const New: NextPage = () => {
                                     selected ? "font-semibold" : "font-normal"
                                   )}
                                 >
-                                  {option.state}
+                                  {option.status}
                                 </p>
                                 {selected ? (
                                   <span
@@ -346,7 +346,7 @@ const New: NextPage = () => {
               <h3
                 className={classNames(
                   "mb-2 text-base font-bold",
-                  selected?.state === "draft"
+                  selected?.status === "draft"
                     ? "text-gray-400"
                     : "text-gray-900"
                 )}
@@ -355,7 +355,7 @@ const New: NextPage = () => {
               </h3>
               <DatePicker
                 showPopperArrow={false}
-                selected={selected?.state === "published" ? startDate : null}
+                selected={selected?.status === "published" ? startDate : null}
                 onChange={(date) => setStartDate(date)}
                 selectsStart
                 startDate={startDate}
@@ -363,7 +363,7 @@ const New: NextPage = () => {
                 dateFormat="dd MMMM yyyy"
                 nextMonthButtonLabel=">"
                 previousMonthButtonLabel="<"
-                disabled={selected?.state === "draft" ? true : false}
+                disabled={selected?.status === "draft" ? true : false}
                 placeholderText="Unavailable for drafts"
               />
             </div>
@@ -371,7 +371,7 @@ const New: NextPage = () => {
               <h3
                 className={classNames(
                   "mb-2 text-base font-bold",
-                  selected?.state === "draft"
+                  selected?.status === "draft"
                     ? "text-gray-400"
                     : "text-gray-900"
                 )}
@@ -380,7 +380,7 @@ const New: NextPage = () => {
               </h3>
               <DatePicker
                 showPopperArrow={false}
-                selected={selected?.state === "published" ? endDate : null}
+                selected={selected?.status === "published" ? endDate : null}
                 onChange={(date) => setEndDate(date)}
                 selectsEnd
                 startDate={startDate}
@@ -389,7 +389,7 @@ const New: NextPage = () => {
                 dateFormat="dd MMMM yyyy"
                 nextMonthButtonLabel=">"
                 previousMonthButtonLabel="<"
-                disabled={selected?.state === "draft" ? true : false}
+                disabled={selected?.status === "draft" ? true : false}
                 placeholderText="Unavailable for drafts"
               />
             </div>

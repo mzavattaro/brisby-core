@@ -34,11 +34,11 @@ export const noticeRouter = router({
       z.object({
         title: z.string().min(1, { message: "Title is required" }),
         uploadUrl: z.string(),
-        name: z.string().optional(),
-        size: z.number().optional(),
-        type: z.string().optional(),
+        fileName: z.string().optional(),
+        fileSize: z.number().optional(),
+        fileType: z.string().optional(),
         key: z.string().optional(),
-        state: z.string().optional(),
+        status: z.string().optional(),
         startDate: z.date().optional(),
         endDate: z.date().optional(),
       })
@@ -48,11 +48,11 @@ export const noticeRouter = router({
       const {
         title,
         uploadUrl,
-        name,
-        size,
-        type,
+        fileName,
+        fileSize,
+        fileType,
         key,
-        state,
+        status,
         startDate,
         endDate,
       } = input;
@@ -63,11 +63,11 @@ export const noticeRouter = router({
         data: {
           title,
           uploadUrl,
-          name,
-          size,
-          type,
+          fileName,
+          fileSize,
+          fileType,
           key,
-          state,
+          status,
           startDate,
           endDate,
           author: {
@@ -127,13 +127,13 @@ export const noticeRouter = router({
       z.object({
         limit: z.number().min(1).max(100).default(10),
         cursor: z.string().optional(),
-        state: z.string().optional(),
+        status: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
       const { limit, cursor } = input;
       const notices = await ctx.prisma.notice.findMany({
-        where: { state: "published" },
+        where: { status: "published" },
         take: limit + 1,
         orderBy: [{ createdAt: "desc" }],
         cursor: cursor ? { id: cursor } : undefined,
@@ -169,13 +169,13 @@ export const noticeRouter = router({
       z.object({
         limit: z.number().min(1).max(100).default(10),
         cursor: z.string().optional(),
-        state: z.string().optional(),
+        status: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
       const { limit, cursor } = input;
       const notices = await ctx.prisma.notice.findMany({
-        where: { state: "draft" },
+        where: { status: "draft" },
         take: limit + 1,
         orderBy: [{ createdAt: "desc" }],
         cursor: cursor ? { id: cursor } : undefined,
@@ -210,13 +210,13 @@ export const noticeRouter = router({
       z.object({
         limit: z.number().min(1).max(100).default(10),
         cursor: z.string().optional(),
-        state: z.string().optional(),
+        status: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
       const { limit, cursor } = input;
       const notices = await ctx.prisma.notice.findMany({
-        where: { state: "archived" },
+        where: { status: "archived" },
         take: limit + 1,
         orderBy: [{ createdAt: "desc" }],
         cursor: cursor ? { id: cursor } : undefined,
@@ -263,10 +263,10 @@ export const noticeRouter = router({
           id: true,
           createdAt: true,
           title: true,
-          state: true,
+          status: true,
           startDate: true,
           endDate: true,
-          name: true,
+          fileName: true,
         },
       });
 
@@ -281,12 +281,12 @@ export const noticeRouter = router({
     }),
 
   // update /api/notice
-  updateState: protectedProcedure
+  updateStatus: protectedProcedure
     .input(
       z.object({
         id: z.string(),
         data: z.object({
-          state: z.string(),
+          status: z.string(),
         }),
       })
     )

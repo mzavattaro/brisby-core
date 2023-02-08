@@ -11,7 +11,7 @@ const Notices: NextPageWithLayout = () => {
       buildingComplex: "Kimberly Court",
       periodStart: "12/1/2023",
       periodEnd: "24/3/2023",
-      state: "draft",
+      status: "draft",
     },
     {
       id: "2",
@@ -19,7 +19,7 @@ const Notices: NextPageWithLayout = () => {
       buildingComplex: "Kimberly Court",
       periodStart: "12/1/2023",
       periodEnd: "24/3/2023",
-      state: "draft",
+      status: "draft",
     },
     {
       id: "3",
@@ -27,7 +27,7 @@ const Notices: NextPageWithLayout = () => {
       buildingComplex: "Kimberly Court",
       periodStart: "12/1/2023",
       periodEnd: "24/3/2023",
-      state: "draft",
+      status: "draft",
     },
   ];
 
@@ -87,7 +87,7 @@ const Notices: NextPageWithLayout = () => {
                   scope="col"
                   className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                 >
-                  State
+                  Status
                 </th>
                 <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
                   <span className="sr-only">View</span>
@@ -124,7 +124,7 @@ const Notices: NextPageWithLayout = () => {
                     {notice.periodEnd}
                   </td>
                   <td className="px-3 py-4 text-sm text-gray-500">
-                    {notice.state}
+                    {notice.status}
                   </td>
                   <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                     <a

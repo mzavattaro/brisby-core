@@ -11,7 +11,7 @@ type NoticeItem = {
 };
 
 const NoticeItem: React.FC<NoticeItem> = ({ notice, toggle }) => {
-  const { id, title, startDate, endDate, state, uploadUrl, author } = notice;
+  const { id, title, startDate, endDate, status, uploadUrl, author } = notice;
 
   const queryClient = useQueryClient();
 
@@ -27,7 +27,7 @@ const NoticeItem: React.FC<NoticeItem> = ({ notice, toggle }) => {
     deleteMutation.mutate(id);
   };
 
-  const updateMutation = trpc.notice.updateState.useMutation({
+  const updateMutation = trpc.notice.updateStatus.useMutation({
     onSuccess: () => {
       queryClient.invalidateQueries();
       setTimeout(toggle, 220);
@@ -38,13 +38,13 @@ const NoticeItem: React.FC<NoticeItem> = ({ notice, toggle }) => {
   });
 
   const handlePublishChange = async () => {
-    const state = "published";
-    updateMutation.mutate({ data: { state: state }, id: id });
+    const status = "published";
+    updateMutation.mutate({ data: { status: status }, id: id });
   };
 
   const handleDraftChange = async () => {
-    const state = "draft";
-    updateMutation.mutate({ data: { state: state }, id: id });
+    const status = "draft";
+    updateMutation.mutate({ data: { status: status }, id: id });
   };
 
   return (
@@ -76,9 +76,7 @@ const NoticeItem: React.FC<NoticeItem> = ({ notice, toggle }) => {
           </div>
         </div>
         <div className="mx-auto">
-          <Tag state={state} type="published">
-            {state?.toUpperCase()}
-          </Tag>
+          <Tag status={status}>{status?.toUpperCase()}</Tag>
         </div>
         <div className="relative flex flex-1 flex-col">
           <div className="flex-shrink-0">
@@ -103,7 +101,7 @@ const NoticeItem: React.FC<NoticeItem> = ({ notice, toggle }) => {
                 handleDraftChange={handleDraftChange}
                 uploadUrl={uploadUrl}
                 deleteMutationLoadingState={deleteMutationLoadingState}
-                state={state}
+                status={status}
               />
             </div>
           </div>

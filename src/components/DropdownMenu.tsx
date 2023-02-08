@@ -11,7 +11,7 @@ type DropdownMenuProps = {
   handleDraftChange: () => void;
   uploadUrl: string;
   deleteMutationLoadingState: boolean;
-  state: string | null;
+  status: string | null;
 };
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({
@@ -20,7 +20,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   handlePublishChange,
   handleDraftChange,
   deleteMutationLoadingState,
-  state,
+  status,
 }) => {
   const { isShowing, toggle } = useModal();
   return (
@@ -70,12 +70,13 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                   {({ active }) => (
                     <button
                       type="button"
-                      disabled={state === "published"}
+                      disabled={status === "published"}
                       onClick={handlePublishChange}
                       className={classNames(
                         "block w-full px-4 py-2 text-left text-sm",
                         active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        state === "published" && "cursor-not-allowed opacity-50"
+                        status === "published" &&
+                          "cursor-not-allowed opacity-50"
                       )}
                     >
                       Publish
@@ -86,12 +87,12 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                   {({ active }) => (
                     <button
                       type="button"
-                      disabled={state === "draft"}
+                      disabled={status === "draft"}
                       onClick={handleDraftChange}
                       className={classNames(
                         "block w-full px-4 py-2 text-left text-sm",
                         active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        state === "draft" && "cursor-not-allowed opacity-50"
+                        status === "draft" && "cursor-not-allowed opacity-50"
                       )}
                     >
                       Draft

@@ -22,11 +22,11 @@ datasource db {
 
 model User {
   id            String    @id @default(cuid())
-  firstName     String?
-  lastName      String?
+  firstName     String?   @db.Text
+  lastName      String?   @db.Text
   email         String    @unique
   emailVerified DateTime?
-  organisation  String?
+  organisation  String?   @db.Text
   accounts      Account[]
   sessions      Session[]
   notices       Notice[]
@@ -38,15 +38,15 @@ model Notice {
   id        String    @id @default(cuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  title     String
+  title     String    @db.Text
   author    User      @relation(fields: [authorId], references: [id])
   authorId  String
-  name      String?
-  size      Int?
-  type      String?
+  fileName  String?   @db.Text
+  fileSize  Int?
+  fileType  String?
   uploadUrl String    @db.Text
-  key       String?
-  state     String?
+  key       String?   @db.Text
+  status    String?
   startDate DateTime?
   endDate   DateTime?
 
