@@ -48,6 +48,7 @@ module.exports = {
       24: "6rem", //96px
       26: "6.5rem", //104px
       28: "7rem", //112px
+      31: "7.875rem", //126px
       32: "8rem", //128px
       36: "9rem", //144px
       40: "10rem", //160px
