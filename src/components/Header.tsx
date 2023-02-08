@@ -97,7 +97,7 @@ const Header = () => {
               <StyledLink
                 className="hidden px-4 text-xs sm:block md:text-sm"
                 styleType="button"
-                href="/noticeboard/new"
+                href="/notice/new"
               >
                 Upload notice
               </StyledLink>

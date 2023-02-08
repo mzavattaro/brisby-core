@@ -1,6 +1,6 @@
 import NextError from "next/error";
 import { useRouter } from "next/router";
-import { RouterOutputs, trpc } from "../../../utils/trpc";
+import { RouterOutputs, trpc } from "../../utils/trpc";
 
 type NoticeByIdOutput = RouterOutputs["notice"]["byId"];
 
