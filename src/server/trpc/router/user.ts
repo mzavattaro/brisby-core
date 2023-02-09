@@ -10,6 +10,7 @@ export const userRouter = router({
         id: z.string().optional(),
         data: z.object({
           name: z.string().optional(),
+          email: z.string().optional(),
         }),
       })
     )
@@ -38,10 +39,6 @@ export const userRouter = router({
       });
       return user;
     }),
-
-  getName: protectedProcedure
-    .input(z.object({ name: z.string().optional() }))
-    .query(async ({ ctx, input }) => {}),
 
   // check user exists by email /api/user
   byEmail: publicProcedure

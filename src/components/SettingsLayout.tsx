@@ -212,16 +212,14 @@ const SettingsLayout: React.FC<SetttingsLayout> = ({ children }) => {
               </nav>
             </div>
             <div className="flex flex-shrink-0 border-t border-gray-200 p-4">
-              <Link href="#" className="group block w-full flex-shrink-0">
-                <div>
-                  <p className=" text-sm font-medium text-gray-900 group-hover:text-gray-900">
-                    Signed in as
-                  </p>
-                  <p className="text-base font-semibold text-gray-900 group-hover:text-gray-700">
-                    {sessionData?.user?.name || sessionData?.user?.email}
-                  </p>
-                </div>
-              </Link>
+              <div className="group block w-full flex-shrink-0">
+                <p className=" text-sm font-medium text-gray-900 group-hover:text-gray-900">
+                  Signed in as
+                </p>
+                <p className="text-base font-semibold text-gray-900 group-hover:text-gray-700">
+                  {sessionData?.user?.name || sessionData?.user?.email}
+                </p>
+              </div>
             </div>
           </div>
         </div>

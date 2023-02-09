@@ -12,13 +12,11 @@ import { createTransport } from "nodemailer";
 //   interface Session {
 //     user?: DefaultUser & {
 //       id: string;
-//       firstName: string;
-//       lastName: string;
+//       email: string;
 //     };
 //   }
 //   interface User extends DefaultUser {
-//     firstName?: string;
-//     lastName?: string;
+//     email: string;
 //   }
 // }
 

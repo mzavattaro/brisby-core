@@ -1,3 +1,4 @@
+import { useSession } from "next-auth/react";
 import SettingsLayout from "../../components/SettingsLayout";
 import type { ReactElement } from "react";
 import type { NextPageWithLayout } from "../_app";
@@ -10,25 +11,46 @@ import type { SubmitHandler } from "react-hook-form";
 import { classNames } from "../../utils/classNames";
 
 const accountSettingsSchema = z.object({
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
-  email: z.string().email({ message: "Invalid email address" }).optional(),
+  name: z.string().optional(),
+  email: z.string().optional(),
 });
 
 type AccountSettingsSchema = z.infer<typeof accountSettingsSchema>;
 
 const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
+  const queryClient = useQueryClient();
+
+  const { data: sessionData } = useSession();
+
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<AccountSettingsSchema>({
     resolver: zodResolver(accountSettingsSchema),
   });
 
+  const { mutateAsync, isLoading } = trpc.user.updateUser.useMutation({
+    onSuccess: (data) => {
+      queryClient.setQueryData([["user"], data.id], data);
+      queryClient.invalidateQueries();
+    },
+  });
+
   const onSubmit: SubmitHandler<AccountSettingsSchema> = async (data) => {
     console.log(data);
+    const { name, email } = data;
+
+    mutateAsync({
+      data: {
+        name: name,
+        email: email,
+      },
+      id: sessionData?.user?.id,
+    });
   };
+
+  console.log(sessionData?.user?.email);
 
   return (
     <>
@@ -44,83 +66,91 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
             These settings control your personal account information.
           </p>
         </div>
+      </div>
 
-        <div className="col-span-1 mt-4 sm:col-span-12">
-          <h2 className="col-span-1 text-lg font-semibold sm:col-span-12">
-            Personal information
-          </h2>
-          <form
-            className="grid max-w-7xl grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-12"
-            onSubmit={handleSubmit(onSubmit)}
+      <div className="mx-auto mt-4 max-w-4xl px-2 sm:px-6 md:px-8">
+        <h2 className="text-lg font-semibold">Personal information</h2>
+        <div className="flex flex-col">
+          {/* Name */}
+          <h4 className="w-fit text-left text-sm font-semibold text-gray-900">
+            Name
+          </h4>
+          <p className="w-fit text-gray-500">{sessionData?.user?.name}</p>
+          <button
+            className="w-fit text-sm font-semibold text-indigo-600 hover:underline"
+            type="button"
           >
-            {/* First name */}
-            <label className="block w-full text-left text-sm font-semibold text-gray-900 sm:col-span-6">
-              First name
-              <input
-                className={classNames(
-                  "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
-                )}
-                type="text"
-                id="firstName"
-                placeholder="Joe"
-                {...register("firstName")}
-                autoComplete="given-name"
-              />
-            </label>
+            change
+          </button>
 
-            {/* Last name */}
-            <label className="text-gray-90 block w-full text-left text-sm font-semibold sm:col-span-6">
-              Last name
-              <input
-                className={classNames(
-                  "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
-                )}
-                type="text"
-                id="lastName"
-                placeholder="Bloggs"
-                {...register("lastName")}
-                autoComplete="family-name"
-              />
-            </label>
-
-            {/* Email address */}
-            <label className="block text-left text-sm font-semibold text-gray-900 sm:col-span-12">
-              Email address
-              <input
-                className={classNames(
-                  "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
-                  errors.email
-                    ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
-                    : "focus:border-blue-600 focus:ring-blue-600"
-                )}
-                type="text"
-                id="email"
-                placeholder="you@company.com"
-                {...register("email", { required: true })}
-                autoComplete="email"
-              />
-              <div className="absolute max-w-xl">
-                {errors.email && (
-                  <p className="mt-1 h-10 text-sm font-bold text-rose-500">
-                    {errors.email?.message}
-                  </p>
-                )}
-              </div>
-            </label>
-
-            {/* Save button */}
-            <button
-              disabled={isSubmitting}
-              className={classNames(
-                "col-span-1 mt-4 flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:col-span-2 sm:col-end-13",
-                isSubmitting && "cursor-not-allowed opacity-50"
-              )}
-              type="submit"
-            >
-              {isSubmitting ? <span>Saving...</span> : <span>Save</span>}
-            </button>
-          </form>
+          {/* Email */}
+          <h4 className="mt-6 w-fit text-left text-sm font-semibold text-gray-900">
+            Email
+          </h4>
+          <p className="w-fit text-gray-500">{sessionData?.user?.email}</p>
+          <button
+            className="w-fit text-sm font-semibold text-indigo-600 hover:underline"
+            type="button"
+          >
+            change
+          </button>
         </div>
+        {/* <form
+          className="grid max-w-7xl grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-12"
+          onSubmit={handleSubmit(onSubmit)}
+        > */}
+        {/* Name
+            <label className="w-full text-left text-sm font-semibold text-gray-900 sm:col-span-6">
+              Name
+              <input
+                className={classNames(
+                  "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
+                )}
+                type="text"
+                id="name"
+                defaultValue={sessionData?.user?.name as string}
+                {...register("name")}
+                autoComplete="name"
+              />
+            </label> */}
+
+        {/* Email address */}
+        {/* <label className="text-left text-sm font-semibold text-gray-900 sm:col-span-12">
+            Email address
+            <input
+              className={classNames(
+                "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
+                errors.email
+                  ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
+                  : "focus:border-blue-600 focus:ring-blue-600"
+              )}
+              type="text"
+              id="email"
+              defaultValue={sessionData?.user?.email as string}
+              {...register("email", { required: true })}
+              autoComplete="email"
+            />
+            <div className="absolute max-w-xl">
+              {errors.email && (
+                <p className="mt-1 h-10 text-sm font-bold text-rose-500">
+                  {errors.email?.message}
+                </p>
+              )}
+            </div>
+          </label> */}
+
+        {/* Save button */}
+        {/* <button
+            disabled={isLoading}
+            className={classNames(
+              "col-span-1 mt-4 flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:col-span-2 sm:col-end-13",
+              isLoading && "cursor-not-allowed opacity-50"
+            )}
+            type="submit"
+          >
+            {isLoading ? <span>Saving...</span> : <span>Save</span>}
+          </button> */}
+        {/* </form> */}
       </div>
     </>
   );
