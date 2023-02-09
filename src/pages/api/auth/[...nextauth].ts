@@ -8,21 +8,19 @@ import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db/client";
 import { createTransport } from "nodemailer";
 
-declare module "next-auth" {
-  interface Session {
-    user?: DefaultUser & {
-      id: string;
-      firstName: string;
-      lastName: string;
-      organisation: string;
-    };
-  }
-  interface User extends DefaultUser {
-    firstName?: string;
-    lastName?: string;
-    organisation?: string;
-  }
-}
+// declare module "next-auth" {
+//   interface Session {
+//     user?: DefaultUser & {
+//       id: string;
+//       firstName: string;
+//       lastName: string;
+//     };
+//   }
+//   interface User extends DefaultUser {
+//     firstName?: string;
+//     lastName?: string;
+//   }
+// }
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session

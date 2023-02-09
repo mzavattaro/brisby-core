@@ -20,12 +20,12 @@ const MyApp: AppType<{ session: Session | null }> = ({
   pageProps: { session, ...pageProps },
 }: AppPropsWithLayout) => {
   const getLayout = Component.getLayout ?? ((page) => page);
-  return getLayout(
+  return (
     <SessionProvider session={session}>
-      <Component {...pageProps} />
+      {getLayout(<Component {...pageProps} />) as unknown as JSX.Element}
       <ReactQueryDevtools initialIsOpen={false} />
     </SessionProvider>
-  ) as unknown as JSX.Element;
+  );
 };
 
 export default trpc.withTRPC(MyApp);

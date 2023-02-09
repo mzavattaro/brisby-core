@@ -1,24 +1,15 @@
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 import { TRPCError } from "@trpc/server";
-import { object, z } from "zod";
-
-// const userSchema = object({
-//   id: z.string(),
-//   firstName: z.string().optional(),
-//   lastName: z.string().optional(),
-//   email: z.string(),
-//   organisation: z.string().optional(),
-// });
+import { z } from "zod";
 
 export const userRouter = router({
-  // create /api/user
+  // update /api/user
   updateUser: protectedProcedure
     .input(
       z.object({
         id: z.string().optional(),
         data: z.object({
-          firstName: z.string().optional(),
-          lastName: z.string().optional(),
+          name: z.string().optional(),
         }),
       })
     )
@@ -48,6 +39,11 @@ export const userRouter = router({
       return user;
     }),
 
+  getName: protectedProcedure
+    .input(z.object({ name: z.string().optional() }))
+    .query(async ({ ctx, input }) => {}),
+
+  // check user exists by email /api/user
   byEmail: publicProcedure
     .input(z.object({ email: z.string().optional() }))
     .query(async ({ ctx, input }) => {

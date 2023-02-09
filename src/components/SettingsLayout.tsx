@@ -1,3 +1,4 @@
+import { useSession } from "next-auth/react";
 import type { ReactNode } from "react";
 import { Fragment, useState } from "react";
 import Link from "next/link";
@@ -47,7 +48,7 @@ const navigation = [
 
 const SettingsLayout: React.FC<SetttingsLayout> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  const { data: sessionData } = useSession();
   const router = useRouter();
   const { asPath } = router;
 
@@ -153,7 +154,7 @@ const SettingsLayout: React.FC<SetttingsLayout> = ({ children }) => {
                         Signed in as
                       </p>
                       <p className="text-base font-semibold text-gray-900 group-hover:text-gray-700">
-                        Michael Zavattaro
+                        {sessionData?.user?.name || sessionData?.user?.email}
                       </p>
                     </div>
                   </div>
@@ -217,7 +218,7 @@ const SettingsLayout: React.FC<SetttingsLayout> = ({ children }) => {
                     Signed in as
                   </p>
                   <p className="text-base font-semibold text-gray-900 group-hover:text-gray-700">
-                    Michael Zavattaro
+                    {sessionData?.user?.name || sessionData?.user?.email}
                   </p>
                 </div>
               </Link>

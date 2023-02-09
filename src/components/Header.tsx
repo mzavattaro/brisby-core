@@ -119,6 +119,14 @@ const Header = () => {
                   leaveTo="transform opacity-0 scale-95"
                 >
                   <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <div className="mb-2 border-b">
+                      <p className="block px-4 pt-2 text-sm text-gray-700">
+                        Signed in as
+                      </p>
+                      <p className="block truncate px-4 pb-4 text-sm font-bold text-gray-700">
+                        {sessionData?.user?.name || sessionData?.user?.email}
+                      </p>
+                    </div>
                     <Menu.Item>
                       {({ active }) => (
                         <Link
