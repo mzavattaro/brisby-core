@@ -9,8 +9,7 @@ import { classNames } from "../../utils/classNames";
 import { useRouter } from "next/router";
 
 const newUserSchema = z.object({
-  firstName: z.string().min(1, { message: "First name is required" }),
-  lastName: z.string().min(1, { message: "Last name is required" }),
+  name: z.string().min(1, { message: "Name is required" }),
 });
 
 type NewUserSchema = z.infer<typeof newUserSchema>;
@@ -24,7 +23,7 @@ const NewUser: React.FC<NewUserSchema> = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<NewUserSchema>({
     resolver: zodResolver(newUserSchema),
   });
@@ -37,12 +36,11 @@ const NewUser: React.FC<NewUserSchema> = () => {
   });
 
   const onSubmit: SubmitHandler<NewUserSchema> = async (data) => {
-    const { firstName, lastName } = data;
+    const { name } = data;
 
     mutateAsync({
       data: {
-        firstName: firstName,
-        lastName: lastName,
+        name: name,
       },
       id: sessionData?.user?.id,
     });
@@ -65,53 +63,27 @@ const NewUser: React.FC<NewUserSchema> = () => {
       <div className="mt-6 sm:mx-10">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex w-full flex-col justify-between sm:flex-row">
-            {/* First name */}
-            <label className="block w-full text-left text-sm font-semibold text-gray-900 sm:w-72">
-              First name
+            {/* Name */}
+            <label className="block w-full text-left text-sm font-semibold text-gray-900">
+              Name
               <input
                 className={classNames(
                   "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
-                  errors.firstName
+                  errors.name
                     ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
                     : "focus:border-blue-600 focus:ring-blue-600"
                 )}
                 type="text"
                 id="firstName"
-                placeholder="Joe"
-                {...register("firstName", { required: true })}
-                autoComplete="given-name"
+                placeholder="Joe Bloggs"
+                {...register("name", { required: true })}
+                autoComplete="name"
               />
               <div className="absolute max-w-xl">
-                {errors.firstName && (
+                {errors.name && (
                   <p className="mt-1 h-10 text-sm font-bold text-rose-500">
                     {" "}
-                    {errors.firstName?.message}
-                  </p>
-                )}
-              </div>
-            </label>
-
-            {/* Last name */}
-            <label className="text-gray-90 mt-8 block w-full text-left text-sm font-semibold sm:mt-0 sm:w-72">
-              Last name
-              <input
-                className={classNames(
-                  "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
-                  errors.lastName
-                    ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
-                    : "focus:border-blue-600 focus:ring-blue-600"
-                )}
-                type="text"
-                id="lastName"
-                placeholder="Bloggs"
-                {...register("lastName", { required: true })}
-                autoComplete="family-name"
-              />
-              <div className="absolute max-w-xl">
-                {errors.lastName && (
-                  <p className="mt-1 h-10 text-sm font-bold text-rose-500">
-                    {" "}
-                    {errors.lastName?.message}
+                    {errors.name?.message}
                   </p>
                 )}
               </div>
