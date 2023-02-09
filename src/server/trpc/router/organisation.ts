@@ -1,4 +1,4 @@
-// import { Prisma } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
@@ -9,6 +9,22 @@ import { protectedProcedure, router } from "../trpc";
  * @see https://github.com/prisma/prisma/issues/9353
  */
 
+// const getOrganisationName = async (
+//   name: string,
+//   prisma: PrismaClient<
+//     Prisma.PrismaClientOptions,
+//     never,
+//     Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined
+//   >
+// ) => {
+//   const organisation = await prisma.organisation.findUniqueOrThrow({
+//     where: { name },
+//     select: { name: true },
+//   });
+
+//   return organisation;
+// };
+
 export const organisationRouter = router({
   // create /api/organisation
   create: protectedProcedure
@@ -17,7 +33,7 @@ export const organisationRouter = router({
         name: z.string(),
       })
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const { prisma, session } = ctx;
       const { name } = input;
 

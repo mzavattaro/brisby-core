@@ -29,7 +29,7 @@ const NewUser: React.FC<NewUserSchema> = () => {
     resolver: zodResolver(newUserSchema),
   });
 
-  const updateMutation = trpc.user.updateUser.useMutation({
+  const { mutateAsync, isLoading } = trpc.user.updateUser.useMutation({
     onSuccess: (data) => {
       queryClient.setQueryData([["user"], data.id], data);
       queryClient.invalidateQueries();
@@ -39,7 +39,7 @@ const NewUser: React.FC<NewUserSchema> = () => {
   const onSubmit: SubmitHandler<NewUserSchema> = async (data) => {
     const { firstName, lastName } = data;
 
-    updateMutation.mutate({
+    mutateAsync({
       data: {
         firstName: firstName,
         lastName: lastName,
@@ -119,14 +119,14 @@ const NewUser: React.FC<NewUserSchema> = () => {
           </div>
 
           <button
-            disabled={isSubmitting}
+            disabled={isLoading}
             className={classNames(
               "mt-10 flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:mt-10",
-              isSubmitting && "cursor-not-allowed opacity-50"
+              isLoading && "cursor-not-allowed opacity-50"
             )}
             type="submit"
           >
-            {isSubmitting ? <span>Creating...</span> : <span>Continue</span>}
+            {isLoading ? <span>Creating...</span> : <span>Continue</span>}
           </button>
         </form>
       </div>

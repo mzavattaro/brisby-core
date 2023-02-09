@@ -18,14 +18,15 @@ const Organisation: NextPage = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<OrganisationSchema>({
     resolver: zodResolver(organisationSchema),
   });
 
   const queryClient = useQueryClient();
+  const router = useRouter();
 
-  const { mutateAsync } = trpc.organisation.create.useMutation({
+  const { mutateAsync, isLoading } = trpc.organisation.create.useMutation({
     onSuccess: (data) => {
       queryClient.setQueryData([["organisation"], data.id], data);
       queryClient.invalidateQueries();
@@ -43,10 +44,8 @@ const Organisation: NextPage = () => {
       }
       return;
     }
-
     mutateAsync({ name: name });
-
-    console.log(data);
+    router.push("/noticeboard");
   };
 
   return (
@@ -90,14 +89,14 @@ const Organisation: NextPage = () => {
           </label>
 
           <button
-            disabled={isSubmitting}
+            disabled={isLoading}
             className={classNames(
               "mt-10 flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:mt-10",
-              isSubmitting && "cursor-not-allowed opacity-50"
+              isLoading && "cursor-not-allowed opacity-50"
             )}
             type="submit"
           >
-            {isSubmitting ? <span>Creating...</span> : <span>Continue</span>}
+            {isLoading ? <span>Creating...</span> : <span>Submit</span>}
           </button>
         </form>
       </div>

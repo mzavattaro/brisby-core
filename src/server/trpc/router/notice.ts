@@ -43,7 +43,7 @@ export const noticeRouter = router({
         endDate: z.date().optional(),
       })
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const { prisma, session } = ctx;
       const {
         title,

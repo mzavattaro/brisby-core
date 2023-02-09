@@ -24,7 +24,7 @@ model Organisation {
   id            String   @id @default(cuid())
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  name          String   @unique
+  name          String
   streetAddress String?
   suburb        String?
   state         String?
