@@ -80,18 +80,23 @@ export const noticeRouter = router({
     }),
 
   // list /api/notice
-  list: publicProcedure
+  list: protectedProcedure
     .input(
       z.object({
         limit: z.number().min(1).max(100).default(10),
         cursor: z.string().optional(),
+        organisationId: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
       const { prisma } = ctx;
-      const { limit, cursor } = input;
+      const { limit, cursor, organisationId } = input;
       const notices = await prisma.notice.findMany({
-        where: {},
+        where: {
+          buildingComplex: {
+            organisation: { id: organisationId },
+          },
+        },
         take: limit + 1,
         orderBy: [{ createdAt: "desc" }],
         cursor: cursor ? { id: cursor } : undefined,
@@ -99,6 +104,17 @@ export const noticeRouter = router({
           author: {
             select: {
               id: true,
+              name: true,
+              organisation: {
+                select: { id: true, name: true, billing: {} },
+              },
+            },
+          },
+          buildingComplex: {
+            select: {
+              id: true,
+              name: true,
+              organisation: { select: { id: true, name: true } },
             },
           },
         },

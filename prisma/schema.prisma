@@ -21,26 +21,27 @@ datasource db {
 }
 
 model Organisation {
-  id            String   @id @default(cuid())
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  name          String
-  streetAddress String?
-  suburb        String?
-  state         String?
-  postcode      String?
-  users         User[]
-  // billing       Billing  @relation(fields: [billingId], references: [id])
-  // billingId     String
+  id              String            @id @default(cuid())
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  name            String
+  streetAddress   String?
+  suburb          String?
+  state           String?
+  postcode        String?
+  users           User[]
+  billing         Billing           @relation(fields: [billingId], references: [id])
+  billingId       String
+  buildingComplex BuildingComplex[]
   // Notice        Notice[]
 
-  // @@index([billingId])
+  @@index([billingId])
 }
 
 model BuildingComplex {
-  id               String   @id @default(cuid())
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id               String        @id @default(cuid())
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
   name             String
   type             String
   totalOccupancies Int
@@ -48,11 +49,15 @@ model BuildingComplex {
   suburb           String
   state            String
   postcode         String
-  // notice           Notice[]
+  notice           Notice[]
+  organisation     Organisation? @relation(fields: [organisationId], references: [id])
+  organisationId   String?
   // User             User?    @relation(fields: [userId], references: [id])
   // userId           String?
 
   // @@index([userId])
+
+  @@index([organisationId])
 }
 
 model User {
@@ -65,46 +70,43 @@ model User {
   accounts       Account[]
   sessions       Session[]
   notices        Notice[]
-  // buildingComplexes BuildingComplex[]
-  // organisation      Organisation?     @relation(fields: [organisationId], references: [id])
-  // organisationId    String?
-  // @@index([organisationId])
-  Organisation   Organisation? @relation(fields: [organisationId], references: [id])
+  organisation   Organisation? @relation(fields: [organisationId], references: [id])
   organisationId String?
+  // buildingComplexes BuildingComplex[]
 
   @@index([email])
   @@index([organisationId])
 }
 
 model Notice {
-  id        String    @id @default(cuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  title     String    @db.Text
-  author    User      @relation(fields: [authorId], references: [id])
-  authorId  String
-  fileName  String?   @db.Text
-  fileSize  Int?
-  fileType  String?
-  uploadUrl String    @db.Text
-  key       String?   @db.Text
-  status    String?
-  startDate DateTime?
-  endDate   DateTime?
+  id                String           @id @default(cuid())
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  title             String           @db.Text
+  author            User             @relation(fields: [authorId], references: [id])
+  authorId          String
+  fileName          String?          @db.Text
+  fileSize          Int?
+  fileType          String?
+  uploadUrl         String           @db.Text
+  key               String?          @db.Text
+  status            String?
+  startDate         DateTime?
+  endDate           DateTime?
+  buildingComplex   BuildingComplex? @relation(fields: [buildingComplexId], references: [id])
+  buildingComplexId String?
   // organisation      Organisation     @relation(fields: [organisationId], references: [id])
   // organisationId    String
-  // BuildingComplex   BuildingComplex? @relation(fields: [buildingComplexId], references: [id])
-  // buildingComplexId String?
   // @@index([organisationId])
-  // @@index([buildingComplexId])
 
   @@index([authorId])
+  @@index([buildingComplexId])
 }
 
 model Billing {
-  id            String   @id @default(cuid())
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id            String         @id @default(cuid())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   firstName     String
   lastName      String
   phone         String
@@ -113,7 +115,7 @@ model Billing {
   suburb        String
   state         String
   postcode      String
-  // organisations Organisation[]
+  organisation  Organisation[]
 }
 
 // Necessary for Next auth

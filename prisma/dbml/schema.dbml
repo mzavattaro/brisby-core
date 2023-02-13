@@ -12,6 +12,9 @@ Table Organisation {
   state String
   postcode String
   users User [not null]
+  billing Billing [not null]
+  billingId String [not null]
+  buildingComplex BuildingComplex [not null]
 }
 
 Table BuildingComplex {
@@ -25,6 +28,9 @@ Table BuildingComplex {
   suburb String [not null]
   state String [not null]
   postcode String [not null]
+  notice Notice [not null]
+  organisation Organisation
+  organisationId String
 }
 
 Table User {
@@ -37,7 +43,7 @@ Table User {
   accounts Account [not null]
   sessions Session [not null]
   notices Notice [not null]
-  Organisation Organisation
+  organisation Organisation
   organisationId String
 }
 
@@ -56,6 +62,8 @@ Table Notice {
   status String
   startDate DateTime
   endDate DateTime
+  buildingComplex BuildingComplex
+  buildingComplexId String
 }
 
 Table Billing {
@@ -70,6 +78,7 @@ Table Billing {
   suburb String [not null]
   state String [not null]
   postcode String [not null]
+  organisation Organisation [not null]
 }
 
 Table Account {
@@ -112,9 +121,15 @@ Table VerificationToken {
   }
 }
 
+Ref: Organisation.billingId > Billing.id
+
+Ref: BuildingComplex.organisationId > Organisation.id
+
 Ref: User.organisationId > Organisation.id
 
 Ref: Notice.authorId > User.id
+
+Ref: Notice.buildingComplexId > BuildingComplex.id
 
 Ref: Account.userId > User.id [delete: Cascade]
 

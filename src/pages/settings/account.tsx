@@ -1,6 +1,7 @@
+import type { ReactElement } from "react";
+import { useState, useRef } from "react";
 import { useSession } from "next-auth/react";
 import SettingsLayout from "../../components/SettingsLayout";
-import type { ReactElement } from "react";
 import type { NextPageWithLayout } from "../_app";
 import { useQueryClient } from "@tanstack/react-query";
 import { trpc } from "../../utils/trpc";
@@ -9,6 +10,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { SubmitHandler } from "react-hook-form";
 import { classNames } from "../../utils/classNames";
+import Modal from "../../components/Modal";
+import useModal from "../../utils/useModal";
 
 const accountSettingsSchema = z.object({
   name: z.string().optional(),
@@ -18,8 +21,8 @@ const accountSettingsSchema = z.object({
 type AccountSettingsSchema = z.infer<typeof accountSettingsSchema>;
 
 const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
+  const [modal, setModalData] = useState<ReactElement | null>(null);
   const queryClient = useQueryClient();
-
   const { data: sessionData } = useSession();
 
   const {
@@ -29,6 +32,23 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
   } = useForm<AccountSettingsSchema>({
     resolver: zodResolver(accountSettingsSchema),
   });
+
+  const getButtonName = () => {
+    //get button element name
+    if (typeof window !== "undefined") {
+      const buttonName = document
+        .getElementById("button")
+        ?.getAttribute("name");
+      if (buttonName === "changeEmail") {
+        return "Email change";
+      }
+
+      if (buttonName === "changeName") {
+        return "Name change";
+      }
+    }
+    return;
+  };
 
   const { mutateAsync, isLoading } = trpc.user.updateUser.useMutation({
     onSuccess: (data) => {
@@ -50,10 +70,18 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
     });
   };
 
-  console.log(sessionData?.user?.email);
+  const { isShowing, toggle } = useModal();
+  const cancelButtonRef = useRef(null);
 
   return (
     <>
+      <Modal
+        isShowing={isShowing}
+        hide={toggle}
+        cancelButtonRef={cancelButtonRef}
+      >
+        Hello
+      </Modal>
       <div className="mx-auto grid max-w-4xl grid-cols-1 gap-2 px-2 sm:grid-cols-12 sm:px-6 md:px-8">
         <div className="col-span-1 sm:col-span-12">
           <h1 className="text-xl font-semibold text-gray-900">
@@ -77,8 +105,12 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
           </h4>
           <p className="w-fit text-gray-500">{sessionData?.user?.name}</p>
           <button
+            id="changeEmail"
             className="w-fit text-sm font-semibold text-indigo-600 hover:underline"
             type="button"
+            onClick={toggle}
+            name="changeName"
+            // data-modal="modal-one"
           >
             change
           </button>
@@ -89,8 +121,11 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
           </h4>
           <p className="w-fit text-gray-500">{sessionData?.user?.email}</p>
           <button
+            id="changeEmail"
             className="w-fit text-sm font-semibold text-indigo-600 hover:underline"
             type="button"
+            onClick={toggle}
+            name="changeEmail"
           >
             change
           </button>

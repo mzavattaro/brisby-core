@@ -32,18 +32,16 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
         hide={toggle}
         cancelButtonRef={cancelButtonRef}
       >
+        <h3 className="text-lg font-medium leading-6 text-gray-900">
+          Delete notice
+        </h3>
         <div>
-          <h3 className="text-lg font-medium leading-6 text-gray-900">
-            Delete notice
-          </h3>
-          <div>
-            <div className="mt-2">
-              <p className="text-sm text-gray-500">
-                Are you sure you want to delete this notice? It will be
-                permanently removed from the noticeboard.{" "}
-                <span className="font-bold">This action cannot be undone.</span>
-              </p>
-            </div>
+          <div className="mt-2">
+            <p className="text-sm text-gray-500">
+              Are you sure you want to delete this notice? It will be
+              permanently removed from the noticeboard.{" "}
+              <span className="font-bold">This action cannot be undone.</span>
+            </p>
           </div>
         </div>
 

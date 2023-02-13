@@ -27,7 +27,7 @@ const Noticeboard: NextPage = () => {
 
   const notices = data?.pages.flatMap((page) => page.notices) ?? [];
   const scrollPosition = useScrollPosition();
-
+  console.log(data);
   useEffect(() => {
     if (scrollPosition > 90 && hasNextPage && !isFetching) {
       fetchNextPage();
