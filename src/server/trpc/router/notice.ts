@@ -47,6 +47,7 @@ export const noticeRouter = router({
 
       const userId = session.user.id;
       const sessionBuildingComplexId = session.user.buildingComplexId;
+      const sessionOrganisationId = session.user.organisationId;
 
       return prisma.notice.create({
         data: {
@@ -69,6 +70,11 @@ export const noticeRouter = router({
               id: sessionBuildingComplexId,
             },
           },
+          organisation: {
+            connect: {
+              id: sessionOrganisationId,
+            },
+          },
         },
       });
     }),
@@ -79,17 +85,17 @@ export const noticeRouter = router({
       z.object({
         limit: z.number().min(1).max(100).default(10),
         cursor: z.string().optional(),
-        buildingComplexId: z.string().optional(),
+        organisationId: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
       const { prisma, session } = ctx;
       const { limit, cursor } = input;
 
-      const sessionBuildingComplexId = session.user.buildingComplexId;
+      const sessionOrganisationId = session.user.organisationId;
 
       const notices = await prisma.notice.findMany({
-        where: { buildingComplexId: sessionBuildingComplexId },
+        where: { organisationId: sessionOrganisationId },
         take: limit + 1,
         orderBy: [{ createdAt: "desc" }],
         cursor: cursor ? { id: cursor } : undefined,

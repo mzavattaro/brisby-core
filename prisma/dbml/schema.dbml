@@ -15,6 +15,7 @@ Table Organisation {
   billing Billing [not null]
   billingId String [not null]
   buildingComplex BuildingComplex [not null]
+  Notice Notice [not null]
 }
 
 Table BuildingComplex {
@@ -67,6 +68,8 @@ Table Notice {
   endDate DateTime
   buildingComplex BuildingComplex
   buildingComplexId String
+  organisation Organisation
+  organisationId String
 }
 
 Table Billing {
@@ -135,6 +138,8 @@ Ref: User.buildingComplexId > BuildingComplex.id
 Ref: Notice.authorId > User.id
 
 Ref: Notice.buildingComplexId > BuildingComplex.id
+
+Ref: Notice.organisationId > Organisation.id
 
 Ref: Account.userId > User.id [delete: Cascade]
 

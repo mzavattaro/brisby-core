@@ -34,6 +34,7 @@ model Organisation {
   billingId       String
   buildingComplex BuildingComplex[]
   // Notice        Notice[]
+  Notice          Notice[]
 
   @@index([billingId])
 }
@@ -98,12 +99,13 @@ model Notice {
   endDate           DateTime?
   buildingComplex   BuildingComplex? @relation(fields: [buildingComplexId], references: [id])
   buildingComplexId String?
-  // organisation      Organisation     @relation(fields: [organisationId], references: [id])
-  // organisationId    String
+  organisation      Organisation?    @relation(fields: [organisationId], references: [id])
+  organisationId    String?
   // @@index([organisationId])
 
   @@index([authorId])
   @@index([buildingComplexId])
+  @@index([organisationId])
 }
 
 model Billing {

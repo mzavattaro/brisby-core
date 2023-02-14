@@ -8,7 +8,7 @@ declare module "next-auth" {
     user?: {
       id: string;
       buildingComplexId?: string;
-      organizationId?: string;
+      organisationId?: string;
     } & DefaultSession["user"];
   }
 }
