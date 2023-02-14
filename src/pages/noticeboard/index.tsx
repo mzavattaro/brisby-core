@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { useSession } from "next-auth/react";
 import { trpc } from "../../utils/trpc";
 import useScrollPosition from "../../utils/useScrollPosition";
 import Header from "../../components/Header";
@@ -26,8 +25,6 @@ const Noticeboard = () => {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
   );
-
-  const { data: sessionData } = useSession();
 
   const notices = data?.pages.flatMap((page) => page.notices) ?? [];
   const scrollPosition = useScrollPosition();
