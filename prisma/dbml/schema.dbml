@@ -29,8 +29,9 @@ Table BuildingComplex {
   state String [not null]
   postcode String [not null]
   notice Notice [not null]
-  organisation Organisation
-  organisationId String
+  organisation Organisation [not null]
+  organisationId String [not null]
+  user User [not null]
 }
 
 Table User {
@@ -45,6 +46,8 @@ Table User {
   notices Notice [not null]
   organisation Organisation
   organisationId String
+  buildingComplex BuildingComplex
+  buildingComplexId String
 }
 
 Table Notice {
@@ -126,6 +129,8 @@ Ref: Organisation.billingId > Billing.id
 Ref: BuildingComplex.organisationId > Organisation.id
 
 Ref: User.organisationId > Organisation.id
+
+Ref: User.buildingComplexId > BuildingComplex.id
 
 Ref: Notice.authorId > User.id
 

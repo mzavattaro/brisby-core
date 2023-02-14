@@ -1,7 +1,7 @@
 // import { Prisma } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { protectedProcedure, publicProcedure, router } from "../trpc";
+import { protectedProcedure, router } from "../trpc";
 import s3 from "../../../utils/s3";
 import cloudFront from "../../../utils/cloudFront";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
@@ -12,20 +12,8 @@ import { CreateInvalidationCommand } from "@aws-sdk/client-cloudfront";
  * It's important to always explicitly say which fields you want to return in order to not leak extra information
  * @see https://github.com/prisma/prisma/issues/9353
  */
-// const defaultNoticeSelect = Prisma.validator<Prisma.NoticeSelect>()({
-//   id: true,
-//   createdAt: true,
-//   updatedAt: true,
-//   title: true,
-//   uploadUrl: true,
-//   size: false,
-//   type: false,
-//   key: false,
-//   name: true,
-//   state: true,
-//   startDate: true,
-//   endDate: true,
-// });
+
+// type BuildingComplexByIdOutput = RouterOutputs["buildingComplex"]["byId"];
 
 export const noticeRouter = router({
   // create /api/notice
@@ -58,6 +46,7 @@ export const noticeRouter = router({
       } = input;
 
       const userId = session.user.id;
+      const sessionBuildingComplexId = session.user.buildingComplexId;
 
       return prisma.notice.create({
         data: {
@@ -75,6 +64,11 @@ export const noticeRouter = router({
               id: userId,
             },
           },
+          buildingComplex: {
+            connect: {
+              id: sessionBuildingComplexId,
+            },
+          },
         },
       });
     }),
@@ -85,18 +79,17 @@ export const noticeRouter = router({
       z.object({
         limit: z.number().min(1).max(100).default(10),
         cursor: z.string().optional(),
-        organisationId: z.string().optional(),
+        buildingComplexId: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
-      const { prisma } = ctx;
-      const { limit, cursor, organisationId } = input;
+      const { prisma, session } = ctx;
+      const { limit, cursor } = input;
+
+      const sessionBuildingComplexId = session.user.buildingComplexId;
+
       const notices = await prisma.notice.findMany({
-        where: {
-          buildingComplex: {
-            organisation: { id: organisationId },
-          },
-        },
+        where: { buildingComplexId: sessionBuildingComplexId },
         take: limit + 1,
         orderBy: [{ createdAt: "desc" }],
         cursor: cursor ? { id: cursor } : undefined,
@@ -105,16 +98,6 @@ export const noticeRouter = router({
             select: {
               id: true,
               name: true,
-              organisation: {
-                select: { id: true, name: true, billing: {} },
-              },
-            },
-          },
-          buildingComplex: {
-            select: {
-              id: true,
-              name: true,
-              organisation: { select: { id: true, name: true } },
             },
           },
         },

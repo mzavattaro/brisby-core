@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { type NextPage } from "next";
+import { useSession } from "next-auth/react";
 import { trpc } from "../../utils/trpc";
 import useScrollPosition from "../../utils/useScrollPosition";
 import Header from "../../components/Header";
@@ -10,7 +10,7 @@ import ToastNofication from "../../components/ToastNotification";
 import useModal from "../../utils/useModal";
 import ScrollVertical from "../../../public/ScrollVertical";
 
-const Noticeboard: NextPage = () => {
+const Noticeboard = () => {
   const {
     data,
     hasNextPage,
@@ -19,15 +19,21 @@ const Noticeboard: NextPage = () => {
     isFetching,
     error,
   } = trpc.notice.list.useInfiniteQuery(
-    { limit: 5 },
+    {
+      limit: 5,
+    },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
   );
 
+  const { data: sessionData } = useSession();
+
   const notices = data?.pages.flatMap((page) => page.notices) ?? [];
   const scrollPosition = useScrollPosition();
-  console.log(data);
+
+  console.log("notices", notices);
+
   useEffect(() => {
     if (scrollPosition > 90 && hasNextPage && !isFetching) {
       fetchNextPage();

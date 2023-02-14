@@ -1,5 +1,4 @@
 import NextAuth, { Theme, type NextAuthOptions } from "next-auth";
-import { DefaultUser } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
@@ -8,26 +7,15 @@ import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db/client";
 import { createTransport } from "nodemailer";
 
-// declare module "next-auth" {
-//   interface Session {
-//     user?: DefaultUser & {
-//       id: string;
-//       email: string;
-//     };
-//   }
-//   interface User extends DefaultUser {
-//     email: string;
-//   }
-// }
-
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
   callbacks: {
     session({ session, user }) {
-      if (session.user) {
+      if (session.user && user && session) {
         session.user.id = user.id;
+        session.user = user;
       }
-      return session;
+      return Promise.resolve(session);
     },
   },
   // Configure one or more authentication providers

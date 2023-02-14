@@ -39,9 +39,9 @@ model Organisation {
 }
 
 model BuildingComplex {
-  id               String        @id @default(cuid())
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
+  id               String       @id @default(cuid())
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
   name             String
   type             String
   totalOccupancies Int
@@ -50,8 +50,9 @@ model BuildingComplex {
   state            String
   postcode         String
   notice           Notice[]
-  organisation     Organisation? @relation(fields: [organisationId], references: [id])
-  organisationId   String?
+  organisation     Organisation @relation(fields: [organisationId], references: [id])
+  organisationId   String
+  user             User[]
   // User             User?    @relation(fields: [userId], references: [id])
   // userId           String?
 
@@ -61,21 +62,23 @@ model BuildingComplex {
 }
 
 model User {
-  id             String        @id @default(cuid())
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  name           String?
-  email          String        @unique
-  emailVerified  DateTime?
-  accounts       Account[]
-  sessions       Session[]
-  notices        Notice[]
-  organisation   Organisation? @relation(fields: [organisationId], references: [id])
-  organisationId String?
-  // buildingComplexes BuildingComplex[]
+  id                String           @id @default(cuid())
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  name              String?
+  email             String           @unique
+  emailVerified     DateTime?
+  accounts          Account[]
+  sessions          Session[]
+  notices           Notice[]
+  organisation      Organisation?    @relation(fields: [organisationId], references: [id])
+  organisationId    String?
+  buildingComplex   BuildingComplex? @relation(fields: [buildingComplexId], references: [id])
+  buildingComplexId String?
 
   @@index([email])
   @@index([organisationId])
+  @@index([buildingComplexId])
 }
 
 model Notice {
