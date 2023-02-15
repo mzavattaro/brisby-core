@@ -37,7 +37,7 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
   const queryClient = useQueryClient();
   const { data: sessionData } = useSession();
 
-  const { data: user } = trpc.user.byId.useQuery({
+  const { data: user, isLoading: isFetching } = trpc.user.byId.useQuery({
     id: sessionData?.user?.id,
   });
 
@@ -253,37 +253,41 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
 
       <div className="mx-auto mt-4 max-w-4xl px-2 sm:px-6 md:px-8">
         <h2 className="text-lg font-semibold">Personal information</h2>
-        <div className="flex flex-col">
-          {/* Name */}
-          <h4 className="w-fit text-left text-sm font-semibold text-gray-900">
-            Name
-          </h4>
-          <p className="w-fit text-gray-500">{user?.name}</p>
-          <button
-            id="changeEmail"
-            className="w-fit text-sm font-semibold text-indigo-600 hover:underline"
-            type="button"
-            onClick={toggleNameModal}
-            name="changeName"
-          >
-            change
-          </button>
+        {isFetching ? (
+          <span>Loading..</span>
+        ) : (
+          <div className="flex flex-col">
+            {/* Name */}
+            <h4 className="w-fit text-left text-sm font-semibold text-gray-900">
+              Name
+            </h4>
+            <p className="w-fit text-gray-500">{user?.name}</p>
+            <button
+              id="changeEmail"
+              className="w-fit text-sm font-semibold text-indigo-600 hover:underline"
+              type="button"
+              onClick={toggleNameModal}
+              name="changeName"
+            >
+              change
+            </button>
 
-          {/* Email */}
-          <h4 className="mt-6 w-fit text-left text-sm font-semibold text-gray-900">
-            Email
-          </h4>
-          <p className="w-fit text-gray-500">{user?.email}</p>
-          <button
-            id="changeEmail"
-            className="w-fit text-sm font-semibold text-indigo-600 hover:underline"
-            type="button"
-            onClick={toggleEmailModal}
-            name="changeEmail"
-          >
-            change
-          </button>
-        </div>
+            {/* Email */}
+            <h4 className="mt-6 w-fit text-left text-sm font-semibold text-gray-900">
+              Email
+            </h4>
+            <p className="w-fit text-gray-500">{user?.email}</p>
+            <button
+              id="changeEmail"
+              className="w-fit text-sm font-semibold text-indigo-600 hover:underline"
+              type="button"
+              onClick={toggleEmailModal}
+              name="changeEmail"
+            >
+              change
+            </button>
+          </div>
+        )}
       </div>
     </>
   );
