@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import SettingsLayout from "../../components/SettingsLayout";
 import type { NextPageWithLayout } from "../_app";
 import { useQueryClient } from "@tanstack/react-query";
-import { trpc } from "../../utils/trpc";
+import { RouterOutputs, trpc } from "../../utils/trpc";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,21 +15,31 @@ import Modal from "../../components/Modal";
 const accountSettingsSchema = z
   .object({
     name: z.string().optional(),
-    email: z.string().email({ message: "Invalid email address" }),
-    confirmEmail: z.string().email({ message: "Invalid email address" }),
+    email: z.string().email({ message: "Invalid email address" }).optional(),
+    confirmEmail: z
+      .string()
+      .email({ message: "Invalid email address" })
+      .optional(),
   })
   .refine((data) => data.email === data.confirmEmail, {
     message: "Emails do not match",
     path: ["confirmEmail"],
   });
 
-type AccountSettingsSchema = z.infer<typeof accountSettingsSchema>;
+type UserByIdOutput = RouterOutputs["user"]["byId"];
+
+type AccountSettingsSchema = z.infer<typeof accountSettingsSchema> &
+  UserByIdOutput;
 
 const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
   const [isShowingEmailModal, setIsShowingEmailModal] = useState(false);
   const [isShowingNameModal, setIsShowingNameModal] = useState(false);
   const queryClient = useQueryClient();
   const { data: sessionData } = useSession();
+
+  const { data: user } = trpc.user.byId.useQuery({
+    id: sessionData?.user?.id,
+  });
 
   const {
     register,
@@ -71,7 +81,6 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
   const onSubmitEmailChange: SubmitHandler<AccountSettingsSchema> = async (
     data
   ) => {
-    console.log(data);
     const { email } = data;
 
     mutateAsync({
@@ -249,7 +258,7 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
           <h4 className="w-fit text-left text-sm font-semibold text-gray-900">
             Name
           </h4>
-          <p className="w-fit text-gray-500">{sessionData?.user?.name}</p>
+          <p className="w-fit text-gray-500">{user?.name}</p>
           <button
             id="changeEmail"
             className="w-fit text-sm font-semibold text-indigo-600 hover:underline"
@@ -264,7 +273,7 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
           <h4 className="mt-6 w-fit text-left text-sm font-semibold text-gray-900">
             Email
           </h4>
-          <p className="w-fit text-gray-500">{sessionData?.user?.email}</p>
+          <p className="w-fit text-gray-500">{user?.email}</p>
           <button
             id="changeEmail"
             className="w-fit text-sm font-semibold text-indigo-600 hover:underline"

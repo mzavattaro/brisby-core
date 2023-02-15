@@ -3,6 +3,27 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 export const userRouter = router({
+  // get user by id /api/user
+  byId: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { prisma } = ctx;
+      const { id } = input;
+
+      const users = await prisma.user.findUniqueOrThrow({
+        where: {
+          id,
+        },
+        select: { name: true, email: true },
+      });
+
+      return users;
+    }),
+
   // update /api/user
   updateUser: protectedProcedure
     .input(

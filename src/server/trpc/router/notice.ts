@@ -8,7 +8,7 @@ import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { CreateInvalidationCommand } from "@aws-sdk/client-cloudfront";
 
 /**
- * Default selector for Post.
+ * Default selector for Notice.
  * It's important to always explicitly say which fields you want to return in order to not leak extra information
  * @see https://github.com/prisma/prisma/issues/9353
  */
@@ -262,7 +262,7 @@ export const noticeRouter = router({
       const { prisma } = ctx;
       const { id } = input;
 
-      const post = await prisma.notice.findUnique({
+      const notice = await prisma.notice.findUnique({
         where: { id },
         select: {
           id: true,
@@ -275,14 +275,14 @@ export const noticeRouter = router({
         },
       });
 
-      if (!post) {
+      if (!notice) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: `No post with id '${id}'`,
+          message: `No notice with id '${id}'`,
         });
       }
 
-      return post;
+      return notice;
     }),
 
   // update /api/notice
