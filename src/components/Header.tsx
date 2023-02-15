@@ -1,11 +1,14 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  Bars3Icon,
+  XMarkIcon,
+  HomeIcon,
+  Cog6ToothIcon,
+} from "@heroicons/react/24/outline";
 import { classNames } from "../utils/classNames";
 import StyledLink from "../components/StyledLink";
-import Home from "../../public/Home";
-import Cog from "../../public/Cog";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -38,7 +41,7 @@ const Header = () => {
 
                 <div className="hidden h-8 w-auto lg:block">
                   <div className="flex h-8 items-center">
-                    <Home />
+                    <HomeIcon className="block h-6 w-6" />
                     <h4 className="text-md ml-2 font-bold ">Kimberly Court</h4>
                   </div>
                 </div>
@@ -106,7 +109,7 @@ const Header = () => {
                 <div>
                   <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                     <span className="sr-only">Open user menu</span>
-                    <Cog />
+                    <Cog6ToothIcon className="block h-6 w-6 text-gray-400" />
                   </Menu.Button>
                 </div>
                 <Transition

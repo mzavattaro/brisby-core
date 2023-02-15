@@ -10,9 +10,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { SubmitHandler } from "react-hook-form";
-import Close from "../../../public/Close";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 import Button from "../../components/Button";
 import StyledLink from "../../components/StyledLink";
 import DatePicker from "react-datepicker";
@@ -122,7 +122,7 @@ const New: NextPage = () => {
           <div className="flex place-content-between items-center">
             <h3 className=" text-xl font-semibold">Upload new strata notice</h3>
             <Link href={"/noticeboard"}>
-              <Close />
+              <XMarkIcon className="h-6 w-6" />
             </Link>
           </div>
           <p className="mt-2 text-base text-gray-500">
