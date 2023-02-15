@@ -11,17 +11,23 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { SubmitHandler } from "react-hook-form";
 import { classNames } from "../../utils/classNames";
 import Modal from "../../components/Modal";
-import useModal from "../../utils/useModal";
 
-const accountSettingsSchema = z.object({
-  name: z.string().optional(),
-  email: z.string().optional(),
-});
+const accountSettingsSchema = z
+  .object({
+    name: z.string().optional(),
+    email: z.string().email({ message: "Invalid email address" }),
+    confirmEmail: z.string().email({ message: "Invalid email address" }),
+  })
+  .refine((data) => data.email === data.confirmEmail, {
+    message: "Emails do not match",
+    path: ["confirmEmail"],
+  });
 
 type AccountSettingsSchema = z.infer<typeof accountSettingsSchema>;
 
 const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
-  const [modal, setModalData] = useState<ReactElement | null>(null);
+  const [isShowingEmailModal, setIsShowingEmailModal] = useState(false);
+  const [isShowingNameModal, setIsShowingNameModal] = useState(false);
   const queryClient = useQueryClient();
   const { data: sessionData } = useSession();
 
@@ -33,21 +39,12 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
     resolver: zodResolver(accountSettingsSchema),
   });
 
-  const getButtonName = () => {
-    //get button element name
-    if (typeof window !== "undefined") {
-      const buttonName = document
-        .getElementById("button")
-        ?.getAttribute("name");
-      if (buttonName === "changeEmail") {
-        return "Email change";
-      }
+  const toggleNameModal = () => {
+    setIsShowingNameModal(!isShowingNameModal);
+  };
 
-      if (buttonName === "changeName") {
-        return "Name change";
-      }
-    }
-    return;
+  const toggleEmailModal = () => {
+    setIsShowingEmailModal(!isShowingEmailModal);
   };
 
   const { mutateAsync, isLoading } = trpc.user.updateUser.useMutation({
@@ -57,30 +54,179 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<AccountSettingsSchema> = async (data) => {
-    console.log(data);
-    const { name, email } = data;
+  const onSubmitNameChange: SubmitHandler<AccountSettingsSchema> = async (
+    data
+  ) => {
+    const { name } = data;
 
     mutateAsync({
       data: {
         name: name,
+      },
+      id: sessionData?.user?.id,
+    });
+    setIsShowingNameModal(!isShowingNameModal);
+  };
+
+  const onSubmitEmailChange: SubmitHandler<AccountSettingsSchema> = async (
+    data
+  ) => {
+    console.log(data);
+    const { email } = data;
+
+    mutateAsync({
+      data: {
         email: email,
       },
       id: sessionData?.user?.id,
     });
+    setIsShowingEmailModal(!isShowingEmailModal);
   };
 
-  const { isShowing, toggle } = useModal();
   const cancelButtonRef = useRef(null);
 
   return (
     <>
+      {/* Name change */}
       <Modal
-        isShowing={isShowing}
-        hide={toggle}
+        isShowing={isShowingNameModal}
+        hide={toggleNameModal}
         cancelButtonRef={cancelButtonRef}
       >
-        Hello
+        <h3 className="text-lg font-medium leading-6 text-gray-900">
+          Change name
+        </h3>
+        <div>
+          <div className="mt-2">
+            <p className="text-sm text-gray-500">Enter your new name.</p>
+            <form onSubmit={handleSubmit(onSubmitNameChange)}>
+              <label
+                className="mt-4 block text-left text-sm font-semibold text-gray-900"
+                htmlFor="Name"
+              >
+                New name
+                <input
+                  id="name"
+                  type="text"
+                  {...register("name")}
+                  autoComplete="name"
+                  className="mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm"
+                />
+              </label>
+              <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+                <button
+                  type="submit"
+                  className={classNames(
+                    "inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm",
+                    isLoading && "cursor-not-allowed opacity-50"
+                  )}
+                  disabled={isLoading}
+                >
+                  {isLoading ? <span>Updating...</span> : <span>Update</span>}
+                </button>
+                <button
+                  type="button"
+                  className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
+                  onClick={toggleNameModal}
+                  ref={cancelButtonRef}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Email change */}
+      <Modal
+        isShowing={isShowingEmailModal}
+        hide={toggleEmailModal}
+        cancelButtonRef={cancelButtonRef}
+      >
+        <h3 className="text-lg font-medium leading-6 text-gray-900">
+          Change email address
+        </h3>
+        <div>
+          <div className="mt-2">
+            <p className="text-sm text-gray-500">
+              Enter your new email address.
+            </p>
+            <form onSubmit={handleSubmit(onSubmitEmailChange)}>
+              <label
+                className="mt-4 block text-left text-sm font-semibold text-gray-900"
+                htmlFor="Email"
+              >
+                New email
+                <input
+                  id="email"
+                  type="email"
+                  {...register("email")}
+                  autoComplete="email"
+                  className={classNames(
+                    "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
+                    errors.email
+                      ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
+                      : "focus:border-blue-600 focus:ring-blue-600"
+                  )}
+                />
+                <div className="absolute max-w-xl">
+                  {errors.email && (
+                    <p className="mt-1 h-10 text-sm font-bold text-rose-500">
+                      {errors.email?.message}
+                    </p>
+                  )}
+                </div>
+              </label>
+
+              {/* Confirm email */}
+              <label
+                className="mt-6 block text-left text-sm font-semibold text-gray-900"
+                htmlFor="Confirm email"
+              >
+                Confirm new email
+                <input
+                  id="confirmEmail"
+                  type="email"
+                  {...register("confirmEmail")}
+                  className={classNames(
+                    "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
+                    errors.confirmEmail
+                      ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
+                      : "focus:border-blue-600 focus:ring-blue-600"
+                  )}
+                />
+                <div className="absolute max-w-xl">
+                  {errors.confirmEmail && (
+                    <p className="mt-1 h-10 text-sm font-bold text-rose-500">
+                      {errors.confirmEmail?.message}
+                    </p>
+                  )}
+                </div>
+              </label>
+              <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+                <button
+                  type="submit"
+                  className={classNames(
+                    "inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm",
+                    isLoading && "cursor-not-allowed opacity-50"
+                  )}
+                  disabled={isLoading}
+                >
+                  {isLoading ? <span>Updating...</span> : <span>Update</span>}
+                </button>
+                <button
+                  type="button"
+                  className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
+                  onClick={toggleEmailModal}
+                  ref={cancelButtonRef}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       </Modal>
       <div className="mx-auto grid max-w-4xl grid-cols-1 gap-2 px-2 sm:grid-cols-12 sm:px-6 md:px-8">
         <div className="col-span-1 sm:col-span-12">
@@ -108,9 +254,8 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
             id="changeEmail"
             className="w-fit text-sm font-semibold text-indigo-600 hover:underline"
             type="button"
-            onClick={toggle}
+            onClick={toggleNameModal}
             name="changeName"
-            // data-modal="modal-one"
           >
             change
           </button>
@@ -124,68 +269,12 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
             id="changeEmail"
             className="w-fit text-sm font-semibold text-indigo-600 hover:underline"
             type="button"
-            onClick={toggle}
+            onClick={toggleEmailModal}
             name="changeEmail"
           >
             change
           </button>
         </div>
-        {/* <form
-          className="grid max-w-7xl grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-12"
-          onSubmit={handleSubmit(onSubmit)}
-        > */}
-        {/* Name
-            <label className="w-full text-left text-sm font-semibold text-gray-900 sm:col-span-6">
-              Name
-              <input
-                className={classNames(
-                  "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
-                )}
-                type="text"
-                id="name"
-                defaultValue={sessionData?.user?.name as string}
-                {...register("name")}
-                autoComplete="name"
-              />
-            </label> */}
-
-        {/* Email address */}
-        {/* <label className="text-left text-sm font-semibold text-gray-900 sm:col-span-12">
-            Email address
-            <input
-              className={classNames(
-                "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
-                errors.email
-                  ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
-                  : "focus:border-blue-600 focus:ring-blue-600"
-              )}
-              type="text"
-              id="email"
-              defaultValue={sessionData?.user?.email as string}
-              {...register("email", { required: true })}
-              autoComplete="email"
-            />
-            <div className="absolute max-w-xl">
-              {errors.email && (
-                <p className="mt-1 h-10 text-sm font-bold text-rose-500">
-                  {errors.email?.message}
-                </p>
-              )}
-            </div>
-          </label> */}
-
-        {/* Save button */}
-        {/* <button
-            disabled={isLoading}
-            className={classNames(
-              "col-span-1 mt-4 flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:col-span-2 sm:col-end-13",
-              isLoading && "cursor-not-allowed opacity-50"
-            )}
-            type="submit"
-          >
-            {isLoading ? <span>Saving...</span> : <span>Save</span>}
-          </button> */}
-        {/* </form> */}
       </div>
     </>
   );

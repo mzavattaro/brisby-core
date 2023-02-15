@@ -91,7 +91,7 @@ const NoticeItem: React.FC<NoticeItem> = ({ notice, toggle }) => {
             </span>
             <div className="flex place-content-between">
               <span className=" truncate text-sm text-gray-500">
-                Michael Zavaavavavavavavaavavavaavvavvava
+                {author?.name}
               </span>
               <DropdownMenu
                 handleDelete={handleDelete}
