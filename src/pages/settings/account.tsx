@@ -36,6 +36,7 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
   const [isShowingNameModal, setIsShowingNameModal] = useState(false);
   const queryClient = useQueryClient();
   const { data: sessionData } = useSession();
+  const cancelButtonRef = useRef(null);
 
   const { data: user, isLoading: isFetching } = trpc.user.byId.useQuery({
     id: sessionData?.user?.id,
@@ -92,8 +93,6 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
     setIsShowingEmailModal(!isShowingEmailModal);
   };
 
-  const cancelButtonRef = useRef(null);
-
   return (
     <>
       {/* Name change */}
@@ -115,11 +114,12 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
               >
                 New name
                 <input
+                  className="mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm"
                   id="name"
                   type="text"
+                  defaultValue={user?.name as string}
                   {...register("name")}
                   autoComplete="name"
-                  className="mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm"
                 />
               </label>
               <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">

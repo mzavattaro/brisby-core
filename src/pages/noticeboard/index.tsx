@@ -10,6 +10,8 @@ import useModal from "../../utils/useModal";
 import ScrollVertical from "../../../public/ScrollVertical";
 
 const Noticeboard = () => {
+  const { isShowing, toggle } = useModal();
+
   const {
     data,
     hasNextPage,
@@ -38,8 +40,6 @@ const Noticeboard = () => {
   }, [scrollPosition, hasNextPage, isFetching, fetchNextPage]);
 
   if (error) return <>`An error has occurred: ${error.message}`</>;
-
-  const { isShowing, toggle } = useModal();
 
   return (
     <Container className="text-gray-900">

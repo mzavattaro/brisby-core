@@ -35,10 +35,48 @@ export const organisationRouter = router({
       });
     }),
 
+  // update /api/organisation
+  update: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().optional(),
+        name: z.string().optional(),
+        streetAddress: z.string().optional(),
+        suburb: z.string().optional(),
+        state: z.string().optional(),
+        postcode: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { prisma, session } = ctx;
+      const { id, name, streetAddress, suburb, state, postcode } = input;
+
+      // const userId = session.user.id;
+
+      await prisma.organisation.findUniqueOrThrow({
+        where: {
+          id,
+        },
+      });
+
+      const organisation = await prisma.organisation.update({
+        where: { id },
+        data: {
+          name,
+          streetAddress,
+          suburb,
+          state,
+          postcode,
+        },
+      });
+      return organisation;
+    }),
+
+  // get organisation by id /api/organisation
   byId: protectedProcedure
     .input(
       z.object({
-        id: z.string(),
+        id: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
@@ -49,8 +87,11 @@ export const organisationRouter = router({
         where: { id },
         select: {
           id: true,
-          createdAt: true,
           name: true,
+          streetAddress: true,
+          suburb: true,
+          state: true,
+          postcode: true,
         },
       });
 
