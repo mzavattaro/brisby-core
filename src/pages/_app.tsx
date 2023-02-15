@@ -6,6 +6,9 @@ import { SessionProvider } from "next-auth/react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { trpc } from "../utils/trpc";
 import "../styles/globals.css";
+import { Inter } from "@next/font/google";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -22,7 +25,13 @@ const MyApp: AppType<{ session: Session | null }> = ({
   const getLayout = Component.getLayout ?? ((page) => page);
   return (
     <SessionProvider session={session}>
-      {getLayout(<Component {...pageProps} />) as unknown as JSX.Element}
+      {
+        getLayout(
+          <main className={inter.className}>
+            <Component {...pageProps} />
+          </main>
+        ) as unknown as JSX.Element
+      }
       <ReactQueryDevtools initialIsOpen={false} />
     </SessionProvider>
   );
