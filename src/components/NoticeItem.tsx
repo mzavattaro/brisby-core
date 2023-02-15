@@ -65,7 +65,7 @@ const NoticeItem: React.FC<NoticeItem> = ({ notice, toggle }) => {
             </div>
           </div>
           <div className="-ml-px flex w-0 flex-1">
-            <div className="indivne-flex relative w-0 flex-1 items-center justify-center rounded-br-lg border border-transparent py-2 text-sm font-medium text-gray-700 hover:text-gray-500">
+            <div className="indivne-flex relative w-0 flex-1 items-center justify-center rounded-br-lg border border-transparent pt-2 text-sm font-medium text-gray-700 hover:text-gray-500">
               <div className="flex flex-col">
                 <span className="text-xs font-bold">End date</span>
                 <span className="text-xs text-gray-400">
@@ -83,18 +83,16 @@ const NoticeItem: React.FC<NoticeItem> = ({ notice, toggle }) => {
             <PdfViewer uploadUrl={uploadUrl} />
           </div>
           <div className="mt-4 border-t px-4 pb-4">
-            <h3 className="divne-clamp-2 mt-3 text-sm font-medium text-gray-900">
+            <h3 className="mt-3 mb-6 text-sm font-medium text-gray-900 line-clamp-2">
               {title}
             </h3>
-            <div className="mt-4 flex items-center">
-              <div className="mt-1 flex flex-grow flex-col justify-between">
-                <h3 className="sr-only">Title</h3>
-                <span className="sr-only">Uploaded by</span>
-                <div className="flex flex-col text-xs">
-                  <span className=" font-bold text-gray-900">Uploaded by</span>
-                  <span className="text-gray-500">{author.id}</span>
-                </div>
-              </div>
+            <span className="text-sm font-semibold text-gray-900">
+              Uploaded by
+            </span>
+            <div className="flex place-content-between">
+              <span className=" truncate text-sm text-gray-500">
+                Michael Zavaavavavavavavaavavavaavvavvava
+              </span>
               <DropdownMenu
                 handleDelete={handleDelete}
                 handlePublishChange={handlePublishChange}
