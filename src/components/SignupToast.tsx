@@ -1,4 +1,4 @@
-import Close from "../../public/Close";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 const SignupToast = () => {
   return (
@@ -6,7 +6,7 @@ const SignupToast = () => {
       <div className="mr-4 flex-auto">
         <span>Sign up here to receive notifications</span>
       </div>
-      <Close />
+      <XMarkIcon className="block h-6 w-6" />
     </div>
   );
 };
