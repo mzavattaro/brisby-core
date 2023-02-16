@@ -59,7 +59,11 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
     setIsShowingEmailModal(!isShowingEmailModal);
   };
 
-  const { mutateAsync, isLoading } = trpc.user.updateUser.useMutation({
+  const {
+    mutateAsync,
+    isLoading,
+    error: apiError,
+  } = trpc.user.updateUser.useMutation({
     onSuccess: async (data) => {
       queryClient.setQueryData([["user"], data.id], data);
 
@@ -227,6 +231,13 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
                   {errors.confirmEmail && (
                     <p className="mt-1 h-10 text-sm font-bold text-rose-500">
                       {errors.confirmEmail?.message}
+                    </p>
+                  )}
+                </div>
+                <div className="absolute max-w-xl">
+                  {apiError && (
+                    <p className="mt-1 h-10 text-sm font-bold text-rose-500">
+                      An account with that email already exists
                     </p>
                   )}
                 </div>
