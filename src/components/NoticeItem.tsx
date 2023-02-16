@@ -92,7 +92,7 @@ const NoticeItem: React.FC<NoticeItem> = ({ notice, toggle }) => {
           <Tag status={status}>{status?.toUpperCase()}</Tag>
         </div>
         <div className="relative flex flex-1 flex-col">
-          <div className="flex-shrink-0">
+          <div className="aspect-[1/1.414] flex-shrink-0">
             <PdfViewer uploadUrl={uploadUrl} />
           </div>
           <div className="mt-4 border-t px-4 pb-4">

@@ -15,7 +15,7 @@ const PdfViewer: FC<PdfViewer> = ({ uploadUrl }) => {
       for (let i = 0; i < canvas.length; i++) {
         canvas[i]?.classList.replace("hidden", "block");
       }
-    }, 40);
+    }, 70);
   };
 
   return (
@@ -27,7 +27,7 @@ const PdfViewer: FC<PdfViewer> = ({ uploadUrl }) => {
           renderAnnotationLayer={false}
           pageIndex={0}
           renderMode="canvas"
-          className="hidden"
+          className="hidden aspect-[1/1.414]"
           onRenderSuccess={() => {
             displayCanvas();
           }}
