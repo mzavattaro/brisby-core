@@ -19,7 +19,13 @@ export const userRouter = router({
         where: {
           id: userId,
         },
-        select: { name: true, email: true },
+        select: {
+          name: true,
+          email: true,
+          organisation: {
+            select: { name: true },
+          },
+        },
       });
 
       return users;

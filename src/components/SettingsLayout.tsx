@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
 import type { ReactNode, FC } from "react";
 import { Fragment, useState } from "react";
+import { trpc } from "../utils/trpc";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { classNames } from "../utils/classNames";
@@ -51,6 +52,10 @@ const SettingsLayout: FC<SetttingsLayout> = ({ children }) => {
   const { data: sessionData } = useSession();
   const router = useRouter();
   const { asPath } = router;
+
+  const { data: user, isLoading } = trpc.user.byId.useQuery({
+    id: sessionData?.user?.id,
+  });
 
   return (
     <>
@@ -149,15 +154,18 @@ const SettingsLayout: FC<SetttingsLayout> = ({ children }) => {
                     </nav>
                   </div>
                   <div className="flex flex-shrink-0 border-t border-gray-200 p-4">
-                    <div>
-                      <p className=" text-sm font-medium text-gray-900 group-hover:text-gray-900">
-                        Signed in as
-                      </p>
-                      <p className="text-base font-semibold text-gray-900 group-hover:text-gray-700">
-                        {/* CHANGE */}
-                        {sessionData?.user?.name || sessionData?.user?.email}
-                      </p>
-                    </div>
+                    {isLoading ? (
+                      <span>Loading...</span>
+                    ) : (
+                      <div>
+                        <p className=" text-sm font-medium text-gray-900 group-hover:text-gray-900">
+                          {user?.organisation?.name}
+                        </p>
+                        <p className="text-base font-semibold text-gray-900 group-hover:text-gray-700">
+                          {user?.name || user?.email}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
@@ -214,13 +222,18 @@ const SettingsLayout: FC<SetttingsLayout> = ({ children }) => {
             </div>
             <div className="flex flex-shrink-0 border-t border-gray-200 p-4">
               <div className="group block w-full flex-shrink-0">
-                <p className=" text-sm font-medium text-gray-900 group-hover:text-gray-900">
-                  Signed in as
-                </p>
-                <p className="text-base font-semibold text-gray-900 group-hover:text-gray-700">
-                  {/* CHANGE */}
-                  {sessionData?.user?.name || sessionData?.user?.email}
-                </p>
+                {isLoading ? (
+                  <span>Loading...</span>
+                ) : (
+                  <>
+                    <p className=" text-sm font-medium text-gray-900 group-hover:text-gray-900">
+                      {user?.organisation?.name}
+                    </p>
+                    <p className="text-base font-semibold text-gray-900 group-hover:text-gray-700">
+                      {user?.name || user?.email}
+                    </p>
+                  </>
+                )}
               </div>
             </div>
           </div>
