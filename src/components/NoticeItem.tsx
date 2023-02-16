@@ -43,7 +43,7 @@ const NoticeItem: React.FC<NoticeItem> = ({ notice, toggle }) => {
           console.log(error.message);
         }
       }
-      setTimeout(toggle, 220);
+      toggle();
     },
     onError: (error) => {
       console.log(error);
