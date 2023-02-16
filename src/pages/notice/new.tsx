@@ -35,8 +35,8 @@ const noticeSchema = z.object({
   fileList: typeof window === "undefined" ? z.any() : z.instanceof(FileList),
   fileName: z.string().optional(),
   status: z.string().optional(),
-  startDate: z.date().optional(),
-  endDate: z.date().optional(),
+  startDate: z.date().nullable().optional(),
+  endDate: z.date().nullable().optional(),
 });
 
 type NoticeSchema = z.infer<typeof noticeSchema>;
@@ -67,8 +67,10 @@ async function uploadToS3(data: FileList) {
 
 const New: NextPage = () => {
   const [selected, setSelected] = useState(publishingOptions[0]);
-  const [startDate, setStartDate] = useState<Date | null>(new Date());
-  const [endDate, setEndDate] = useState<Date | null>(new Date());
+  const [startDate, setStartDate] = useState<Date | null | undefined>(
+    new Date()
+  );
+  const [endDate, setEndDate] = useState<Date | null | undefined>(new Date());
   const [fileName, setFileName] = useState<string>("");
   const [fileSize, setFileSize] = useState<number>(0);
 
@@ -121,8 +123,8 @@ const New: NextPage = () => {
     const payload = {
       title: data.title,
       status: selected?.status,
-      startDate: data.startDate,
-      endDate: data.endDate,
+      startDate: startDate,
+      endDate: endDate,
       uploadUrl: transformedData.uploadUrl,
       key: transformedData?.key,
       fileName: transformedData?.fileName,

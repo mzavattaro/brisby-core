@@ -27,8 +27,8 @@ export const noticeRouter = router({
         fileType: z.string().optional(),
         key: z.string().optional(),
         status: z.string().optional(),
-        startDate: z.date().optional(),
-        endDate: z.date().optional(),
+        startDate: z.date().nullable().optional(),
+        endDate: z.date().nullable().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
