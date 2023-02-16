@@ -11,5 +11,5 @@
 }
 
 .react-pdf__Page__canvas {
-  @apply relative block h-full w-full !important;
+  @apply relative h-full w-full bg-white !important;
 }
