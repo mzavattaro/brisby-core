@@ -281,7 +281,7 @@ export const noticeRouter = router({
       const { prisma } = ctx;
       const { id } = input;
 
-      const notice = await prisma.notice.findUnique({
+      const notice = await prisma.notice.findUniqueOrThrow({
         where: { id },
         select: {
           id: true,
@@ -293,13 +293,6 @@ export const noticeRouter = router({
           fileName: true,
         },
       });
-
-      if (!notice) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: `No notice with id '${id}'`,
-        });
-      }
 
       return notice;
     }),
@@ -318,16 +311,9 @@ export const noticeRouter = router({
       const { prisma } = ctx;
       const { id, data } = input;
 
-      const notices = await prisma.notice.findUnique({
+      await prisma.notice.findUniqueOrThrow({
         where: { id },
       });
-
-      if (!notices) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Notice not found!",
-        });
-      }
 
       const notice = await prisma.notice.update({
         where: {

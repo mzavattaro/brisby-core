@@ -1,5 +1,5 @@
 import { useSession } from "next-auth/react";
-import type { ReactNode } from "react";
+import type { ReactNode, FC } from "react";
 import { Fragment, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -46,7 +46,7 @@ const navigation = [
   },
 ];
 
-const SettingsLayout: React.FC<SetttingsLayout> = ({ children }) => {
+const SettingsLayout: FC<SetttingsLayout> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { data: sessionData } = useSession();
   const router = useRouter();

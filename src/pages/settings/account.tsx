@@ -60,9 +60,14 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
   };
 
   const { mutateAsync, isLoading } = trpc.user.updateUser.useMutation({
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       queryClient.setQueryData([["user"], data.id], data);
-      void queryClient.invalidateQueries();
+
+      try {
+        await queryClient.invalidateQueries();
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
 
@@ -71,13 +76,16 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
   ) => {
     const { name } = data;
 
-    await mutateAsync({
-      data: {
-        name: name,
-      },
-      id: sessionData?.user?.id,
-    });
-    setIsShowingNameModal(!isShowingNameModal);
+    try {
+      await mutateAsync({
+        data: {
+          name: name,
+        },
+      });
+      setIsShowingNameModal(!isShowingNameModal);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onSubmitEmailChange: SubmitHandler<AccountSettingsSchema> = async (
@@ -90,12 +98,11 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
         data: {
           email: email,
         },
-        id: sessionData?.user?.id,
       });
+      setIsShowingEmailModal(!isShowingEmailModal);
     } catch (error) {
       console.log(error);
     }
-    setIsShowingEmailModal(!isShowingEmailModal);
   };
 
   return (

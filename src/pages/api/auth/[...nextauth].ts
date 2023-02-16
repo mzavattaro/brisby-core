@@ -1,5 +1,5 @@
 import type { Theme } from "next-auth";
-import NextAuth, { type NextAuthOptions } from "next-auth";
+import NextAuth, { type NextAuthOptions, type DefaultSession } from "next-auth";
 import type { SendVerificationRequestParams } from "next-auth/providers/email";
 import EmailProvider from "next-auth/providers/email";
 
@@ -9,15 +9,33 @@ import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db/client";
 import { createTransport } from "nodemailer";
 
+declare module "next-auth" {
+  interface Session extends DefaultSession {
+    user: {
+      id: string;
+      // ...other properties
+      buildingComplexId?: string;
+      organisationId?: string;
+    } & DefaultSession["user"];
+  }
+
+  interface User {
+    // ...other properties
+    buildingComplexId?: string;
+    organisationId?: string;
+  }
+}
+
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
   callbacks: {
     session({ session, user }) {
-      if (session.user && user && session) {
+      if (session.user) {
         session.user.id = user.id;
-        session.user = user;
+        session.user.buildingComplexId = user.buildingComplexId;
+        session.user.organisationId = user.organisationId;
       }
-      return Promise.resolve(session);
+      return session;
     },
   },
   // Configure one or more authentication providers

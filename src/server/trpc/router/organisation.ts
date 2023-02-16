@@ -48,19 +48,19 @@ export const organisationRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { prisma } = ctx;
-      const { id, name, streetAddress, suburb, state, postcode } = input;
+      const { prisma, session } = ctx;
+      const { name, streetAddress, suburb, state, postcode } = input;
 
-      // const userId = session.user.id;
+      const organisationId = session.user.organisationId;
 
       await prisma.organisation.findUniqueOrThrow({
         where: {
-          id,
+          id: organisationId,
         },
       });
 
       const organisation = await prisma.organisation.update({
-        where: { id },
+        where: { id: organisationId },
         data: {
           name,
           streetAddress,

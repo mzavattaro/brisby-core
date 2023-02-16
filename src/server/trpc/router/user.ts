@@ -10,13 +10,14 @@ export const userRouter = router({
         id: z.string().optional(),
       })
     )
-    .query(async ({ ctx, input }) => {
-      const { prisma } = ctx;
-      const { id } = input;
+    .query(async ({ ctx }) => {
+      const { prisma, session } = ctx;
+
+      const userId = session.user.id;
 
       const users = await prisma.user.findUniqueOrThrow({
         where: {
-          id,
+          id: userId,
         },
         select: { name: true, email: true },
       });

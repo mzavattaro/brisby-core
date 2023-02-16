@@ -185,7 +185,6 @@ const NewUser: React.FC<NewCommunitySchema> = () => {
           <div className="absolute max-w-xl">
             {errors.streetAddress && (
               <p className="mt-1 h-10 text-sm font-bold text-rose-500">
-                {" "}
                 {errors.streetAddress?.message}
               </p>
             )}
@@ -229,14 +228,13 @@ const NewUser: React.FC<NewCommunitySchema> = () => {
             id="state"
             {...register("state", { required: true })}
           >
-            <option value="australian capital terriorty">ACT</option>
-            <option value="new south wales">NSW</option>
-            <option value="northern territory">NT</option>
-            <option value="queensland">QLD</option>
-            <option value="south australia">SA</option>
-            <option value="tasmania">TAS</option>
-            <option value="victoria">VIC</option>
-            <option value="western australia">WA</option>
+            {["ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"].map(
+              (state) => (
+                <option key={state} value={state}>
+                  {state}
+                </option>
+              )
+            )}
           </select>
         </label>
 
@@ -258,7 +256,6 @@ const NewUser: React.FC<NewCommunitySchema> = () => {
           <div className="absolute max-w-xl">
             {errors.postcode && (
               <p className="mt-1 h-10 text-sm font-bold text-rose-500">
-                {" "}
                 {errors.postcode?.message}
               </p>
             )}

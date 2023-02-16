@@ -30,6 +30,8 @@ type OrganisationSettingsSchema = z.infer<typeof organisationSettingsSchema> &
 const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
   const { data: sessionData } = useSession();
   const queryClient = useQueryClient();
+  const { isShowing, toggle } = useModal();
+  const cancelButtonRef = useRef(null);
 
   const { data: organisation, isLoading: isFetching } =
     trpc.organisation.byId.useQuery({
@@ -39,6 +41,7 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
   const { mutateAsync, isLoading } = trpc.organisation.update.useMutation({
     onSuccess: async (data) => {
       queryClient.setQueryData([["organisation"], data.id], data);
+
       try {
         await queryClient.invalidateQueries();
       } catch (error) {
@@ -58,9 +61,6 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
     resolver: zodResolver(organisationSettingsSchema),
   });
 
-  const { isShowing, toggle } = useModal();
-  const cancelButtonRef = useRef(null);
-
   const onSubmit: SubmitHandler<OrganisationSettingsSchema> = async (data) => {
     const { streetAddress, suburb, state, postcode, name } = data;
 
@@ -71,7 +71,7 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
         suburb: suburb,
         state: state,
         postcode: postcode,
-        id: sessionData?.user?.organisationId,
+        // id: sessionData?.user?.organisationId,
       });
     } catch (error) {
       if (error instanceof Error) {
