@@ -277,11 +277,11 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
             </div>
 
             <button
-              id="changeEmail"
+              id="changeOrganisation"
               className="w-fit text-sm font-semibold text-indigo-600 hover:underline"
               type="button"
               onClick={toggle}
-              name="changeName"
+              name="changeOrganisation"
             >
               change
             </button>
