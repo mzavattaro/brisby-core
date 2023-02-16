@@ -40,14 +40,14 @@ const Header = () => {
             </div>
             <div className="flex flex-1 items-center justify-center sm:flex-none sm:items-stretch sm:justify-start">
               <div className="flex flex-shrink-0 items-center">
-                <h4 className="block w-auto text-sm font-bold lg:hidden">
+                <h4 className="block w-auto text-sm font-semibold lg:hidden">
                   {user?.buildingComplex?.name || ""}
                 </h4>
 
                 <div className="hidden h-8 w-auto lg:block">
                   <div className="flex h-8 items-center">
                     <HomeIcon className="block h-6 w-6" />
-                    <h4 className="text-md ml-2 font-bold ">
+                    <h4 className="text-md ml-2 font-semibold ">
                       {user?.buildingComplex?.name || ""}
                     </h4>
                   </div>
