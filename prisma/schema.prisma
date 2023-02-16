@@ -33,7 +33,6 @@ model Organisation {
   billing         Billing?          @relation(fields: [billingId], references: [id])
   billingId       String?
   buildingComplex BuildingComplex[]
-  // Notice        Notice[]
   Notice          Notice[]
 
   @@index([billingId])
@@ -101,7 +100,6 @@ model Notice {
   buildingComplexId String?
   organisation      Organisation?    @relation(fields: [organisationId], references: [id])
   organisationId    String?
-  // @@index([organisationId])
 
   @@index([authorId])
   @@index([buildingComplexId])
