@@ -12,8 +12,8 @@ Table Organisation {
   state String
   postcode String
   users User [not null]
-  billing Billing [not null]
-  billingId String [not null]
+  billing Billing
+  billingId String
   buildingComplex BuildingComplex [not null]
   Notice Notice [not null]
 }

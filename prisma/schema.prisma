@@ -30,8 +30,8 @@ model Organisation {
   state           String?
   postcode        String?
   users           User[]
-  billing         Billing           @relation(fields: [billingId], references: [id])
-  billingId       String
+  billing         Billing?          @relation(fields: [billingId], references: [id])
+  billingId       String?
   buildingComplex BuildingComplex[]
   // Notice        Notice[]
   Notice          Notice[]

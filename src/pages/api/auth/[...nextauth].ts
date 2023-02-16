@@ -1,4 +1,6 @@
-import NextAuth, { Theme, type NextAuthOptions } from "next-auth";
+import type { Theme } from "next-auth";
+import NextAuth, { type NextAuthOptions } from "next-auth";
+import type { SendVerificationRequestParams } from "next-auth/providers/email";
 import EmailProvider from "next-auth/providers/email";
 
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
@@ -31,7 +33,7 @@ export const authOptions: NextAuthOptions = {
         },
       },
       from: "no-reply@getbrisby.com",
-      sendVerificationRequest: sendVerificationRequest,
+      sendVerificationRequest,
       maxAge: 10 * 60, // Magic links are valid for 10 min only
     }),
     // ...add more providers here
@@ -46,12 +48,7 @@ export const authOptions: NextAuthOptions = {
 
 export default NextAuth(authOptions);
 
-async function sendVerificationRequest(params: {
-  identifier: any;
-  url: any;
-  provider: any;
-  theme: any;
-}) {
+async function sendVerificationRequest(params: SendVerificationRequestParams) {
   const { identifier, url, provider, theme } = params;
   const { host } = new URL(url);
   // NOTE: You are not required to use `nodemailer`, use whatever you want.

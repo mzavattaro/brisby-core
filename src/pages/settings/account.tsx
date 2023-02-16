@@ -4,7 +4,8 @@ import { useSession } from "next-auth/react";
 import SettingsLayout from "../../components/SettingsLayout";
 import type { NextPageWithLayout } from "../_app";
 import { useQueryClient } from "@tanstack/react-query";
-import { RouterOutputs, trpc } from "../../utils/trpc";
+import type { RouterOutputs } from "../../utils/trpc";
+import { trpc } from "../../utils/trpc";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -61,7 +62,7 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
   const { mutateAsync, isLoading } = trpc.user.updateUser.useMutation({
     onSuccess: (data) => {
       queryClient.setQueryData([["user"], data.id], data);
-      queryClient.invalidateQueries();
+      void queryClient.invalidateQueries();
     },
   });
 
@@ -70,7 +71,7 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
   ) => {
     const { name } = data;
 
-    mutateAsync({
+    await mutateAsync({
       data: {
         name: name,
       },
@@ -84,11 +85,13 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
   ) => {
     const { email } = data;
 
-    mutateAsync({
+    await mutateAsync({
       data: {
         email: email,
       },
       id: sessionData?.user?.id,
+    }).catch((err) => {
+      console.log(err);
     });
     setIsShowingEmailModal(!isShowingEmailModal);
   };

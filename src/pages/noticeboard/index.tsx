@@ -35,7 +35,7 @@ const Noticeboard = () => {
 
   useEffect(() => {
     if (scrollPosition > 90 && hasNextPage && !isFetching) {
-      fetchNextPage();
+      fetchNextPage().catch(console.error);
     }
   }, [scrollPosition, hasNextPage, isFetching, fetchNextPage]);
 
@@ -66,7 +66,7 @@ const Noticeboard = () => {
         </GridLayout>
       ) : (
         <div className="mt-20 flex flex-col items-center justify-center font-bold text-slate-300">
-          <span>You don't have any notices!</span>
+          <span>You do not have any notices!</span>
         </div>
       )}
 

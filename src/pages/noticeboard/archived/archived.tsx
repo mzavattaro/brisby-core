@@ -11,6 +11,9 @@ import useModal from "../../../utils/useModal";
 import ScrollVertical from "../../../../public/ScrollVertical";
 
 const Archived: NextPage = () => {
+  const scrollPosition = useScrollPosition();
+  const { isShowing, toggle } = useModal();
+
   const {
     data,
     hasNextPage,
@@ -26,17 +29,14 @@ const Archived: NextPage = () => {
   );
 
   const notices = data?.pages.flatMap((page) => page.notices) ?? [];
-  const scrollPosition = useScrollPosition();
 
   useEffect(() => {
     if (scrollPosition > 90 && hasNextPage && !isFetching) {
-      fetchNextPage();
+      fetchNextPage().catch(console.error);
     }
   }, [scrollPosition, hasNextPage, isFetching, fetchNextPage]);
 
   if (error) return <>`An error has occurred: ${error.message}`</>;
-
-  const { isShowing, toggle } = useModal();
 
   return (
     <Container className="text-gray-900">
@@ -63,7 +63,7 @@ const Archived: NextPage = () => {
         </GridLayout>
       ) : (
         <div className="mt-20 flex flex-col items-center justify-center font-bold text-slate-300">
-          <span>You don't have any notices!</span>
+          <span>You don&apos;t have any notices!</span>
         </div>
       )}
 

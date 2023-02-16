@@ -1,7 +1,7 @@
 // import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
-import { userSession } from "../../../utils/userSession";
+import { UserSession } from "../../../utils/userSession";
 
 export const buildingComplexRouter = router({
   // get single /api/buildingComplex by id
@@ -15,7 +15,7 @@ export const buildingComplexRouter = router({
       const { prisma } = ctx;
       const { id } = input;
 
-      const buildingComplexId = userSession()?.buildingComplexId;
+      const buildingComplexId = UserSession()?.buildingComplexId;
 
       const buildingComplex = await prisma.buildingComplex.findUniqueOrThrow({
         where: { id: buildingComplexId },

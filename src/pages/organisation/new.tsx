@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import { useQueryClient } from "@tanstack/react-query";
 import { trpc } from "../../utils/trpc";
 import { useForm } from "react-hook-form";
@@ -27,9 +27,15 @@ const Organisation: NextPage = () => {
   const router = useRouter();
 
   const { mutateAsync, isLoading } = trpc.organisation.create.useMutation({
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       queryClient.setQueryData([["organisation"], data.id], data);
-      queryClient.invalidateQueries();
+      try {
+        await queryClient.invalidateQueries();
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log(error.message);
+        }
+      }
     },
   });
 
@@ -37,15 +43,23 @@ const Organisation: NextPage = () => {
     const { name } = data;
 
     try {
-      await organisationSchema.parse(data);
+      organisationSchema.parse(data);
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message);
       }
       return;
     }
-    mutateAsync({ name: name });
-    router.push("/noticeboard");
+
+    try {
+      await mutateAsync({ name: name });
+      await router.push("/noticeboard");
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+      return;
+    }
   };
 
   return (
@@ -54,7 +68,7 @@ const Organisation: NextPage = () => {
         <h4>Step 2 of 2</h4>
         <h4 className="text-3xl font-bold text-gray-900">Brisby</h4>
         <h2 className="mt-6 text-center text-4xl font-extrabold text-gray-900">
-          Let’s setup your company or organisation
+          Setup your company or organisation
         </h2>
         <p className="mt-2 text-lg text-gray-900">
           You can change these later in your <b>organisation settings</b>

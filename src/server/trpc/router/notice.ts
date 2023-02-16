@@ -20,7 +20,7 @@ export const noticeRouter = router({
   create: protectedProcedure
     .input(
       z.object({
-        title: z.string().min(1, { message: "Title is required" }),
+        title: z.string(),
         uploadUrl: z.string(),
         fileName: z.string().optional(),
         fileSize: z.number().optional(),
@@ -109,15 +109,19 @@ export const noticeRouter = router({
         },
       });
 
-      for (let notice of notices) {
-        const url = "https://d1ve2d1xbf677h.cloudfront.net/" + notice.key;
-        notice.uploadUrl = url;
+      for (const notice of notices) {
+        if (!notice.key) {
+          console.log("Notice key is undefined");
+        } else {
+          const url = `https://d1ve2d1xbf677h.cloudfront.net/${notice.key}`;
+          notice.uploadUrl = url;
+        }
       }
 
       let nextCursor: typeof cursor | undefined = undefined;
       if (notices.length > limit) {
-        const nextItem = notices.pop() as (typeof notices)[number];
-        nextCursor = nextItem.id;
+        const nextItem = notices.pop();
+        nextCursor = nextItem?.id;
       }
 
       return {
@@ -146,20 +150,25 @@ export const noticeRouter = router({
           author: {
             select: {
               id: true,
+              name: true,
             },
           },
         },
       });
 
-      for (let notice of notices) {
-        const url = "https://d1ve2d1xbf677h.cloudfront.net/" + notice.key;
-        notice.uploadUrl = url;
+      for (const notice of notices) {
+        if (!notice.key) {
+          console.log("Notice key is undefined");
+        } else {
+          const url = `https://d1ve2d1xbf677h.cloudfront.net/${notice.key}`;
+          notice.uploadUrl = url;
+        }
       }
 
       let nextCursor: typeof cursor | undefined = undefined;
       if (notices.length > limit) {
-        const nextItem = notices.pop() as (typeof notices)[number];
-        nextCursor = nextItem.id;
+        const nextItem = notices.pop();
+        nextCursor = nextItem?.id;
       }
 
       return {
@@ -188,20 +197,25 @@ export const noticeRouter = router({
           author: {
             select: {
               id: true,
+              name: true,
             },
           },
         },
       });
 
-      for (let notice of notices) {
-        const url = "https://d1ve2d1xbf677h.cloudfront.net/" + notice.key;
-        notice.uploadUrl = url;
+      for (const notice of notices) {
+        if (!notice.key) {
+          console.log("Notice key is undefined");
+        } else {
+          const url = `https://d1ve2d1xbf677h.cloudfront.net/${notice.key}`;
+          notice.uploadUrl = url;
+        }
       }
 
       let nextCursor: typeof cursor | undefined = undefined;
       if (notices.length > limit) {
-        const nextItem = notices.pop() as (typeof notices)[number];
-        nextCursor = nextItem.id;
+        const nextItem = notices.pop();
+        nextCursor = nextItem?.id;
       }
 
       return {
@@ -229,20 +243,25 @@ export const noticeRouter = router({
           author: {
             select: {
               id: true,
+              name: true,
             },
           },
         },
       });
 
-      for (let notice of notices) {
-        const url = "https://d1ve2d1xbf677h.cloudfront.net/" + notice.key;
-        notice.uploadUrl = url;
+      for (const notice of notices) {
+        if (!notice.key) {
+          console.log("Notice key is undefined");
+        } else {
+          const url = `https://d1ve2d1xbf677h.cloudfront.net/${notice.key}`;
+          notice.uploadUrl = url;
+        }
       }
 
       let nextCursor: typeof cursor | undefined = undefined;
       if (notices.length > limit) {
-        const nextItem = notices.pop() as (typeof notices)[number];
-        nextCursor = nextItem.id;
+        const nextItem = notices.pop();
+        nextCursor = nextItem?.id;
       }
 
       return {
@@ -343,6 +362,8 @@ export const noticeRouter = router({
       // Delete from s3 bucket
       await s3.send(new DeleteObjectCommand(params));
 
+      const noticeskey = notices.key as string;
+
       // Invalidate the CloudFront cache
       const invalidationParams = {
         DistributionId: process.env.AWS_CLOUDFRONT_DISTRIBUTION_ID,
@@ -350,7 +371,7 @@ export const noticeRouter = router({
           CallerReference: notices.key as string,
           Paths: {
             Quantity: 1,
-            Items: [`/${notices.key}`],
+            Items: [`/${noticeskey}`],
           },
         },
       };

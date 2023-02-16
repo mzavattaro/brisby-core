@@ -1,4 +1,5 @@
-import { RouterOutputs, trpc } from "../utils/trpc";
+import type { RouterOutputs } from "../utils/trpc";
+import { trpc } from "../utils/trpc";
 import dayjs from "dayjs";
 import PdfViewer from "./PdfViewer";
 import DropdownMenu from "./DropdownMenu";
@@ -16,20 +17,28 @@ const NoticeItem: React.FC<NoticeItem> = ({ notice, toggle }) => {
   const queryClient = useQueryClient();
 
   const deleteMutation = trpc.notice.delete.useMutation({
-    onSuccess: () => {
-      queryClient.invalidateQueries();
+    onSuccess: async () => {
+      try {
+        await queryClient.invalidateQueries();
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
 
   const deleteMutationLoadingState = deleteMutation.isLoading;
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     deleteMutation.mutate(id);
   };
 
   const updateMutation = trpc.notice.updateStatus.useMutation({
-    onSuccess: () => {
-      queryClient.invalidateQueries();
+    onSuccess: async () => {
+      try {
+        await queryClient.invalidateQueries();
+      } catch (error) {
+        console.log(error);
+      }
       setTimeout(toggle, 220);
     },
     onError: (error) => {
@@ -37,12 +46,12 @@ const NoticeItem: React.FC<NoticeItem> = ({ notice, toggle }) => {
     },
   });
 
-  const handlePublishChange = async () => {
+  const handlePublishChange = () => {
     const status = "published";
     updateMutation.mutate({ data: { status: status }, id: id });
   };
 
-  const handleDraftChange = async () => {
+  const handleDraftChange = () => {
     const status = "draft";
     updateMutation.mutate({ data: { status: status }, id: id });
   };

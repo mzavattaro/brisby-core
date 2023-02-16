@@ -154,6 +154,7 @@ const SettingsLayout: React.FC<SetttingsLayout> = ({ children }) => {
                         Signed in as
                       </p>
                       <p className="text-base font-semibold text-gray-900 group-hover:text-gray-700">
+                        {/* CHANGE */}
                         {sessionData?.user?.name || sessionData?.user?.email}
                       </p>
                     </div>
@@ -217,6 +218,7 @@ const SettingsLayout: React.FC<SetttingsLayout> = ({ children }) => {
                   Signed in as
                 </p>
                 <p className="text-base font-semibold text-gray-900 group-hover:text-gray-700">
+                  {/* CHANGE */}
                   {sessionData?.user?.name || sessionData?.user?.email}
                 </p>
               </div>

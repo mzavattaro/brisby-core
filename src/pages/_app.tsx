@@ -1,5 +1,4 @@
 import type { ReactElement, ReactNode } from "react";
-import { type AppType, AppProps } from "next/app";
 import type { NextPage } from "next";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
@@ -10,28 +9,29 @@ import { Inter } from "@next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
-type AppPropsWithLayout = AppProps & {
+type AppPropsWithLayout = {
   Component: NextPageWithLayout;
+  pageProps: {
+    session: Session | null;
+  };
 };
 
-const MyApp: AppType<{ session: Session | null }> = ({
+const MyApp: React.FC<AppPropsWithLayout> = ({
   Component,
   pageProps: { session, ...pageProps },
-}: AppPropsWithLayout) => {
+}) => {
   const getLayout = Component.getLayout ?? ((page) => page);
   return (
     <SessionProvider session={session}>
-      {
-        getLayout(
-          <main className={inter.className}>
-            <Component {...pageProps} />
-          </main>
-        ) as unknown as JSX.Element
-      }
+      {getLayout(
+        <main className={inter.className}>
+          <Component {...pageProps} />
+        </main>
+      )}
       <ReactQueryDevtools initialIsOpen={false} />
     </SessionProvider>
   );

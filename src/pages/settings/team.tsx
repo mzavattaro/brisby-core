@@ -23,7 +23,7 @@ const Team: NextPageWithLayout<TeamSchema> = () => {
     resolver: zodResolver(teamSchema),
   });
 
-  const onSubmit: SubmitHandler<TeamSchema> = async (data) => {
+  const onSubmit: SubmitHandler<TeamSchema> = (data) => {
     console.log(data);
   };
 

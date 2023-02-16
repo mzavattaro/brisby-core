@@ -4,7 +4,8 @@ import { useRef } from "react";
 import type { ReactElement } from "react";
 import type { NextPageWithLayout } from "../_app";
 import { useQueryClient } from "@tanstack/react-query";
-import { RouterOutputs, trpc } from "../../utils/trpc";
+import type { RouterOutputs } from "../../utils/trpc";
+import { trpc } from "../../utils/trpc";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,9 +37,15 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
     });
 
   const { mutateAsync, isLoading } = trpc.organisation.update.useMutation({
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       queryClient.setQueryData([["organisation"], data.id], data);
-      queryClient.invalidateQueries();
+      try {
+        await queryClient.invalidateQueries();
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log(error.message);
+        }
+      }
       toggle();
     },
   });
@@ -46,7 +53,7 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting }, // FINISH
   } = useForm<OrganisationSettingsSchema>({
     resolver: zodResolver(organisationSettingsSchema),
   });
@@ -56,14 +63,21 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
 
   const onSubmit: SubmitHandler<OrganisationSettingsSchema> = async (data) => {
     const { streetAddress, suburb, state, postcode, name } = data;
-    mutateAsync({
-      name: name,
-      streetAddress: streetAddress,
-      suburb: suburb,
-      state: state,
-      postcode: postcode,
-      id: sessionData?.user?.organisationId,
-    });
+
+    try {
+      await mutateAsync({
+        name: name,
+        streetAddress: streetAddress,
+        suburb: suburb,
+        state: state,
+        postcode: postcode,
+        id: sessionData?.user?.organisationId,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+    }
   };
 
   return (
@@ -87,7 +101,7 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
                 )}
                 type="text"
                 id="name"
-                defaultValue={organisation?.name as string}
+                defaultValue={organisation?.name}
                 {...register("name")}
               />
             </label>
@@ -101,7 +115,7 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
                 )}
                 type="text"
                 id="streetAddress"
-                defaultValue={organisation?.streetAddress as string}
+                defaultValue={organisation?.streetAddress ?? ""}
                 {...register("streetAddress")}
                 autoComplete="street-address"
               />
@@ -116,7 +130,7 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
                 )}
                 type="text"
                 id="suburb"
-                defaultValue={organisation?.suburb as string}
+                defaultValue={organisation?.suburb ?? ""}
                 {...register("suburb")}
               />
             </label>
@@ -130,16 +144,15 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
                 )}
                 id="state"
                 {...register("state")}
-                defaultValue={organisation?.state as string}
+                defaultValue={organisation?.state ?? ""}
               >
-                <option value="ACT">ACT</option>
-                <option value="NSW">NSW</option>
-                <option value="NT">NT</option>
-                <option value="QLD">QLD</option>
-                <option value="SA">SA</option>
-                <option value="TAS">TAS</option>
-                <option value="VIC">VIC</option>
-                <option value="WA">WA</option>
+                {["ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"].map(
+                  (state) => (
+                    <option key={state} value={state}>
+                      {state}
+                    </option>
+                  )
+                )}
               </select>
             </label>
 
@@ -152,7 +165,7 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
                 )}
                 type="text"
                 id="postcode"
-                defaultValue={organisation?.postcode as string}
+                defaultValue={organisation?.postcode ?? ""}
                 {...register("postcode")}
                 autoComplete="postal-code"
               />
@@ -190,7 +203,7 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
 
         <div className="col-span-1 sm:col-span-12">
           <p className="text-gray-500">
-            These settings control your organisastion's or company's
+            These settings control your organisastion&apos;s or company&apos;s
             information.
           </p>
         </div>

@@ -29,23 +29,31 @@ const NewUser: React.FC<NewUserSchema> = () => {
   });
 
   const { mutateAsync, isLoading } = trpc.user.updateUser.useMutation({
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       queryClient.setQueryData([["user"], data.id], data);
-      queryClient.invalidateQueries();
+
+      try {
+        await queryClient.invalidateQueries();
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
 
   const onSubmit: SubmitHandler<NewUserSchema> = async (data) => {
     const { name } = data;
 
-    mutateAsync({
-      data: {
-        name: name,
-      },
-      id: sessionData?.user?.id,
-    });
-
-    router.push("/organisation/new");
+    try {
+      await mutateAsync({
+        data: {
+          name: name,
+        },
+        id: sessionData?.user?.id,
+      });
+      await router.push("/organisation/new");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -54,7 +62,7 @@ const NewUser: React.FC<NewUserSchema> = () => {
         <h4>Step 1 of 2</h4>
         <h4 className="text-3xl font-bold text-gray-900">Brisby</h4>
         <h2 className="mt-6 text-center text-4xl font-extrabold text-gray-900">
-          Let's setup your new account
+          Setup your new account
         </h2>
         <p className="mt-2 text-lg text-gray-900">
           You can change these later in your <b>account settings</b>

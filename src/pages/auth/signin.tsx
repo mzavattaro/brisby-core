@@ -1,4 +1,4 @@
-import { RouterOutputs } from "../../utils/trpc";
+import type { RouterOutputs } from "../../utils/trpc";
 import { getCsrfToken } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -8,6 +8,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { classNames } from "../../utils/classNames";
 import Email from "../../../public/Email";
+import type { CtxOrReq } from "next-auth/client/_utils";
 
 const signInSchema = z.object({
   csrfToken: z.string(),
@@ -31,7 +32,7 @@ const SignIn: React.FC<SignInSchema> = ({ csrfToken }) => {
   const onSubmit: SubmitHandler<SignInSchema> = async (data) => {
     try {
       await axios.post("/api/auth/signin/email", data); // revisit...
-      router.push("/auth/verify");
+      await router.push("/auth/verify");
     } catch (error) {
       console.error(error);
     }
@@ -92,7 +93,8 @@ const SignIn: React.FC<SignInSchema> = ({ csrfToken }) => {
         <div className="mt-6 flex h-14 items-center rounded bg-zinc-200 px-4 text-left text-xs sm:text-sm">
           <Email />
           <p className="ml-2">
-            We'll email you a magic link for a password-free sign in experience.
+            We will email you a magic link for a password-free sign in
+            experience.
           </p>
         </div>
       </div>
@@ -102,7 +104,7 @@ const SignIn: React.FC<SignInSchema> = ({ csrfToken }) => {
 
 export default SignIn;
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: CtxOrReq | undefined) {
   const csrfToken = await getCsrfToken(context);
   return {
     props: { csrfToken },

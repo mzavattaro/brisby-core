@@ -1,3 +1,4 @@
+import type { ChangeEventHandler } from "react";
 import { Fragment, useState } from "react";
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
@@ -47,9 +48,10 @@ async function uploadToS3(data: FileList) {
   }
 
   const fileType = encodeURIComponent(file.type);
-  const fileData = await axios.get(
-    `/api/generateUploadUrl?fileType=${fileType}`
-  );
+  const fileData = await axios.get<{
+    uploadUrl: string;
+    key: string;
+  }>(`/api/generateUploadUrl?fileType=${fileType}`);
   const { uploadUrl } = fileData.data;
   await axios.put(uploadUrl, file);
 
@@ -82,15 +84,23 @@ const New: NextPage = () => {
   });
 
   const { mutateAsync } = trpc.notice.create.useMutation({
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       queryClient.setQueryData([["notice"], data.id], data);
-      queryClient.invalidateQueries();
+
+      try {
+        await queryClient.invalidateQueries();
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log(error.message);
+        }
+        return;
+      }
     },
   });
 
   const onSubmit: SubmitHandler<NoticeSchema> = async (data) => {
     try {
-      await noticeSchema.parse(data);
+      noticeSchema.parse(data);
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message);
@@ -98,21 +108,52 @@ const New: NextPage = () => {
       return;
     }
 
-    const transformedData = await uploadToS3(data.fileList);
+    const transformedData = await uploadToS3(data.fileList as FileList);
+
+    console.log("transformedData", transformedData);
+
+    if (!transformedData?.uploadUrl) {
+      // massive issue
+      window.alert("Fuck");
+      return;
+    }
+
     const payload = {
       title: data.title,
       status: selected?.status,
-      startDate: startDate,
-      endDate: endDate,
-      ...transformedData,
+      startDate: data.startDate,
+      endDate: data.endDate,
+      uploadUrl: transformedData.uploadUrl,
+      key: transformedData?.key,
+      fileName: transformedData?.fileName,
+      fileSize: transformedData?.fileSize,
+      fileType: transformedData?.fileType,
     };
-    mutateAsync(payload);
-    router.push("/noticeboard");
+
+    try {
+      await mutateAsync(payload);
+      await router.push("/noticeboard");
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+      return;
+    }
   };
 
-  const getFileParameters = (event: any) => {
-    setFileName(event?.target.files[0]?.name);
-    setFileSize(event?.target.files[0]?.size / 1000000);
+  const getFileParameters: ChangeEventHandler<HTMLInputElement> = (event) => {
+    if (!event?.target.files?.length) {
+      return;
+    }
+
+    const file = event?.target.files[0];
+
+    if (!file) {
+      return;
+    }
+
+    setFileName(file.name);
+    setFileSize(file.size / 1000000);
   };
 
   return (

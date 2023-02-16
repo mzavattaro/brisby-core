@@ -14,19 +14,38 @@ const s3 = new S3({
 });
 
 export type PresignedUrlResponse = {
-  uploadUrl: string;
-  key: string;
+  error?: string;
+  uploadUrl?: string;
+  key?: string;
 };
 
 const handler: NextApiHandler<PresignedUrlResponse> = (req, res) => {
-  const ex = (req.query.fileType as string).split("/")[1];
+  if (typeof req.query.fileType !== "string") {
+    res.status(400).json({ error: "fileType must be a string" });
+    return;
+  }
+
+  const fragments = req.query.fileType.split("/");
+
+  if (fragments.length !== 2) {
+    res.status(400).json({ error: "fileType must have two fragments" });
+    return;
+  }
+
+  const ex = fragments[1];
+
+  if (!ex) {
+    res.status(400).json({ error: "fileType must be a valid mime type" });
+    return;
+  }
+
   const Key = `${randomUUID()}.${ex}`;
 
   const s3Params = {
     Bucket: process.env.AWS_S3_BUCKET,
     Key,
     Expires: 3600,
-    ContentType: `application/${ex}`,
+    ContentType: req.query.fileType,
   };
 
   const uploadUrl = s3.getSignedUrl("putObject", s3Params);
