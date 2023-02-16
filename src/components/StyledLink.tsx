@@ -14,7 +14,6 @@ const StyledLink: React.FC<StyledLink> = ({
   styleType,
   href,
   className,
-  onClick,
   children,
 }) => {
   return (

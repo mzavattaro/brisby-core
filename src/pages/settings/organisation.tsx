@@ -53,7 +53,7 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting }, // FINISH
+    formState: {}, // FINISHerrors, isSubmitting
   } = useForm<OrganisationSettingsSchema>({
     resolver: zodResolver(organisationSettingsSchema),
   });

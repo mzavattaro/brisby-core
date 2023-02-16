@@ -11,9 +11,9 @@ export const buildingComplexRouter = router({
         id: z.string(),
       })
     )
-    .query(async ({ ctx, input }) => {
+    .query(async ({ ctx }) => {
       const { prisma } = ctx;
-      const { id } = input;
+      // const { id } = input;
 
       const buildingComplexId = UserSession()?.buildingComplexId;
 

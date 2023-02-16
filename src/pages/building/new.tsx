@@ -1,12 +1,12 @@
-import { useSession } from "next-auth/react";
-import { useQueryClient } from "@tanstack/react-query";
-import { trpc } from "../../utils/trpc";
+// import { useSession } from "next-auth/react";
+// import { useQueryClient } from "@tanstack/react-query";
+// import { trpc } from "../../utils/trpc";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { SubmitHandler } from "react-hook-form";
 import { classNames } from "../../utils/classNames";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import StyledLink from "../../components/StyledLink";
 import Button from "../../components/Button";
 
@@ -25,10 +25,10 @@ const newCommunitySchema = z.object({
 type NewCommunitySchema = z.infer<typeof newCommunitySchema>;
 
 const NewUser: React.FC<NewCommunitySchema> = () => {
-  const queryClient = useQueryClient();
-  const router = useRouter();
+  // const queryClient = useQueryClient();
+  // const router = useRouter();
 
-  const { data: sessionData } = useSession();
+  // const { data: sessionData } = useSession();
 
   const {
     register,
@@ -45,7 +45,7 @@ const NewUser: React.FC<NewCommunitySchema> = () => {
   //     },
   //   });
 
-  const onSubmit: SubmitHandler<NewCommunitySchema> = async (data) => {
+  const onSubmit: SubmitHandler<NewCommunitySchema> = (data) => {
     // const {
     //   complexName,
     //   buildingType,

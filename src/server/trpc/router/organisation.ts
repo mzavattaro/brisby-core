@@ -48,7 +48,7 @@ export const organisationRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { prisma, session } = ctx;
+      const { prisma } = ctx;
       const { id, name, streetAddress, suburb, state, postcode } = input;
 
       // const userId = session.user.id;
