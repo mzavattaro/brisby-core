@@ -85,14 +85,16 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
   ) => {
     const { email } = data;
 
-    await mutateAsync({
-      data: {
-        email: email,
-      },
-      id: sessionData?.user?.id,
-    }).catch((err) => {
-      console.log(err);
-    });
+    try {
+      await mutateAsync({
+        data: {
+          email: email,
+        },
+        id: sessionData?.user?.id,
+      });
+    } catch (error) {
+      console.log(error);
+    }
     setIsShowingEmailModal(!isShowingEmailModal);
   };
 
