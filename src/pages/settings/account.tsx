@@ -66,7 +66,9 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
       try {
         await queryClient.invalidateQueries();
       } catch (error) {
-        console.log(error);
+        if (error instanceof Error) {
+          console.log(error.message);
+        }
       }
     },
   });

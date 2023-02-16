@@ -21,7 +21,9 @@ const NoticeItem: React.FC<NoticeItem> = ({ notice, toggle }) => {
       try {
         await queryClient.invalidateQueries();
       } catch (error) {
-        console.log(error);
+        if (error instanceof Error) {
+          console.log(error.message);
+        }
       }
     },
   });
@@ -37,7 +39,9 @@ const NoticeItem: React.FC<NoticeItem> = ({ notice, toggle }) => {
       try {
         await queryClient.invalidateQueries();
       } catch (error) {
-        console.log(error);
+        if (error instanceof Error) {
+          console.log(error.message);
+        }
       }
       setTimeout(toggle, 220);
     },
