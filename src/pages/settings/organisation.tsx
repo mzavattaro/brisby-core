@@ -53,11 +53,7 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
     },
   });
 
-  const {
-    register,
-    handleSubmit,
-    formState: {}, // FINISHerrors, isSubmitting
-  } = useForm<OrganisationSettingsSchema>({
+  const { register, handleSubmit } = useForm<OrganisationSettingsSchema>({
     resolver: zodResolver(organisationSettingsSchema),
   });
 
@@ -71,7 +67,6 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
         suburb: suburb,
         state: state,
         postcode: postcode,
-        // id: sessionData?.user?.organisationId,
       });
     } catch (error) {
       if (error instanceof Error) {
@@ -92,6 +87,7 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
             <h2 className="col-span-1 text-lg font-semibold sm:col-span-12">
               Organisation information
             </h2>
+
             {/* Company or organisation */}
             <label className="-mt-6 block text-left text-sm font-semibold text-gray-900 sm:col-span-12">
               Company or organisastion
@@ -194,6 +190,7 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
           </div>
         </form>
       </Modal>
+
       <div className="mx-auto grid max-w-4xl grid-cols-1 gap-2 px-2 sm:grid-cols-12 sm:px-6 md:px-8">
         <div className="col-span-1 sm:col-span-12">
           <h1 className="text-xl font-semibold text-gray-900">
