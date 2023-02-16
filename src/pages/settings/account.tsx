@@ -86,7 +86,9 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
       });
       setIsShowingNameModal(!isShowingNameModal);
     } catch (error) {
-      console.log(error);
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
     }
   };
 
@@ -103,7 +105,9 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
       });
       setIsShowingEmailModal(!isShowingEmailModal);
     } catch (error) {
-      console.log(error);
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
     }
   };
 
@@ -131,7 +135,7 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
                   className="mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm"
                   id="name"
                   type="text"
-                  defaultValue={user?.name as string}
+                  defaultValue={user?.name ?? ""}
                   {...register("name")}
                   autoComplete="name"
                 />
@@ -277,7 +281,7 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
             </h4>
             <p className="w-fit text-gray-500">{user?.name}</p>
             <button
-              id="changeEmail"
+              id="changeName"
               className="w-fit text-sm font-semibold text-indigo-600 hover:underline"
               type="button"
               onClick={toggleNameModal}
