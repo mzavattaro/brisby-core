@@ -5,13 +5,14 @@ import PdfViewer from "./PdfViewer";
 import DropdownMenu from "./DropdownMenu";
 import Tag from "./Tag";
 import { useQueryClient } from "@tanstack/react-query";
+import type { FC } from "react";
 
 type NoticeItem = {
   notice: RouterOutputs["notice"]["list"]["notices"][number];
   toggle: () => void;
 };
 
-const NoticeItem: React.FC<NoticeItem> = ({ notice, toggle }) => {
+const NoticeItem: FC<NoticeItem> = ({ notice, toggle }) => {
   const { id, title, startDate, endDate, status, uploadUrl, author } = notice;
 
   const queryClient = useQueryClient();

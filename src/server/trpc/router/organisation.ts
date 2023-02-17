@@ -97,4 +97,24 @@ export const organisationRouter = router({
 
       return organisation;
     }),
+
+  // get organisation billing /api/organisation
+  billing: protectedProcedure.query(async ({ ctx }) => {
+    const { prisma, session } = ctx;
+
+    const organisationId = session.user.organisationId;
+
+    try {
+      const billing = await prisma.organisation
+        .findUniqueOrThrow({
+          where: { id: organisationId },
+        })
+        .billing();
+      return billing;
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+    }
+  }),
 });
