@@ -179,12 +179,12 @@ const New: NextPage = () => {
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* Title */}
-          <label className="text-base font-bold" htmlFor="title">
-            Notice title*
+          <label className="text-sm font-semibold" htmlFor="title">
+            Notice title
           </label>
           <input
             className={classNames(
-              "mt-2 h-10 w-full rounded-md border border-slate-200 bg-slate-50 px-4 focus:ring-1",
+              "h-10 w-full rounded-md border border-slate-200 bg-slate-50 px-4 focus:ring-1",
               errors.title
                 ? "focus:border-rose-500 focus:ring-rose-500"
                 : "focus:border-blue-600 focus:ring-blue-600"
@@ -205,10 +205,10 @@ const New: NextPage = () => {
 
           {/* File upload */}
           <div className="mt-10 w-full border-b-2 border-slate-200 pb-10 sm:col-span-6">
-            <label className="text-base font-bold" htmlFor="fileList">
-              File upload*
+            <label className="text-sm font-semibold" htmlFor="fileList">
+              File upload
             </label>
-            <div className="mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
+            <div className="flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
               <div className="space-y-1 text-center">
                 <svg
                   className="mx-auto h-12 w-12 text-gray-400"
@@ -397,7 +397,7 @@ const New: NextPage = () => {
             <div className="sm:mr-9">
               <h3
                 className={classNames(
-                  "mb-2 text-base font-bold",
+                  "text-sm font-semibold",
                   selected?.status === "draft"
                     ? "text-gray-400"
                     : "text-gray-900"
@@ -422,7 +422,7 @@ const New: NextPage = () => {
             <div className="mt-6 sm:mt-0">
               <h3
                 className={classNames(
-                  "mb-2 text-base font-bold",
+                  "text-sm font-semibold",
                   selected?.status === "draft"
                     ? "text-gray-400"
                     : "text-gray-900"
