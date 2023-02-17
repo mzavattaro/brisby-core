@@ -234,7 +234,7 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
               </div>
             </div>
 
-            <div className="mt-6 flex">
+            <div className="mt-6 flex flex-col sm:flex-row">
               {/* Suburb */}
               <div>
                 <h4 className="w-fit text-left text-sm font-semibold text-gray-900">
@@ -249,7 +249,7 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
                 </div>
               </div>
               {/* State */}
-              <div className="mx-18">
+              <div className="my-6 sm:mx-18 sm:my-0">
                 <h4 className="w-fit text-left text-sm font-semibold text-gray-900">
                   State
                 </h4>
