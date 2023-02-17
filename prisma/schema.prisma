@@ -88,9 +88,9 @@ model Notice {
   title             String           @db.Text
   author            User             @relation(fields: [authorId], references: [id])
   authorId          String
-  fileName          String?          @db.Text
-  fileSize          Int?
-  fileType          String?
+  fileName          String           @db.Text
+  fileSize          Int
+  fileType          String
   uploadUrl         String           @db.Text
   key               String?          @db.Text
   status            String?

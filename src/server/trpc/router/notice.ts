@@ -22,9 +22,9 @@ export const noticeRouter = router({
       z.object({
         title: z.string(),
         uploadUrl: z.string(),
-        fileName: z.string().optional(),
-        fileSize: z.number().optional(),
-        fileType: z.string().optional(),
+        fileName: z.string(),
+        fileSize: z.number(),
+        fileType: z.string(),
         key: z.string().optional(),
         status: z.string().optional(),
         startDate: z.date().nullable().optional(),

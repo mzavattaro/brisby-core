@@ -58,9 +58,9 @@ Table Notice {
   title String [not null]
   author User [not null]
   authorId String [not null]
-  fileName String
-  fileSize Int
-  fileType String
+  fileName String [not null]
+  fileSize Int [not null]
+  fileType String [not null]
   uploadUrl String [not null]
   key String
   status String

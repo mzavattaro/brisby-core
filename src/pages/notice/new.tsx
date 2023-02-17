@@ -30,14 +30,20 @@ const publishingOptions = [
   },
 ];
 
-const noticeSchema = z.object({
-  title: z.string().min(1, { message: "Title is required" }),
-  fileList: typeof window === "undefined" ? z.any() : z.instanceof(FileList),
-  fileName: z.string().optional(),
-  status: z.string().optional(),
-  startDate: z.date().nullable().optional(),
-  endDate: z.date().nullable().optional(),
-});
+const noticeSchema = z
+  .object({
+    title: z.string().min(1, { message: "Title is required" }),
+    fileList:
+      typeof window === "undefined" ? z.never() : z.instanceof(FileList),
+    fileName: z.string().optional(),
+    status: z.string().optional(),
+    startDate: z.date().nullable().optional(),
+    endDate: z.date().nullable().optional(),
+  })
+  .refine((data) => data?.fileList[0], {
+    message: "File is required",
+    path: ["fileList"],
+  });
 
 type NoticeSchema = z.infer<typeof noticeSchema>;
 
@@ -71,7 +77,7 @@ const New: NextPage = () => {
     new Date()
   );
   const [endDate, setEndDate] = useState<Date | null | undefined>(new Date());
-  const [fileName, setFileName] = useState<string>("");
+  const [fileName, setFileName] = useState<string | null>(null);
   const [fileSize, setFileSize] = useState<number>(0);
 
   const router = useRouter();
@@ -110,13 +116,11 @@ const New: NextPage = () => {
       return;
     }
 
-    const transformedData = await uploadToS3(data.fileList as FileList);
-
-    console.log("transformedData", transformedData);
+    const transformedData = await uploadToS3(data.fileList);
 
     if (!transformedData?.uploadUrl) {
       // massive issue
-      window.alert("Fuck");
+      console.log("An error has occured, please try again later.");
       return;
     }
 
@@ -248,6 +252,11 @@ const New: NextPage = () => {
             {fileSize > 1 && (
               <span className="absolute text-sm font-bold text-red-500">
                 File size exceeds 1MB limit ({fileSize.toPrecision(3)} MB)
+              </span>
+            )}
+            {errors.fileList && !fileName && (
+              <span className="absolute text-sm font-bold text-red-500">
+                {errors.fileList?.message?.toString()}
               </span>
             )}
           </div>
@@ -444,9 +453,7 @@ const New: NextPage = () => {
               Cancel
             </StyledLink>
             <Button
-              disabled={
-                fileSize > 1 || !fileName || isSubmitting ? true : false
-              }
+              disabled={isSubmitting ? true : false}
               type="submit"
               size="md"
               style="primary"
