@@ -14,13 +14,13 @@ export const billingRouter = router({
   create: protectedProcedure
     .input(
       z.object({
-        fullName: z.string(),
-        email: z.string(),
-        phone: z.string(),
-        streetAddress: z.string(),
-        suburb: z.string(),
-        state: z.string(),
-        postcode: z.string(),
+        fullName: z.string().optional(),
+        email: z.string().optional(),
+        phone: z.string().optional(),
+        streetAddress: z.string().optional(),
+        suburb: z.string().optional(),
+        state: z.string().optional(),
+        postcode: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -30,99 +30,95 @@ export const billingRouter = router({
 
       const sessionOrganisationId = session.user.organisationId;
 
-      return prisma.billing.create({
-        data: {
-          fullName,
-          email,
-          phone,
-          streetAddress,
-          suburb,
-          state,
-          postcode,
-          organisation: {
-            connect: {
-              id: sessionOrganisationId,
+      try {
+        const billing = await prisma.billing.create({
+          data: {
+            fullName,
+            email,
+            phone,
+            streetAddress,
+            suburb,
+            state,
+            postcode,
+            organisation: {
+              connect: {
+                id: sessionOrganisationId,
+              },
             },
           },
-        },
-      });
+        });
+        return billing;
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log(error.message);
+        }
+      }
     }),
 
-  // update /api/organisation
-  //   update: protectedProcedure
-  //     .input(
-  //       z.object({
-  //         id: z.string().optional(),
-  //         name: z.string().optional(),
-  //         streetAddress: z.string().optional(),
-  //         suburb: z.string().optional(),
-  //         state: z.string().optional(),
-  //         postcode: z.string().optional(),
-  //       })
-  //     )
-  //     .mutation(async ({ ctx, input }) => {
-  //       const { prisma, session } = ctx;
-  //       const { name, streetAddress, suburb, state, postcode } = input;
+  // update /api/billing
+  update: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        fullName: z.string().optional(),
+        email: z.string().optional(),
+        phone: z.string().optional(),
+        streetAddress: z.string().optional(),
+        suburb: z.string().optional(),
+        state: z.string().optional(),
+        postcode: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { prisma, session } = ctx;
+      const {
+        id,
+        fullName,
+        email,
+        phone,
+        streetAddress,
+        suburb,
+        state,
+        postcode,
+      } = input;
 
-  //       const organisationId = session.user.organisationId;
+      const organisationId = session.user.organisationId;
 
-  //       await prisma.organisation.findUniqueOrThrow({
-  //         where: {
-  //           id: organisationId,
-  //         },
-  //       });
+      try {
+        await prisma.billing.findUniqueOrThrow({
+          where: {
+            id,
+          },
+        });
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log(error.message);
+        }
+      }
 
-  //       const organisation = await prisma.organisation.update({
-  //         where: { id: organisationId },
-  //         data: {
-  //           name,
-  //           streetAddress,
-  //           suburb,
-  //           state,
-  //           postcode,
-  //         },
-  //       });
-  //       return organisation;
-  //     }),
-
-  // get billing by id /api/billing
-  //   byId: protectedProcedure
-  //     .input(
-  //       z.object({
-  //         id: z.string().optional(),
-  //         organisation: z.object({
-  //           id: z.string().optional(),
-  //         }),
-  //       })
-  //     )
-  //     .query(async ({ ctx, input }) => {
-  //       const { prisma, session } = ctx;
-  //       //   const { id } = input;
-
-  //       const organisationId = session.user.organisationId;
-
-  //       await prisma.organisation.findUniqueOrThrow({
-  //         where: {
-  //           id: organisationId,
-  //         },
-  //       });
-
-  //       const billing = await prisma.billing.findUniqueOrThrow({
-  //         where: {
-  //           id: { in: organisationId },
-  //         },
-  //         select: {
-  //           id: true,
-  //           fullName: true,
-  //           email: true,
-  //           phone: true,
-  //           streetAddress: true,
-  //           suburb: true,
-  //           state: true,
-  //           postcode: true,
-  //         },
-  //       });
-
-  //       return billing;
-  //     }),
+      try {
+        const organisation = await prisma.billing.update({
+          where: { id },
+          data: {
+            fullName,
+            email,
+            phone,
+            streetAddress,
+            suburb,
+            state,
+            postcode,
+            organisation: {
+              connect: {
+                id: organisationId,
+              },
+            },
+          },
+        });
+        return organisation;
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log(error.message);
+        }
+      }
+    }),
 });

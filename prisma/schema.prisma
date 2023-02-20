@@ -24,7 +24,7 @@ model Organisation {
   id              String            @id @default(cuid())
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
-  name            String
+  name            String?
   streetAddress   String?
   suburb          String?
   state           String?
@@ -110,13 +110,13 @@ model Billing {
   id            String         @id @default(cuid())
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
-  fullName      String
-  phone         String
-  email         String
-  streetAddress String
-  suburb        String
-  state         String
-  postcode      String
+  fullName      String?
+  phone         String?
+  email         String?
+  streetAddress String?
+  suburb        String?
+  state         String?
+  postcode      String?
   organisation  Organisation[]
 }
 

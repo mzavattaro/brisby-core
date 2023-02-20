@@ -97,7 +97,7 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
                 )}
                 type="text"
                 id="name"
-                defaultValue={organisation?.name}
+                defaultValue={organisation?.name ?? ""}
                 {...register("name")}
               />
             </label>

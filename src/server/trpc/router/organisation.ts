@@ -99,7 +99,7 @@ export const organisationRouter = router({
     }),
 
   // get organisation billing /api/organisation
-  billing: protectedProcedure.query(async ({ ctx }) => {
+  getBilling: protectedProcedure.query(async ({ ctx }) => {
     const { prisma, session } = ctx;
 
     const organisationId = session.user.organisationId;
