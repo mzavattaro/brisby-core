@@ -79,8 +79,40 @@ export const noticeRouter = router({
       });
     }),
 
-  // list /api/notice
-  list: protectedProcedure
+  // list: protectedProcedurequ
+  byOrganisation: protectedProcedure.query(async ({ ctx }) => {
+    const { prisma, session } = ctx;
+
+    const sessionOrganisationId = session.user.organisationId;
+
+    const notices = await prisma.notice.findMany({
+      where: { organisationId: sessionOrganisationId },
+      orderBy: [{ createdAt: "desc" }],
+      select: {
+        id: true,
+        fileName: true,
+        title: true,
+        startDate: true,
+        endDate: true,
+        status: true,
+        buildingComplex: {
+          select: { name: true },
+        },
+      },
+    });
+
+    if (!notices) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Notices not found",
+      });
+    }
+
+    return notices;
+  }),
+
+  // infinite list /api/notice
+  infiniteList: protectedProcedure
     .input(
       z.object({
         limit: z.number().min(1).max(100).default(10),
@@ -108,6 +140,13 @@ export const noticeRouter = router({
           },
         },
       });
+
+      if (!notices) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Notices not found",
+        });
+      }
 
       for (const notice of notices) {
         if (!notice.key) {
@@ -188,6 +227,7 @@ export const noticeRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const { limit, cursor } = input;
+
       const notices = await ctx.prisma.notice.findMany({
         where: { status: "draft" },
         take: limit + 1,
@@ -202,6 +242,13 @@ export const noticeRouter = router({
           },
         },
       });
+
+      if (!notices) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Notices not found",
+        });
+      }
 
       for (const notice of notices) {
         if (!notice.key) {
@@ -234,6 +281,7 @@ export const noticeRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const { limit, cursor } = input;
+
       const notices = await ctx.prisma.notice.findMany({
         where: { status: "archived" },
         take: limit + 1,
@@ -248,6 +296,13 @@ export const noticeRouter = router({
           },
         },
       });
+
+      if (!notices) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Notices not found",
+        });
+      }
 
       for (const notice of notices) {
         if (!notice.key) {
@@ -281,7 +336,7 @@ export const noticeRouter = router({
       const { prisma } = ctx;
       const { id } = input;
 
-      const notice = await prisma.notice.findUniqueOrThrow({
+      const notice = await prisma.notice.findUnique({
         where: { id },
         select: {
           id: true,
@@ -293,6 +348,13 @@ export const noticeRouter = router({
           fileName: true,
         },
       });
+
+      if (!notice) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Notice not found",
+        });
+      }
 
       return notice;
     }),
@@ -311,9 +373,16 @@ export const noticeRouter = router({
       const { prisma } = ctx;
       const { id, data } = input;
 
-      await prisma.notice.findUniqueOrThrow({
+      const uniqueNotice = await prisma.notice.findUnique({
         where: { id },
       });
+
+      if (!uniqueNotice) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Notice not found",
+        });
+      }
 
       const notice = await prisma.notice.update({
         where: {
@@ -321,6 +390,14 @@ export const noticeRouter = router({
         },
         data,
       });
+
+      if (!notice) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Notice not found",
+        });
+      }
+
       return notice;
     }),
 

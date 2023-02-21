@@ -1,35 +1,12 @@
-import SettingsLayout from "../../components/SettingsLayout";
 import type { ReactElement } from "react";
 import type { NextPageWithLayout } from "../_app";
+import { trpc } from "../../utils/trpc";
+import SettingsLayout from "../../components/SettingsLayout";
 import Link from "next/link";
+import dayjs from "dayjs";
 
 const Notices: NextPageWithLayout = () => {
-  const notices = [
-    {
-      id: "1",
-      name: "name1.pdf",
-      buildingComplex: "Kimberly Court",
-      periodStart: "12/1/2023",
-      periodEnd: "24/3/2023",
-      status: "draft",
-    },
-    {
-      id: "2",
-      name: "name2.pdf",
-      buildingComplex: "Kimberly Court",
-      periodStart: "12/1/2023",
-      periodEnd: "24/3/2023",
-      status: "draft",
-    },
-    {
-      id: "3",
-      name: "name3.pdf",
-      buildingComplex: "Kimberly Court",
-      periodStart: "12/1/2023",
-      periodEnd: "24/3/2023",
-      status: "draft",
-    },
-  ];
+  const { data: notices } = trpc.notice.byOrganisation.useQuery();
 
   return (
     <>
@@ -75,13 +52,7 @@ const Notices: NextPageWithLayout = () => {
                   scope="col"
                   className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell"
                 >
-                  Start Period
-                </th>
-                <th
-                  scope="col"
-                  className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell"
-                >
-                  End Period
+                  Notice Period
                 </th>
                 <th
                   scope="col"
@@ -95,43 +66,40 @@ const Notices: NextPageWithLayout = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
-              {notices.map((notice) => (
+              {notices?.map((notice) => (
                 <tr key={notice.id}>
-                  <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
-                    {notice.name}
+                  <td className="w-full max-w-0 py-4 pl-4 pr-3 text-xs font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
+                    {notice.fileName}
                     <dl className="font-normal lg:hidden">
                       <dt className="sr-only">Building Complex</dt>
                       <dd className="mt-1 truncate text-gray-700">
-                        {notice.buildingComplex}
+                        {notice.buildingComplex?.name}
                       </dd>
-                      <dt className="sr-only sm:hidden">Start Period</dt>
+                      <dt className="sr-only sm:hidden">Notice Period</dt>
                       <dd className="mt-1 truncate text-gray-500 sm:hidden">
-                        {notice.periodStart}
-                      </dd>
-                      <dt className="sr-only sm:hidden">End Period</dt>
-                      <dd className="mt-1 truncate text-gray-500 sm:hidden">
-                        {notice.periodEnd}
+                        {`${dayjs(notice.startDate).format(
+                          "D MMMM YYYY"
+                        )} - ${dayjs(notice.endDate).format("D MMMM YYYY")}`}
                       </dd>
                     </dl>
                   </td>
-                  <td className="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
-                    {notice.buildingComplex}
+                  <td className="hidden px-3 py-4 text-xs text-gray-500 lg:table-cell">
+                    {notice.buildingComplex?.name}
                   </td>
-                  <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
-                    {notice.periodStart}
+                  <td className="hidden px-3 py-4 text-xs text-gray-500 sm:table-cell">
+                    {`${dayjs(notice.startDate).format(
+                      "D MMMM YYYY"
+                    )} - ${dayjs(notice.endDate).format("D MMMM YYYY")}`}
                   </td>
-                  <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
-                    {notice.periodEnd}
-                  </td>
-                  <td className="px-3 py-4 text-sm text-gray-500">
+                  <td className="px-3 py-4 text-xs text-gray-500">
                     {notice.status}
                   </td>
-                  <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                  <td className="py-4 pl-3 pr-4 text-right text-xs font-medium sm:pr-6">
                     <a
                       href="#"
                       className="text-indigo-600 hover:text-indigo-900"
                     >
-                      View<span className="sr-only">, {notice.name}</span>
+                      View<span className="sr-only">, {notice.fileName}</span>
                     </a>
                   </td>
                 </tr>

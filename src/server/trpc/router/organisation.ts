@@ -1,5 +1,5 @@
 // import { PrismaClient } from "@prisma/client";
-// import { TRPCError } from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 
@@ -53,11 +53,18 @@ export const organisationRouter = router({
 
       const organisationId = session.user.organisationId;
 
-      await prisma.organisation.findUniqueOrThrow({
+      const uniqueOrganisation = await prisma.organisation.findUnique({
         where: {
           id: organisationId,
         },
       });
+
+      if (!uniqueOrganisation) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Organisation not found",
+        });
+      }
 
       const organisation = await prisma.organisation.update({
         where: { id: organisationId },
@@ -104,17 +111,19 @@ export const organisationRouter = router({
 
     const organisationId = session.user.organisationId;
 
-    try {
-      const billing = await prisma.organisation
-        .findUniqueOrThrow({
-          where: { id: organisationId },
-        })
-        .billing();
-      return billing;
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log(error.message);
-      }
+    const billing = await prisma.organisation
+      .findUnique({
+        where: { id: organisationId },
+      })
+      .billing();
+
+    if (!billing) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "No billing found",
+      });
     }
+
+    return billing;
   }),
 });

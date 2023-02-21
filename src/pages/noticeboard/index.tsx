@@ -19,7 +19,7 @@ const Noticeboard = () => {
     isFetchingNextPage,
     isFetching,
     error,
-  } = trpc.notice.list.useInfiniteQuery(
+  } = trpc.notice.infiniteList.useInfiniteQuery(
     {
       limit: 5,
     },

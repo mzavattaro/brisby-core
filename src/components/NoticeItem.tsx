@@ -8,7 +8,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { FC } from "react";
 
 type NoticeItem = {
-  notice: RouterOutputs["notice"]["list"]["notices"][number];
+  notice: RouterOutputs["notice"]["infiniteList"]["notices"][number];
   toggle: () => void;
 };
 
