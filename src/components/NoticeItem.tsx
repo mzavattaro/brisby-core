@@ -1,11 +1,11 @@
+import type { FC } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import type { RouterOutputs } from "../utils/trpc";
 import { trpc } from "../utils/trpc";
 import dayjs from "dayjs";
 import PdfViewer from "./PdfViewer";
 import DropdownMenu from "./DropdownMenu";
-import Tag from "./Tag";
-import { useQueryClient } from "@tanstack/react-query";
-import type { FC } from "react";
+import Badge from "./Badge";
 
 type NoticeItem = {
   notice: RouterOutputs["notice"]["infiniteList"]["notices"][number];
@@ -90,7 +90,7 @@ const NoticeItem: FC<NoticeItem> = ({ notice, toggle }) => {
           </div>
         </div>
         <div className="mx-auto">
-          <Tag status={status}>{status?.toUpperCase()}</Tag>
+          <Badge status={status}>{status}</Badge>
         </div>
         <div className="relative flex flex-1 flex-col">
           <div className="aspect-[1/1.414] flex-shrink-0">

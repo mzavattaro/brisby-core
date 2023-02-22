@@ -1,24 +1,22 @@
-import type { ReactNode } from "react";
+import type { ReactNode, FC } from "react";
 import { classNames } from "../utils/classNames";
 
-const Badge = (props: {
-  variantColor: "blue" | "green" | "red";
-  children?: ReactNode;
-}) => {
-  const { variantColor, children } = props;
+type Badge = {
+  children: ReactNode;
+  status: string | null;
+};
 
+const Tag: FC<Badge> = ({ status, children }) => {
   return (
     <div
       className={classNames(
-        "shadow-sm shadow-black",
-        "flex items-center justify-center",
-        "rounded-full",
-        variantColor === "red" && "bg-red-400 text-white",
-        variantColor === "blue" && "bg-blue-400 text-white",
-        variantColor === "green" && "bg-green-400 text-white",
-        children
-          ? "absolute -top-2 -right-1 h-8 w-8"
-          : "absolute -top-1 -right-0.5 h-4 w-4"
+        "w-fit rounded-b-sm px-2 py-1 text-xs font-medium",
+        status === "draft" &&
+          "inline-flex items-center rounded bg-red-100 px-2 py-0.5 text-xs font-medium capitalize text-red-800",
+        status === "published" &&
+          "inline-flex items-center rounded bg-green-100 px-2 py-0.5 text-xs font-medium capitalize text-green-800",
+        status === "archived" &&
+          "inline-flex items-center rounded bg-gray-100 px-2 py-0.5 text-xs font-medium capitalize text-gray-800"
       )}
     >
       {children}
@@ -26,4 +24,4 @@ const Badge = (props: {
   );
 };
 
-export default Badge;
+export default Tag;

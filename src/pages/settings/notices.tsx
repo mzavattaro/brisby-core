@@ -109,8 +109,10 @@ const Notices: NextPageWithLayout = () => {
                               "D MMMM YYYY"
                             )}`}
                           </td>
-                          <td className="px-3 py-4 text-xs text-gray-500">
-                            {notice.status}
+                          <td className="px-3 py-4">
+                            <div className="inline-flex items-center rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
+                              {notice.status}
+                            </div>
                           </td>
                           <td className="py-4 pl-3 pr-4 text-right text-xs font-medium sm:pr-6">
                             <a
