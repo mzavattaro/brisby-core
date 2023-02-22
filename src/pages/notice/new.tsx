@@ -119,7 +119,7 @@ const New: NextPage = () => {
     const transformedData = await uploadToS3(data.fileList);
 
     if (!transformedData?.uploadUrl) {
-      // massive issue
+      // massive issue can occur here
       console.log("An error has occured, please try again later.");
       return;
     }
@@ -138,7 +138,7 @@ const New: NextPage = () => {
 
     try {
       await mutateAsync(payload);
-      await router.push("/noticeboard");
+      router.back();
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message);

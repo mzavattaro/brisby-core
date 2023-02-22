@@ -23,7 +23,7 @@ const Notices: NextPageWithLayout = () => {
 
         <Link
           className="sm:col-end-13 sm:justify-self-end"
-          href={"/noticeboard/new"}
+          href={"/notice/new"}
         >
           <button className="font-base h-10 w-31 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">
             Add notice
@@ -66,53 +66,67 @@ const Notices: NextPageWithLayout = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
-              {notices?.map((notice) => (
+              {notices?.length === 0 ? (
+                <tr className="h-80">
+                  <td className="">
+                    <p className="text-center">There are no notices to show.</p>
+                  </td>
+                </tr>
+              ) : (
                 <>
-                  {isLoading ? (
-                    <span>Loading...</span>
-                  ) : (
-                    <tr key={notice.id}>
-                      <td className="w-full max-w-0 py-4 pl-4 pr-3 text-xs font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
-                        {notice.fileName}
-                        <dl className="font-normal lg:hidden">
-                          <dt className="sr-only">Building Complex</dt>
-                          <dd className="mt-1 truncate text-gray-700">
+                  {notices?.map((notice) => (
+                    <>
+                      {isLoading ? (
+                        <span>Loading...</span>
+                      ) : (
+                        <tr key={notice.id}>
+                          <td className="w-full max-w-0 py-4 pl-4 pr-3 text-xs font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
+                            {notice.fileName}
+                            <dl className="font-normal lg:hidden">
+                              <dt className="sr-only">Building Complex</dt>
+                              <dd className="mt-1 truncate text-gray-700">
+                                {notice.buildingComplex?.name}
+                              </dd>
+                              <dt className="sr-only sm:hidden">
+                                Notice Period
+                              </dt>
+                              <dd className="mt-1 truncate text-gray-500 sm:hidden">
+                                {`${dayjs(notice.startDate).format(
+                                  "D MMMM YYYY"
+                                )} - ${dayjs(notice.endDate).format(
+                                  "D MMMM YYYY"
+                                )}`}
+                              </dd>
+                            </dl>
+                          </td>
+                          <td className="hidden px-3 py-4 text-xs text-gray-500 lg:table-cell">
                             {notice.buildingComplex?.name}
-                          </dd>
-                          <dt className="sr-only sm:hidden">Notice Period</dt>
-                          <dd className="mt-1 truncate text-gray-500 sm:hidden">
+                          </td>
+                          <td className="hidden px-3 py-4 text-xs text-gray-500 sm:table-cell">
                             {`${dayjs(notice.startDate).format(
                               "D MMMM YYYY"
                             )} - ${dayjs(notice.endDate).format(
                               "D MMMM YYYY"
                             )}`}
-                          </dd>
-                        </dl>
-                      </td>
-                      <td className="hidden px-3 py-4 text-xs text-gray-500 lg:table-cell">
-                        {notice.buildingComplex?.name}
-                      </td>
-                      <td className="hidden px-3 py-4 text-xs text-gray-500 sm:table-cell">
-                        {`${dayjs(notice.startDate).format(
-                          "D MMMM YYYY"
-                        )} - ${dayjs(notice.endDate).format("D MMMM YYYY")}`}
-                      </td>
-                      <td className="px-3 py-4 text-xs text-gray-500">
-                        {notice.status}
-                      </td>
-                      <td className="py-4 pl-3 pr-4 text-right text-xs font-medium sm:pr-6">
-                        <a
-                          href="#"
-                          className="text-indigo-600 hover:text-indigo-900"
-                        >
-                          View
-                          <span className="sr-only">, {notice.fileName}</span>
-                        </a>
-                      </td>
-                    </tr>
-                  )}
+                          </td>
+                          <td className="px-3 py-4 text-xs text-gray-500">
+                            {notice.status}
+                          </td>
+                          <td className="py-4 pl-3 pr-4 text-right text-xs font-medium sm:pr-6">
+                            <a
+                              href="#"
+                              className="text-indigo-600 hover:text-indigo-900"
+                            >
+                              View
+                              <span className="sr-only">{notice.fileName}</span>
+                            </a>
+                          </td>
+                        </tr>
+                      )}
+                    </>
+                  ))}
                 </>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
