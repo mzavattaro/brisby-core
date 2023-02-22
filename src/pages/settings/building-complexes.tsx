@@ -1,43 +1,12 @@
 import SettingsLayout from "../../components/SettingsLayout";
 import type { ReactElement } from "react";
+import { trpc } from "../../utils/trpc";
 import type { NextPageWithLayout } from "../_app";
 import Link from "next/link";
 
 const BuildingComplexes: NextPageWithLayout = () => {
-  const buildings = [
-    {
-      id: "1",
-      name: "Kimberly Court",
-      buildingType: "Residential",
-      addedBy: "Joe Bloggs",
-      totalOccupancies: "32",
-      address: "123 Fake Street",
-    },
-    {
-      id: "2",
-      name: "54 Dutruc Street",
-      buildingType: "Residential",
-      addedBy: "Joe Bloggs",
-      totalOccupancies: "32",
-      address: "123 Fake Street",
-    },
-    {
-      id: "3",
-      name: "Fake Complex",
-      buildingType: "Residential",
-      addedBy: "Joe Bloggs",
-      totalOccupancies: "32",
-      address: "123 Fake Street",
-    },
-    {
-      id: "4",
-      name: "White House",
-      buildingType: "Residential",
-      addedBy: "Joe Bloggs",
-      totalOccupancies: "32",
-      address: "123 Fake Street",
-    },
-  ];
+  const { data: buildingComplexes, isLoading } =
+    trpc.buildingComplex.byOrganisation.useQuery();
 
   return (
     <>
@@ -99,41 +68,60 @@ const BuildingComplexes: NextPageWithLayout = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
-              {buildings.map((building) => (
-                <tr key={building.id}>
-                  <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
-                    {building.name}
-                    <dl className="font-normal lg:hidden">
-                      <dt className="sr-only">Building Type</dt>
-                      <dd className="mt-1 truncate text-gray-700">
-                        {building.buildingType}
-                      </dd>
-                      <dt className="sr-only sm:hidden">Total Occupancies</dt>
-                      <dd className="mt-1 truncate text-gray-500 sm:hidden">
-                        {building.totalOccupancies}
-                      </dd>
-                      <dt className="sr-only sm:hidden">Address</dt>
-                    </dl>
-                  </td>
-                  <td className="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
-                    {building.buildingType}
-                  </td>
-                  <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
-                    {building.totalOccupancies}
-                  </td>
-                  <td className="px-3 py-4 text-sm text-gray-500">
-                    {building.address}
-                  </td>
-                  <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                    <a
-                      href="#"
-                      className="text-indigo-600 hover:text-indigo-900"
-                    >
-                      View<span className="sr-only">, {building.name}</span>
-                    </a>
+              {buildingComplexes?.length === 0 ? (
+                <tr className="h-80">
+                  <td>
+                    <p className="text-center">There are no notices to show.</p>
                   </td>
                 </tr>
-              ))}
+              ) : (
+                <>
+                  {buildingComplexes?.map((building) => (
+                    <>
+                      {isLoading ? (
+                        <span>Loading...</span>
+                      ) : (
+                        <tr key={building.id}>
+                          <td className="w-full max-w-0 py-4 pl-4 pr-3 text-xs font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
+                            {building.name}
+                            <dl className="font-normal lg:hidden">
+                              <dt className="sr-only">Building Type</dt>
+                              <dd className="mt-1 truncate text-gray-700">
+                                {building.type}
+                              </dd>
+                              <dt className="sr-only sm:hidden">
+                                Total Occupancies
+                              </dt>
+                              <dd className="mt-1 truncate text-gray-500 sm:hidden">
+                                {building.totalOccupancies}
+                              </dd>
+                              <dt className="sr-only sm:hidden">Address</dt>
+                            </dl>
+                          </td>
+                          <td className="hidden px-3 py-4 text-xs text-gray-500 lg:table-cell">
+                            {building.type}
+                          </td>
+                          <td className="hidden px-3 py-4 text-xs text-gray-500 sm:table-cell">
+                            {building.totalOccupancies}
+                          </td>
+                          <td className="px-3 py-4 text-xs text-gray-500">
+                            {building.streetAddress}
+                          </td>
+                          <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                            <a
+                              href="#"
+                              className="text-indigo-600 hover:text-indigo-900"
+                            >
+                              View
+                              <span className="sr-only">, {building.name}</span>
+                            </a>
+                          </td>
+                        </tr>
+                      )}
+                    </>
+                  ))}
+                </>
+              )}
             </tbody>
           </table>
         </div>

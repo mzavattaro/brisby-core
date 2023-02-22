@@ -449,7 +449,12 @@ const New: NextPage = () => {
 
           {/* Submit form */}
           <div className="mt-6 flex items-center justify-end">
-            <StyledLink className="mr-6" href={"/noticeboard"} styleType="link">
+            <StyledLink
+              className="mr-6"
+              href={""}
+              onClick={() => router.back()}
+              styleType="link"
+            >
               Cancel
             </StyledLink>
             <Button

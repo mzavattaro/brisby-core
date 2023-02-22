@@ -6,7 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { SubmitHandler } from "react-hook-form";
 import { classNames } from "../../utils/classNames";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import StyledLink from "../../components/StyledLink";
 import Button from "../../components/Button";
 
@@ -26,7 +26,7 @@ type NewCommunitySchema = z.infer<typeof newCommunitySchema>;
 
 const NewUser: React.FC<NewCommunitySchema> = () => {
   // const queryClient = useQueryClient();
-  // const router = useRouter();
+  const router = useRouter();
 
   // const { data: sessionData } = useSession();
 
@@ -264,7 +264,12 @@ const NewUser: React.FC<NewCommunitySchema> = () => {
 
         {/* Submit form */}
         <div className="col-span-6 mt-6 flex items-center justify-end sm:col-span-2 sm:col-end-7">
-          <StyledLink className="mr-6" href={"/noticeboard"} styleType="link">
+          <StyledLink
+            className="mr-6"
+            onClick={() => router.back()}
+            styleType="link"
+            href={""}
+          >
             Cancel
           </StyledLink>
           <Button

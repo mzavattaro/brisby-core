@@ -79,7 +79,7 @@ export const noticeRouter = router({
       });
     }),
 
-  // list: protectedProcedurequ
+  // get all notices by organisation
   byOrganisation: protectedProcedure.query(async ({ ctx }) => {
     const { prisma, session } = ctx;
 

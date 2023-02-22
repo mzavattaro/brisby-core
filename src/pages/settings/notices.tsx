@@ -68,7 +68,7 @@ const Notices: NextPageWithLayout = () => {
             <tbody className="divide-y divide-gray-200 bg-white">
               {notices?.length === 0 ? (
                 <tr className="h-80">
-                  <td className="">
+                  <td>
                     <p className="text-center">There are no notices to show.</p>
                   </td>
                 </tr>

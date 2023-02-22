@@ -15,10 +15,12 @@ const StyledLink: React.FC<StyledLink> = ({
   href,
   className,
   children,
+  onClick,
 }) => {
   return (
     <Link
       href={href}
+      onClick={onClick}
       className={classNames(
         className,
         styleType === "button" &&
