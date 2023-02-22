@@ -1,6 +1,6 @@
 // import { useSession } from "next-auth/react";
-// import { useQueryClient } from "@tanstack/react-query";
-// import { trpc } from "../../utils/trpc";
+import { useQueryClient } from "@tanstack/react-query";
+import { trpc } from "../../utils/trpc";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,11 +10,11 @@ import { useRouter } from "next/router";
 import StyledLink from "../../components/StyledLink";
 import Button from "../../components/Button";
 
-const newCommunitySchema = z.object({
-  complexName: z
+const newBuildingSchema = z.object({
+  name: z
     .string()
     .min(1, { message: "Community or building complex name is required" }),
-  buildingType: z.string(),
+  type: z.string(),
   totalOccupancies: z.coerce.number().nonnegative(),
   streetAddress: z.string().min(1, { message: "Street address is required" }),
   suburb: z.string().min(1, { message: "Suburb address is required" }),
@@ -22,56 +22,70 @@ const newCommunitySchema = z.object({
   postcode: z.string().min(1, { message: "Postcode address is required" }),
 });
 
-type NewCommunitySchema = z.infer<typeof newCommunitySchema>;
+type NewBuildingSchema = z.infer<typeof newBuildingSchema>;
 
-const NewUser: React.FC<NewCommunitySchema> = () => {
-  // const queryClient = useQueryClient();
+const NewUser: React.FC<NewBuildingSchema> = () => {
+  const queryClient = useQueryClient();
   const router = useRouter();
-
-  // const { data: sessionData } = useSession();
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<NewCommunitySchema>({
-    resolver: zodResolver(newCommunitySchema),
+  } = useForm<NewBuildingSchema>({
+    resolver: zodResolver(newBuildingSchema),
   });
 
-  //   const updateMutation = trpc.user.updateUser.useMutation({
-  //     onSuccess: (data) => {
-  //       queryClient.setQueryData([["user"], data.id], data);
-  //       queryClient.invalidateQueries();
-  //     },
-  //   });
+  const { mutateAsync } = trpc.buildingComplex.create.useMutation({
+    onSuccess: async (data) => {
+      queryClient.setQueryData([["buildingComplex"], data.id], data);
+      try {
+        await queryClient.invalidateQueries();
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log(error.message);
+        }
+      }
+    },
+  });
 
-  const onSubmit: SubmitHandler<NewCommunitySchema> = (data) => {
-    // const {
-    //   complexName,
-    //   buildingType,
-    //   totalOccupancies,
-    //   streetAddress,
-    //   suburb,
-    //   state,
-    //   postcode,
-    // } = data;
+  const onSubmit: SubmitHandler<NewBuildingSchema> = async (data) => {
+    const {
+      name,
+      type,
+      totalOccupancies,
+      streetAddress,
+      suburb,
+      state,
+      postcode,
+    } = data;
 
-    console.log(data);
+    try {
+      newBuildingSchema.parse(data);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+      return;
+    }
 
-    // updateMutation.mutate({
-    //   data: {
-    //     complexName: complexName,
-    //     buildingType: buildingType,
-    //     totalOccupancies: totalOccupancies,
-    //     streetAddress: streetAddress,
-    //     suburb: suburb,
-    //     state: state,
-    //     postcode: postcode,
-    //   },
-    //   id: sessionData?.user?.id,
-    // });
-
-    // router.push("/noticeboard");
+    try {
+      await mutateAsync({
+        name: name,
+        type: type,
+        totalOccupancies: totalOccupancies,
+        streetAddress: streetAddress,
+        suburb: suburb,
+        state: state,
+        postcode: postcode,
+      });
+      router.back();
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+      return;
+    }
   };
 
   return (
@@ -100,19 +114,19 @@ const NewUser: React.FC<NewCommunitySchema> = () => {
           <input
             className={classNames(
               "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:h-10 sm:text-sm",
-              errors.complexName
+              errors.name
                 ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
                 : "focus:border-blue-600 focus:ring-blue-600"
             )}
             type="text"
-            id="complexName"
-            {...register("complexName", { required: true })}
+            id="name"
+            {...register("name", { required: true })}
           />
           <div className="absolute max-w-xl">
-            {errors.complexName && (
+            {errors.name && (
               <p className="mt-1 h-10 text-sm font-bold text-rose-500">
                 {" "}
-                {errors.complexName?.message}
+                {errors.name?.message}
               </p>
             )}
           </div>
@@ -124,12 +138,12 @@ const NewUser: React.FC<NewCommunitySchema> = () => {
           <select
             className={classNames(
               "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
-              errors.buildingType
+              errors.type
                 ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
                 : "focus:border-blue-600 focus:ring-blue-600"
             )}
-            id="buildingType"
-            {...register("buildingType", { required: true })}
+            id="type"
+            {...register("type", { required: true })}
           >
             <option value="residential">Residential</option>
             <option value="commercial">Commercial</option>

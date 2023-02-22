@@ -4,6 +4,57 @@ import { protectedProcedure, router } from "../trpc";
 import { TRPCError } from "@trpc/server";
 
 export const buildingComplexRouter = router({
+  // create building complex /api/buildingComplex/create
+  create: protectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        type: z.string(),
+        totalOccupancies: z.number(),
+        streetAddress: z.string(),
+        suburb: z.string(),
+        state: z.string(),
+        postcode: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { prisma, session } = ctx;
+      const {
+        name,
+        type,
+        totalOccupancies,
+        streetAddress,
+        suburb,
+        state,
+        postcode,
+      } = input;
+
+      const sessionOrganisationId = session.user.organisationId;
+      const sesserionUserId = session.user.id;
+
+      return prisma.buildingComplex.create({
+        data: {
+          name: name,
+          type: type,
+          totalOccupancies: totalOccupancies,
+          streetAddress: streetAddress,
+          suburb: suburb,
+          state: state,
+          postcode: postcode,
+          organisation: {
+            connect: {
+              id: sessionOrganisationId,
+            },
+          },
+          user: {
+            connect: {
+              id: sesserionUserId,
+            },
+          },
+        },
+      });
+    }),
+
   // get single /api/buildingComplex by id
   byId: protectedProcedure
     .input(

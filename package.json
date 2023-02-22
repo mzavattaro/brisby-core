@@ -44,6 +44,7 @@
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/line-clamp": "^0.4.2",
+    "@total-typescript/ts-reset": "^0.3.7",
     "@types/fs-extra": "^11.0.1",
     "@types/node": "^18.13.0",
     "@types/nodemailer": "^6.4.7",

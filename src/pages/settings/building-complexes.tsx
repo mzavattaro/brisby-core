@@ -19,7 +19,7 @@ const BuildingComplexes: NextPageWithLayout = () => {
         <div className="col-span-1 -mt-2 sm:col-span-12">
           <p className="text-gray-500">
             List of building complexes managed by you. View and update each
-            building complexe you notify.
+            building complex you notify.
           </p>
         </div>
 

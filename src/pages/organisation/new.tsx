@@ -15,6 +15,9 @@ const organisationSchema = z.object({
 type OrganisationSchema = z.infer<typeof organisationSchema>;
 
 const Organisation: NextPage = () => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -22,9 +25,6 @@ const Organisation: NextPage = () => {
   } = useForm<OrganisationSchema>({
     resolver: zodResolver(organisationSchema),
   });
-
-  const queryClient = useQueryClient();
-  const router = useRouter();
 
   const { mutateAsync, isLoading } = trpc.organisation.create.useMutation({
     onSuccess: async (data) => {
