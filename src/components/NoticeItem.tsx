@@ -17,6 +17,8 @@ const NoticeItem: FC<NoticeItem> = ({ notice, toggle }) => {
 
   const queryClient = useQueryClient();
 
+  // console.log("uploadUrl: ", uploadUrl);
+
   const deleteMutation = trpc.notice.delete.useMutation({
     onSuccess: async () => {
       try {

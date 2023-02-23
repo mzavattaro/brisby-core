@@ -180,7 +180,9 @@ export const noticeRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const { limit, cursor } = input;
-      const notices = await ctx.prisma.notice.findMany({
+      const { prisma } = ctx;
+
+      const notices = await prisma.notice.findMany({
         where: { status: "published" },
         take: limit + 1,
         orderBy: [{ createdAt: "desc" }],
@@ -227,8 +229,9 @@ export const noticeRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const { limit, cursor } = input;
+      const { prisma } = ctx;
 
-      const notices = await ctx.prisma.notice.findMany({
+      const notices = await prisma.notice.findMany({
         where: { status: "draft" },
         take: limit + 1,
         orderBy: [{ createdAt: "desc" }],
@@ -281,8 +284,9 @@ export const noticeRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const { limit, cursor } = input;
+      const { prisma } = ctx;
 
-      const notices = await ctx.prisma.notice.findMany({
+      const notices = await prisma.notice.findMany({
         where: { status: "archived" },
         take: limit + 1,
         orderBy: [{ createdAt: "desc" }],
@@ -346,6 +350,15 @@ export const noticeRouter = router({
           startDate: true,
           endDate: true,
           fileName: true,
+          uploadUrl: true,
+          key: true,
+          buildingComplex: {
+            select: {
+              name: true,
+              streetAddress: true,
+              suburb: true,
+            },
+          },
         },
       });
 
@@ -354,6 +367,13 @@ export const noticeRouter = router({
           code: "NOT_FOUND",
           message: "Notice not found",
         });
+      }
+
+      if (!notice.key) {
+        console.log("Notice key is undefined");
+      } else {
+        const url = `https://d1ve2d1xbf677h.cloudfront.net/${notice.key}`;
+        notice.uploadUrl = url;
       }
 
       return notice;

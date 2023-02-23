@@ -1,3 +1,4 @@
+import type { FC } from "react";
 import { classNames } from "../utils/classNames";
 import { Fragment, useRef } from "react";
 import { Menu, Transition } from "@headlessui/react";
@@ -14,7 +15,7 @@ type DropdownMenuProps = {
   status: string | null;
 };
 
-const DropdownMenu: React.FC<DropdownMenuProps> = ({
+const DropdownMenu: FC<DropdownMenuProps> = ({
   uploadUrl,
   handleDelete,
   handlePublishChange,
@@ -24,6 +25,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
 }) => {
   const { isShowing, toggle } = useModal();
   const cancelButtonRef = useRef(null);
+
+  console.log(uploadUrl);
 
   return (
     <>
