@@ -1,11 +1,9 @@
 import { signIn, signOut, useSession } from "next-auth/react";
-import { trpc } from "../utils/trpc";
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
   XMarkIcon,
-  HomeIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
 import { classNames } from "../utils/classNames";
@@ -18,15 +16,11 @@ const Header = () => {
   const router = useRouter();
   const { asPath } = router;
 
-  const { data: user } = trpc.user.byId.useQuery({
-    id: sessionData?.user?.id,
-  });
-
   return (
     <Disclosure as="nav" className="bg-white">
       {({ open }) => (
         <>
-          <div className="relative flex h-16 justify-between">
+          <div className="relative flex h-12 justify-between md:h-14">
             <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
               {/* Mobile menu button */}
               <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
@@ -40,16 +34,13 @@ const Header = () => {
             </div>
             <div className="flex flex-1 items-center justify-center sm:flex-none sm:items-stretch sm:justify-start">
               <div className="flex flex-shrink-0 items-center">
-                <h4 className="block w-auto text-sm font-semibold lg:hidden">
-                  {user?.buildingComplex?.name || ""}
-                </h4>
+                <h2 className="text-md block w-auto font-semibold lg:hidden">
+                  Brisby
+                </h2>
 
                 <div className="hidden h-8 w-auto lg:block">
                   <div className="flex h-8 items-center">
-                    <HomeIcon className="block h-6 w-6" />
-                    <h4 className="text-md ml-2 font-semibold ">
-                      {user?.buildingComplex?.name || ""}
-                    </h4>
+                    <h2 className="ml-2 text-xl font-semibold">Brisby</h2>
                   </div>
                 </div>
               </div>
@@ -62,7 +53,7 @@ const Header = () => {
                 className={classNames(
                   "inline-flex items-center px-1 pt-1 text-xs md:text-sm",
                   asPath.match("/noticeboard$")
-                    ? "font-bold text-indigo-600"
+                    ? "-mb-0.5 border-b-2 border-indigo-600 text-indigo-600"
                     : "font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700 md:text-sm"
                 )}
               >
@@ -73,7 +64,7 @@ const Header = () => {
                 className={classNames(
                   "inline-flex items-center px-1 pt-1 text-xs md:text-sm",
                   asPath.includes("/published")
-                    ? "font-bold text-indigo-600"
+                    ? "-mb-0.5 border-b-2 border-indigo-600 text-indigo-600"
                     : "font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700 md:text-sm"
                 )}
               >
@@ -84,7 +75,7 @@ const Header = () => {
                 className={classNames(
                   "inline-flex items-center px-1 pt-1 text-xs md:text-sm",
                   asPath.includes("/drafts")
-                    ? "font-bold text-indigo-600"
+                    ? "-mb-0.5 border-b-2 border-indigo-600 text-indigo-600"
                     : "font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700 md:text-sm"
                 )}
               >
@@ -95,7 +86,7 @@ const Header = () => {
                 className={classNames(
                   "inline-flex items-center px-1 pt-1 text-xs md:text-sm",
                   asPath.includes("/archived")
-                    ? "font-bold text-indigo-600"
+                    ? "-mb-0.5 border-b-2 border-indigo-600 text-indigo-600"
                     : "font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700 md:text-sm"
                 )}
               >
@@ -187,27 +178,55 @@ const Header = () => {
             </div>
           </div>
 
-          <Disclosure.Panel className="absolute z-10 w-full rounded-b-lg bg-white shadow-md sm:hidden">
+          <Disclosure.Panel className="absolute left-0 z-10 w-full rounded-b-lg bg-white shadow-md sm:hidden">
             <div className="space-y-1 pt-2">
               {/* Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" */}
               <Link className="w-full" href="/noticeboard">
-                <Disclosure.Button className="block w-full border-l-4 border-indigo-500 bg-indigo-50 py-2 pl-3 pr-4 text-left text-base font-medium text-indigo-700">
+                <Disclosure.Button
+                  className={classNames(
+                    "block w-full border-l-4 py-2 px-3 text-left text-base font-medium",
+                    asPath.match("/noticeboard$")
+                      ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+                      : "border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700"
+                  )}
+                >
                   All notices
                 </Disclosure.Button>
               </Link>
               <Link href="/noticeboard/published">
-                <Disclosure.Button className="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700">
+                <Disclosure.Button
+                  className={classNames(
+                    "block w-full border-l-4 py-2 px-3 text-left text-base font-medium",
+                    asPath.match("/noticeboard/published$")
+                      ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+                      : "border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700"
+                  )}
+                >
                   Published
                 </Disclosure.Button>
               </Link>
 
               <Link href="/noticeboard/drafts">
-                <Disclosure.Button className="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700">
+                <Disclosure.Button
+                  className={classNames(
+                    "block w-full border-l-4 py-2 px-3 text-left text-base font-medium",
+                    asPath.match("/noticeboard/drafts$")
+                      ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+                      : "border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700"
+                  )}
+                >
                   Drafts
                 </Disclosure.Button>
               </Link>
               <Link href="/noticeboard/archived">
-                <Disclosure.Button className="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700">
+                <Disclosure.Button
+                  className={classNames(
+                    "block w-full border-l-4 py-2 px-3 text-left text-base font-medium",
+                    asPath.match("/noticeboard/archived$")
+                      ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+                      : "border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700"
+                  )}
+                >
                   Archived
                 </Disclosure.Button>
               </Link>
