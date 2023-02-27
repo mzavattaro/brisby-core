@@ -26,8 +26,6 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
   const { isShowing, toggle } = useModal();
   const cancelButtonRef = useRef(null);
 
-  console.log(uploadUrl);
-
   return (
     <>
       <Modal

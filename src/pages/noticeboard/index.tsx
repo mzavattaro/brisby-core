@@ -51,8 +51,6 @@ const Noticeboard: NextPage = () => {
     user?.buildingComplex?.streetAddress || ""
   }, ${user?.buildingComplex?.suburb || ""}`;
 
-  console.log("bComplex index page: ", user?.buildingComplex?.name);
-
   return (
     <Container className="text-gray-900">
       <Header />
