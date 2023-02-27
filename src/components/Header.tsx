@@ -40,7 +40,7 @@ const Header = () => {
 
                 <div className="hidden h-8 w-auto lg:block">
                   <div className="flex h-8 items-center">
-                    <h2 className="ml-2 text-xl font-semibold">Brisby</h2>
+                    <h2 className="text-xl font-semibold">Brisby</h2>
                   </div>
                 </div>
               </div>

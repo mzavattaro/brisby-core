@@ -25,7 +25,9 @@ export const userRouter = router({
           organisation: {
             select: { name: true },
           },
-          buildingComplex: { select: { name: true } },
+          buildingComplex: {
+            select: { name: true, streetAddress: true, suburb: true },
+          },
         },
       });
 

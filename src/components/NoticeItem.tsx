@@ -73,8 +73,8 @@ const NoticeItem: FC<NoticeItem> = ({ notice, toggle }) => {
           <div className="my-2 flex w-full flex-col justify-center">
             <p className="text-sm font-semibold uppercase">notice period</p>
             <p className="text-sm text-gray-500">
-              {`${dayjs(startDate).format("D MMMM YYYY")} -
-                  ${dayjs(endDate).format("D MMMM YYYY")}`}
+              {`${dayjs(startDate).format("D MMM YYYY")} -
+                  ${dayjs(endDate).format("D MMM YYYY")}`}
             </p>
           </div>
         </div>
