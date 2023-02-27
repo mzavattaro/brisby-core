@@ -10,10 +10,14 @@ import { classNames } from "../utils/classNames";
 import StyledLink from "../components/StyledLink";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { trpc } from "../utils/trpc";
 
 const Header = () => {
-  const { data: sessionData } = useSession();
   const router = useRouter();
+  const { data: sessionData } = useSession();
+  const { data: user } = trpc.user.byId.useQuery({
+    id: sessionData?.user?.id,
+  });
   const { asPath } = router;
 
   return (
@@ -96,11 +100,14 @@ const Header = () => {
 
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
               <StyledLink
-                className="hidden px-4 text-xs sm:block md:text-sm"
-                styleType="button"
-                href="/notice/new"
+                className={classNames(
+                  "hidden px-4 text-xs sm:block md:text-sm",
+                  !user?.buildingComplex && "cursor-not-allowed opacity-50"
+                )}
+                type="button"
+                href={user?.buildingComplex ? "/notice/new" : ""}
               >
-                Upload notice
+                Create notice
               </StyledLink>
               {/* Profile dropdown */}
               <Menu as="div" className="relative ml-3">
@@ -164,11 +171,15 @@ const Header = () => {
                     <Menu.Item>
                       <div className="mt-4 flex justify-center border-slate-200 pb-4 md:hidden">
                         <StyledLink
-                          className="px-2 text-xs sm:block md:text-sm"
-                          styleType="button"
-                          href="/noticeboard/new"
+                          className={classNames(
+                            "px-2 text-xs sm:block md:text-sm",
+                            !user?.buildingComplex &&
+                              "cursor-not-allowed opacity-50"
+                          )}
+                          type="button"
+                          href={user?.buildingComplex ? "/notice/new" : ""}
                         >
-                          Upload notice
+                          Create notice
                         </StyledLink>
                       </div>
                     </Menu.Item>

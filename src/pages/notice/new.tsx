@@ -453,7 +453,7 @@ const New: NextPage = () => {
               className="mr-6"
               href={""}
               onClick={() => router.back()}
-              styleType="link"
+              type="link"
             >
               Cancel
             </StyledLink>

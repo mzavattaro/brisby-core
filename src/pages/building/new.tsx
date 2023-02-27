@@ -281,7 +281,7 @@ const NewUser: React.FC<NewBuildingSchema> = () => {
           <StyledLink
             className="mr-6"
             onClick={() => router.back()}
-            styleType="link"
+            type="link"
             href={""}
           >
             Cancel
