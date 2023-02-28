@@ -1,18 +1,22 @@
 import { Fragment } from "react";
+import type { FC } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import { classNames } from "../utils/classNames";
 
 type Modal = {
   isShowing: boolean;
   hide: () => void;
   children: React.ReactNode;
   cancelButtonRef: React.RefObject<HTMLButtonElement>;
+  className?: string;
 };
 
-const Modal: React.FC<Modal> = ({
+const Modal: FC<Modal> = ({
   isShowing,
   hide,
   children,
   cancelButtonRef,
+  className,
 }) => {
   return (
     <Transition.Root show={isShowing} as={Fragment}>
@@ -45,10 +49,13 @@ const Modal: React.FC<Modal> = ({
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
-                <div className="mt-3 text-center sm:mt-0 sm:text-left">
-                  {children}
-                </div>
+              <Dialog.Panel
+                className={classNames(
+                  "relative transform rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6",
+                  className
+                )}
+              >
+                <div className="mt-3 sm:mt-0 sm:text-left">{children}</div>
               </Dialog.Panel>
             </Transition.Child>
           </div>

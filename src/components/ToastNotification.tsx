@@ -1,14 +1,15 @@
 import { Fragment } from "react";
+import type { FC } from "react";
 import { Transition } from "@headlessui/react";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { XMarkIcon } from "@heroicons/react/20/solid";
 
 type Notification = {
   isShowing: boolean;
-  hide: () => void;
+  toggle: () => void;
 };
 
-const ToastNofication: React.FC<Notification> = ({ isShowing, hide }) => {
+const ToastNofication: FC<Notification> = ({ isShowing, toggle }) => {
   return (
     <>
       {/* Global notification live region, render this permanently at the end of the document */}
@@ -49,7 +50,7 @@ const ToastNofication: React.FC<Notification> = ({ isShowing, hide }) => {
                     <button
                       type="button"
                       className="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                      onClick={hide}
+                      onClick={toggle}
                     >
                       <span className="sr-only">Close</span>
                       <XMarkIcon className="h-5 w-5" aria-hidden="true" />
