@@ -1,12 +1,12 @@
 import type { ChangeEventHandler } from "react";
 import { Fragment, useState } from "react";
-import { type NextPage } from "next";
 import { useRouter } from "next/router";
+import { type NextPage } from "next";
 import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import axios from "axios";
-import { trpc } from "../../utils/trpc";
-import { classNames } from "../../utils/classNames";
+import { trpc } from "../../../../utils/trpc";
+import { classNames } from "../../../../utils/classNames";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,8 +14,8 @@ import type { SubmitHandler } from "react-hook-form";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import { XMarkIcon } from "@heroicons/react/24/solid";
-import Button from "../../components/Button";
-import StyledLink from "../../components/StyledLink";
+import Button from "../../../../components/Button";
+import StyledLink from "../../../../components/StyledLink";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -81,6 +81,7 @@ const New: NextPage = () => {
   const [fileSize, setFileSize] = useState<number>(0);
 
   const router = useRouter();
+  const id = router.query.buildingId as string;
   const queryClient = useQueryClient();
 
   const {
@@ -125,6 +126,7 @@ const New: NextPage = () => {
     }
 
     const payload = {
+      id: id,
       title: data.title,
       status: selected?.status,
       startDate: startDate,
@@ -168,7 +170,12 @@ const New: NextPage = () => {
         <div className="my-6 flex flex-col">
           <div className="flex place-content-between items-center">
             <h3 className=" text-xl font-semibold">Upload new strata notice</h3>
-            <Link href={"/noticeboard"}>
+            <Link
+              href={{
+                pathname: "/[buildingId]/noticeboard",
+                query: { buildingId: id },
+              }}
+            >
               <XMarkIcon className="h-6 w-6" />
             </Link>
           </div>

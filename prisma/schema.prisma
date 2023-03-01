@@ -75,6 +75,7 @@ model User {
   organisationId    String?
   buildingComplex   BuildingComplex? @relation(fields: [buildingComplexId], references: [id])
   buildingComplexId String?
+  // TimeLine          TimeLine[]
 
   @@index([email])
   @@index([organisationId])
@@ -141,6 +142,17 @@ model Account {
   @@unique([provider, providerAccountId])
   @@index([userId])
 }
+
+// model TimeLine {
+//   id        String   @id @default(cuid())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   title     String
+//   content   String
+//   user      User     @relation(fields: [userId], references: [id])
+//   userId    String
+//   event     String
+// }
 
 model Session {
   id           String   @id @default(cuid())

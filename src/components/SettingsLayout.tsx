@@ -51,11 +51,14 @@ const SettingsLayout: FC<SetttingsLayout> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { data: sessionData } = useSession();
   const router = useRouter();
+  // const id = router.query.buildingId as string;
   const { asPath } = router;
 
   const { data: user, isLoading } = trpc.user.byId.useQuery({
     id: sessionData?.user?.id,
   });
+
+  console.log("router: ", router);
 
   return (
     <>

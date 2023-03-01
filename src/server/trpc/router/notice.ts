@@ -20,6 +20,7 @@ export const noticeRouter = router({
   create: protectedProcedure
     .input(
       z.object({
+        id: z.string(),
         title: z.string(),
         uploadUrl: z.string(),
         fileName: z.string(),
@@ -34,6 +35,7 @@ export const noticeRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { prisma, session } = ctx;
       const {
+        id,
         title,
         uploadUrl,
         fileName,
@@ -46,7 +48,6 @@ export const noticeRouter = router({
       } = input;
 
       const userId = session.user.id;
-      const sessionBuildingComplexId = session.user.buildingComplexId;
       const sessionOrganisationId = session.user.organisationId;
 
       return prisma.notice.create({
@@ -67,7 +68,7 @@ export const noticeRouter = router({
           },
           buildingComplex: {
             connect: {
-              id: sessionBuildingComplexId,
+              id,
             },
           },
           organisation: {
@@ -118,16 +119,20 @@ export const noticeRouter = router({
         limit: z.number().min(1).max(100).default(10),
         cursor: z.string().optional(),
         organisationId: z.string().optional(),
+        id: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
       const { prisma, session } = ctx;
-      const { limit, cursor } = input;
+      const { limit, cursor, id } = input;
 
       const sessionOrganisationId = session.user.organisationId;
 
       const notices = await prisma.notice.findMany({
-        where: { organisationId: sessionOrganisationId },
+        where: {
+          organisationId: sessionOrganisationId,
+          buildingComplexId: id,
+        },
         take: limit + 1,
         orderBy: [{ createdAt: "desc" }],
         cursor: cursor ? { id: cursor } : undefined,
@@ -167,6 +172,56 @@ export const noticeRouter = router({
         notices,
         nextCursor,
       };
+    }),
+
+  // get single /api/notice by id
+  byId: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { prisma } = ctx;
+      const { id } = input;
+
+      const notice = await prisma.notice.findUnique({
+        where: { id },
+        select: {
+          id: true,
+          createdAt: true,
+          title: true,
+          status: true,
+          startDate: true,
+          endDate: true,
+          fileName: true,
+          uploadUrl: true,
+          key: true,
+          buildingComplex: {
+            select: {
+              name: true,
+              streetAddress: true,
+              suburb: true,
+            },
+          },
+        },
+      });
+
+      if (!notice) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Notice not found",
+        });
+      }
+
+      if (!notice.key) {
+        console.log("Notice key is undefined");
+      } else {
+        const url = `https://d1ve2d1xbf677h.cloudfront.net/${notice.key}`;
+        notice.uploadUrl = url;
+      }
+
+      return notice;
     }),
 
   // get multiple notices /api/notice by when state is published
@@ -327,56 +382,6 @@ export const noticeRouter = router({
         notices,
         nextCursor,
       };
-    }),
-
-  // get single /api/notice by id
-  byId: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      const { prisma } = ctx;
-      const { id } = input;
-
-      const notice = await prisma.notice.findUnique({
-        where: { id },
-        select: {
-          id: true,
-          createdAt: true,
-          title: true,
-          status: true,
-          startDate: true,
-          endDate: true,
-          fileName: true,
-          uploadUrl: true,
-          key: true,
-          buildingComplex: {
-            select: {
-              name: true,
-              streetAddress: true,
-              suburb: true,
-            },
-          },
-        },
-      });
-
-      if (!notice) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Notice not found",
-        });
-      }
-
-      if (!notice.key) {
-        console.log("Notice key is undefined");
-      } else {
-        const url = `https://d1ve2d1xbf677h.cloudfront.net/${notice.key}`;
-        notice.uploadUrl = url;
-      }
-
-      return notice;
     }),
 
   // update /api/notice

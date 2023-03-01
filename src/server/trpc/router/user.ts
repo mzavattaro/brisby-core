@@ -26,7 +26,7 @@ export const userRouter = router({
             select: { name: true },
           },
           buildingComplex: {
-            select: { name: true, streetAddress: true, suburb: true },
+            select: { id: true, name: true, streetAddress: true, suburb: true },
           },
         },
       });

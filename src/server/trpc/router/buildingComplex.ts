@@ -2,6 +2,7 @@
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 import { TRPCError } from "@trpc/server";
+import type { Notice } from "@prisma/client";
 
 export const buildingComplexRouter = router({
   // create building complex /api/buildingComplex/create
@@ -62,13 +63,12 @@ export const buildingComplexRouter = router({
         id: z.string(),
       })
     )
-    .query(async ({ ctx }) => {
+    .query(async ({ ctx, input }) => {
       const { prisma, session } = ctx;
+      const { id } = input;
 
-      const buildingComplexId = session.user.buildingComplexId;
-
-      const buildingComplex = await prisma.buildingComplex.findUniqueOrThrow({
-        where: { id: buildingComplexId },
+      const buildingComplex = await prisma.buildingComplex.findUnique({
+        where: { id },
         select: {
           id: true,
           createdAt: true,
@@ -76,8 +76,17 @@ export const buildingComplexRouter = router({
           type: true,
           totalOccupancies: true,
           notice: true,
+          streetAddress: true,
+          suburb: true,
         },
       });
+
+      if (!buildingComplex) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Building complex not found",
+        });
+      }
 
       return buildingComplex;
     }),
@@ -103,7 +112,7 @@ export const buildingComplexRouter = router({
     if (!buildingComplexes) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "Notices not found",
+        message: "Building complexes not found",
       });
     }
 

@@ -1,8 +1,8 @@
 import NextError from "next/error";
 import { useRouter } from "next/router";
-import type { RouterOutputs } from "../../../utils/trpc";
-import { trpc } from "../../../utils/trpc";
-import { classNames } from "../../../utils/classNames";
+import type { RouterOutputs } from "../../../../utils/trpc";
+import { trpc } from "../../../../utils/trpc";
+import { classNames } from "../../../../utils/classNames";
 
 import {
   CheckIcon,
@@ -62,7 +62,7 @@ const timeline = [
   },
 ];
 
-const NoticeItem = (props: { notice: NoticeByIdOutput }) => {
+const Notice = (props: { notice: NoticeByIdOutput }) => {
   const { notice } = props;
   console.log(notice);
 
@@ -288,23 +288,23 @@ const NoticeItem = (props: { notice: NoticeByIdOutput }) => {
 
 const NoticeViewPage = () => {
   const id = useRouter().query.id as string;
-  const postQuery = trpc.notice.byId.useQuery({ id });
+  const noticeQuery = trpc.notice.byId.useQuery({ id });
 
-  if (postQuery.error) {
+  if (noticeQuery.error) {
     return (
       <NextError
-        title={postQuery.error.message}
-        statusCode={postQuery.error.data?.httpStatus ?? 500}
+        title={noticeQuery.error.message}
+        statusCode={noticeQuery.error.data?.httpStatus ?? 500}
       />
     );
   }
 
-  if (postQuery.status !== "success") {
+  if (noticeQuery.status !== "success") {
     return <>Loading...</>;
   }
 
-  const { data } = postQuery;
-  return <NoticeItem notice={data} />;
+  const { data } = noticeQuery;
+  return <Notice notice={data} />;
 };
 
 export default NoticeViewPage;

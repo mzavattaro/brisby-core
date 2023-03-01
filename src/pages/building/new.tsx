@@ -1,4 +1,3 @@
-// import { useSession } from "next-auth/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { trpc } from "../../utils/trpc";
 import { useForm } from "react-hook-form";
@@ -9,6 +8,7 @@ import { classNames } from "../../utils/classNames";
 import { useRouter } from "next/router";
 import StyledLink from "../../components/StyledLink";
 import Button from "../../components/Button";
+import type { FC } from "react";
 
 const newBuildingSchema = z.object({
   name: z
@@ -24,7 +24,7 @@ const newBuildingSchema = z.object({
 
 type NewBuildingSchema = z.infer<typeof newBuildingSchema>;
 
-const NewUser: React.FC<NewBuildingSchema> = () => {
+const NewUser: FC<NewBuildingSchema> = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
@@ -46,6 +46,7 @@ const NewUser: React.FC<NewBuildingSchema> = () => {
           console.log(error.message);
         }
       }
+      router.back();
     },
   });
 
@@ -79,7 +80,6 @@ const NewUser: React.FC<NewBuildingSchema> = () => {
         state: state,
         postcode: postcode,
       });
-      router.back();
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message);

@@ -1,17 +1,19 @@
 import { useEffect } from "react";
 import { type NextPage } from "next";
-import { trpc } from "../../../utils/trpc";
-import useScrollPosition from "../../../utils/useScrollPosition";
-import Header from "../../../components/Header";
-import GridLayout from "../../../components/GridLayout";
-import NoticeItem from "../../../components/NoticeItem";
-import Container from "../../../components/Container";
-import ToastNofication from "../../../components/ToastNotification";
-import useModal from "../../../utils/useModal";
-import ScrollVertical from "../../../../public/ScrollVertical";
+import { trpc } from "../../../../utils/trpc";
+import useScrollPosition from "../../../../utils/useScrollPosition";
+import Header from "../../../../components/Header";
+import GridLayout from "../../../../components/GridLayout";
+import NoticeItem from "../../../../components/NoticeItem";
+import Container from "../../../../components/Container";
+import ToastNofication from "../../../../components/ToastNotification";
+import useModal from "../../../../utils/useModal";
+import ScrollVertical from "../../../../../public/ScrollVertical";
 
-const Drafts: NextPage = () => {
+const Archived: NextPage = () => {
+  const scrollPosition = useScrollPosition();
   const { isShowing, toggle } = useModal();
+
   const {
     data,
     hasNextPage,
@@ -19,7 +21,7 @@ const Drafts: NextPage = () => {
     isFetchingNextPage,
     isFetching,
     error,
-  } = trpc.notice.drafts.useInfiniteQuery(
+  } = trpc.notice.archived.useInfiniteQuery(
     { limit: 5 },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -27,7 +29,6 @@ const Drafts: NextPage = () => {
   );
 
   const notices = data?.pages.flatMap((page) => page.notices) ?? [];
-  const scrollPosition = useScrollPosition();
 
   useEffect(() => {
     if (scrollPosition > 90 && hasNextPage && !isFetching) {
@@ -39,7 +40,7 @@ const Drafts: NextPage = () => {
 
   return (
     <Container className="text-gray-900">
-      <Header />
+      <Header toggle={toggle} />
       {notices.length > 0 ? (
         <GridLayout
           isFetching={isFetching}
@@ -71,9 +72,9 @@ const Drafts: NextPage = () => {
           <span className="mx-auto">There are no more notices</span>
         </div>
       )}
-      <ToastNofication isShowing={isShowing} hide={toggle} />
+      <ToastNofication isShowing={isShowing} toggle={toggle} />
     </Container>
   );
 };
 
-export default Drafts;
+export default Archived;

@@ -19,12 +19,13 @@ type Header = {
 
 const Header: FC<Header> = ({ toggle }) => {
   const router = useRouter();
-
+  const id = router.query.buildingId as string;
   const { data: sessionData } = useSession();
 
   const { data: user } = trpc.user.byId.useQuery({
     id: sessionData?.user?.id,
   });
+
   const { asPath } = router;
 
   return (
@@ -61,7 +62,10 @@ const Header: FC<Header> = ({ toggle }) => {
               <div className="hidden space-x-4 sm:flex md:space-x-8">
                 {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
                 <Link
-                  href="/noticeboard"
+                  href={{
+                    pathname: "/[buildingId]/noticeboard/",
+                    query: { buildingId: id },
+                  }}
                   className={classNames(
                     "inline-flex items-center px-1 pt-1 text-xs md:text-sm",
                     asPath.match("/noticeboard$")
@@ -72,7 +76,10 @@ const Header: FC<Header> = ({ toggle }) => {
                   All notices
                 </Link>
                 <Link
-                  href="/noticeboard/published"
+                  href={{
+                    pathname: "/[buildingId]/noticeboard/published",
+                    query: { buildingId: id },
+                  }}
                   className={classNames(
                     "inline-flex items-center px-1 pt-1 text-xs md:text-sm",
                     asPath.includes("/published")
@@ -83,7 +90,10 @@ const Header: FC<Header> = ({ toggle }) => {
                   Published
                 </Link>
                 <Link
-                  href="/noticeboard/drafts"
+                  href={{
+                    pathname: "/[buildingId]/noticeboard/drafts",
+                    query: { buildingId: id },
+                  }}
                   className={classNames(
                     "inline-flex items-center px-1 pt-1 text-xs md:text-sm",
                     asPath.includes("/drafts")
@@ -94,7 +104,10 @@ const Header: FC<Header> = ({ toggle }) => {
                   Drafts
                 </Link>
                 <Link
-                  href="/noticeboard/archived"
+                  href={{
+                    pathname: "/[buildingId]/noticeboard/archived",
+                    query: { buildingId: id },
+                  }}
                   className={classNames(
                     "inline-flex items-center px-1 pt-1 text-xs md:text-sm",
                     asPath.includes("/archived")
@@ -113,7 +126,14 @@ const Header: FC<Header> = ({ toggle }) => {
                     !user?.buildingComplex && "cursor-not-allowed opacity-50"
                   )}
                   type="button"
-                  href={user?.buildingComplex ? "/notice/new" : ""}
+                  href={
+                    user?.buildingComplex
+                      ? {
+                          pathname: "/[buildingId]/noticeboard/notice",
+                          query: { buildingId: id },
+                        }
+                      : ""
+                  }
                 >
                   Create notice
                 </StyledLink>

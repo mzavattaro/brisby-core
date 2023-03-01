@@ -1,16 +1,16 @@
 import { useEffect } from "react";
 import { type NextPage } from "next";
-import { trpc } from "../../../utils/trpc";
-import useScrollPosition from "../../../utils/useScrollPosition";
-import Header from "../../../components/Header";
-import GridLayout from "../../../components/GridLayout";
-import NoticeItem from "../../../components/NoticeItem";
-import Container from "../../../components/Container";
-import ToastNofication from "../../../components/ToastNotification";
-import useModal from "../../../utils/useModal";
-import ScrollVertical from "../../../../public/ScrollVertical";
+import { trpc } from "../../../../utils/trpc";
+import useScrollPosition from "../../../../utils/useScrollPosition";
+import Header from "../../../../components/Header";
+import GridLayout from "../../../../components/GridLayout";
+import NoticeItem from "../../../../components/NoticeItem";
+import Container from "../../../../components/Container";
+import ToastNofication from "../../../../components/ToastNotification";
+import useModal from "../../../../utils/useModal";
+import ScrollVertical from "../../../../../public/ScrollVertical";
 
-const Published: NextPage = () => {
+const Drafts: NextPage = () => {
   const { isShowing, toggle } = useModal();
   const {
     data,
@@ -19,7 +19,7 @@ const Published: NextPage = () => {
     isFetchingNextPage,
     isFetching,
     error,
-  } = trpc.notice.published.useInfiniteQuery(
+  } = trpc.notice.drafts.useInfiniteQuery(
     { limit: 5 },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -39,7 +39,7 @@ const Published: NextPage = () => {
 
   return (
     <Container className="text-gray-900">
-      <Header />
+      <Header toggle={toggle} />
       {notices.length > 0 ? (
         <GridLayout
           isFetching={isFetching}
@@ -62,7 +62,7 @@ const Published: NextPage = () => {
         </GridLayout>
       ) : (
         <div className="mt-20 flex flex-col items-center justify-center font-bold text-slate-300">
-          <span>You do not have any notices!</span>
+          <span>You don&apos;t have any notices!</span>
         </div>
       )}
 
@@ -71,9 +71,9 @@ const Published: NextPage = () => {
           <span className="mx-auto">There are no more notices</span>
         </div>
       )}
-      <ToastNofication isShowing={isShowing} hide={toggle} />
+      <ToastNofication isShowing={isShowing} toggle={toggle} />
     </Container>
   );
 };
 
-export default Published;
+export default Drafts;
