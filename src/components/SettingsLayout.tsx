@@ -113,21 +113,6 @@ const SettingsLayout: FC<SetttingsLayout> = ({ children }) => {
                     </div>
                   </Transition.Child>
                   <div className="h-0 flex-1 overflow-y-auto pt-5 pb-4">
-                    {/* <div className="flex flex-shrink-0 items-center px-4">
-                      <ArrowLongLeftIcon
-                        aria-hidden="true"
-                        className="h-6 w-6 text-gray-500"
-                      />
-                      <Link
-                        className="ml-1 text-sm text-gray-600 hover:underline"
-                        href={{
-                          pathname: "/[buildingId]/noticeboard/",
-                          query: { buildingId: getBuildingComplexId },
-                        }}
-                      >
-                        Back to noticeboard
-                      </Link>
-                    </div> */}
                     <BackButton />
 
                     <nav className="mt-4 space-y-1 px-2">

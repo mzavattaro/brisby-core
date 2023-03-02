@@ -58,9 +58,6 @@ const Noticeboard: FC<NoticeboardProps> = ({
 
   const buildingComplexAddress = `${streetAddress || ""}, ${suburb || ""}`;
 
-  // const id = useStore((state) => state.id);
-  // console.log("buildingComplexId: ", id);
-
   return (
     <Container className="text-gray-900">
       <Modal
