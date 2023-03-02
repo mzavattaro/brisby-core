@@ -2,7 +2,6 @@
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 import { TRPCError } from "@trpc/server";
-import type { Notice } from "@prisma/client";
 
 export const buildingComplexRouter = router({
   // create building complex /api/buildingComplex/create
@@ -64,7 +63,7 @@ export const buildingComplexRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      const { prisma, session } = ctx;
+      const { prisma } = ctx;
       const { id } = input;
 
       const buildingComplex = await prisma.buildingComplex.findUnique({

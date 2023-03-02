@@ -1,4 +1,4 @@
-import type { ReactElement, ReactNode } from "react";
+import type { ReactElement, ReactNode, FC } from "react";
 import "@total-typescript/ts-reset";
 import type { NextPage } from "next";
 import { type Session } from "next-auth";
@@ -21,7 +21,7 @@ type AppPropsWithLayout = {
   };
 };
 
-const MyApp: React.FC<AppPropsWithLayout> = ({
+const MyApp: FC<AppPropsWithLayout> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {

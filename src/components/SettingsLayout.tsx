@@ -7,7 +7,6 @@ import { useRouter } from "next/router";
 import { classNames } from "../utils/classNames";
 import { Dialog, Transition } from "@headlessui/react";
 import {
-  ArrowLongLeftIcon,
   Bars3Icon,
   BuildingOffice2Icon,
   CreditCardIcon,
@@ -17,6 +16,7 @@ import {
   UsersIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import BackButton from "./BackButton";
 
 type SetttingsLayout = {
   children: ReactNode;
@@ -51,14 +51,11 @@ const SettingsLayout: FC<SetttingsLayout> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { data: sessionData } = useSession();
   const router = useRouter();
-  // const id = router.query.buildingId as string;
   const { asPath } = router;
 
   const { data: user, isLoading } = trpc.user.byId.useQuery({
     id: sessionData?.user?.id,
   });
-
-  console.log("router: ", router);
 
   return (
     <>
@@ -116,18 +113,22 @@ const SettingsLayout: FC<SetttingsLayout> = ({ children }) => {
                     </div>
                   </Transition.Child>
                   <div className="h-0 flex-1 overflow-y-auto pt-5 pb-4">
-                    <div className="flex flex-shrink-0 items-center px-4">
+                    {/* <div className="flex flex-shrink-0 items-center px-4">
                       <ArrowLongLeftIcon
                         aria-hidden="true"
                         className="h-6 w-6 text-gray-500"
                       />
                       <Link
                         className="ml-1 text-sm text-gray-600 hover:underline"
-                        href="/noticeboard"
+                        href={{
+                          pathname: "/[buildingId]/noticeboard/",
+                          query: { buildingId: getBuildingComplexId },
+                        }}
                       >
                         Back to noticeboard
                       </Link>
-                    </div>
+                    </div> */}
+                    <BackButton />
 
                     <nav className="mt-4 space-y-1 px-2">
                       <h1 className="pl-2 text-xl font-semibold">Settings</h1>
@@ -184,18 +185,7 @@ const SettingsLayout: FC<SetttingsLayout> = ({ children }) => {
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white">
             <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
-              <div className="flex flex-shrink-0 items-center px-4">
-                <ArrowLongLeftIcon
-                  aria-hidden="true"
-                  className="h-6 w-6 text-gray-500"
-                />
-                <Link
-                  className="ml-1 text-sm text-gray-600 hover:underline"
-                  href="/noticeboard"
-                >
-                  Back to noticeboard
-                </Link>
-              </div>
+              <BackButton />
               <nav className="mt-4 flex-1 space-y-1 bg-white px-2">
                 <h1 className="pl-2 text-xl font-semibold">Settings</h1>
                 {navigation.map((item) => (

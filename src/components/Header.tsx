@@ -129,7 +129,7 @@ const Header: FC<Header> = ({ toggle }) => {
                   href={
                     user?.buildingComplex
                       ? {
-                          pathname: "/[buildingId]/noticeboard/notice",
+                          pathname: "/[buildingId]/noticeboard/notice/new",
                           query: { buildingId: id },
                         }
                       : ""

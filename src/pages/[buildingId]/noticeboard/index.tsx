@@ -3,6 +3,7 @@ import type { Notice } from "@prisma/client";
 import type { FC } from "react";
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/router";
+import { useStore } from "../../../store/useStore";
 import Link from "next/link";
 import { trpc } from "../../../utils/trpc";
 import useScrollPosition from "../../../utils/useScrollPosition";
@@ -36,6 +37,7 @@ type NoticeboardProps = {
     streetAddress: string;
     suburb: string;
   };
+  queryBuildingId: string;
 };
 
 const Noticeboard: FC<NoticeboardProps> = ({
@@ -44,6 +46,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
   isFetchingNextPage,
   hasNextPage,
   buildingComplexData,
+  queryBuildingId,
 }) => {
   const { isShowing, toggle } = useModal();
   const cancelButtonRef = useRef(null);
@@ -54,6 +57,9 @@ const Noticeboard: FC<NoticeboardProps> = ({
     trpc.buildingComplex.byOrganisation.useQuery();
 
   const buildingComplexAddress = `${streetAddress || ""}, ${suburb || ""}`;
+
+  // const id = useStore((state) => state.id);
+  // console.log("buildingComplexId: ", id);
 
   return (
     <Container className="text-gray-900">
@@ -244,6 +250,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
 
 const NoticeboardViewPage = () => {
   const id = useRouter().query.buildingId as string;
+  const setBuildingComplexId = useStore((state) => state.setBuildingComplexId);
 
   const buildingComplexQuery = trpc.buildingComplex.byId.useQuery({ id });
   const {
@@ -264,6 +271,10 @@ const NoticeboardViewPage = () => {
   );
 
   const scrollPosition = useScrollPosition();
+
+  useEffect(() => {
+    setBuildingComplexId(id);
+  }, [id, setBuildingComplexId]);
 
   useEffect(() => {
     if (scrollPosition > 90 && hasNextPage && !isFetching) {
@@ -295,6 +306,7 @@ const NoticeboardViewPage = () => {
       isFetching={isFetching}
       isFetchingNextPage={isFetchingNextPage}
       hasNextPage={hasNextPage}
+      queryBuildingId={id}
     />
   );
 };
