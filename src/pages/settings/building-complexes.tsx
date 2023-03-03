@@ -25,7 +25,7 @@ const BuildingComplexes: NextPageWithLayout = () => {
 
         <Link
           className="sm:col-end-13 sm:justify-self-end"
-          href={"/building/new"}
+          href={"/auth/building-complexes/new"}
         >
           <button className="font-base h-10 w-31 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">
             Add building

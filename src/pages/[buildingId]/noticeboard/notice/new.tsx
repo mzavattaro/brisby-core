@@ -458,7 +458,10 @@ const New: NextPage = () => {
           <div className="mt-6 flex items-center justify-end">
             <StyledLink
               className="mr-6"
-              href={""}
+              href={{
+                pathname: "/[buildingId]/noticeboard",
+                query: { buildingId: id },
+              }}
               onClick={() => router.back()}
               type="link"
             >

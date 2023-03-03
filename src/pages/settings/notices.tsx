@@ -1,3 +1,4 @@
+import { useStore } from "../../store/useStore";
 import type { ReactElement } from "react";
 import type { NextPageWithLayout } from "../_app";
 import { trpc } from "../../utils/trpc";
@@ -7,6 +8,7 @@ import dayjs from "dayjs";
 
 const Notices: NextPageWithLayout = () => {
   const { data: notices, isLoading } = trpc.notice.byOrganisation.useQuery();
+  const buildingComplexId = useStore((state) => state.id);
 
   return (
     <>
@@ -23,7 +25,10 @@ const Notices: NextPageWithLayout = () => {
 
         <Link
           className="sm:col-end-13 sm:justify-self-end"
-          href={"/notice/new"}
+          href={{
+            pathname: "/[buildingComplexId]/noticeboard/notice/new",
+            query: { buildingComplexId: buildingComplexId },
+          }}
         >
           <button className="font-base h-10 w-31 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">
             Add notice

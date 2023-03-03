@@ -126,14 +126,10 @@ const Header: FC<Header> = ({ toggle }) => {
                     !user?.buildingComplex && "cursor-not-allowed opacity-50"
                   )}
                   type="button"
-                  href={
-                    user?.buildingComplex
-                      ? {
-                          pathname: "/[buildingId]/noticeboard/notice/new",
-                          query: { buildingId: id },
-                        }
-                      : ""
-                  }
+                  href={{
+                    pathname: "/[buildingId]/noticeboard/notice/new",
+                    query: { buildingId: id },
+                  }}
                 >
                   Create notice
                 </StyledLink>
