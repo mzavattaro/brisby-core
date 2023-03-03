@@ -1,4 +1,3 @@
-import NextError from "next/error";
 import type { Notice } from "@prisma/client";
 import type { FC } from "react";
 import { useEffect, useRef } from "react";
@@ -20,6 +19,7 @@ import Modal from "../../../components/Modal";
 import { RadioGroup } from "@headlessui/react";
 import { classNames } from "../../../utils/classNames";
 import { CheckIcon } from "@heroicons/react/24/outline";
+import NotFoundPage from "../../404";
 
 type NoticeboardProps = {
   notices: (Notice & {
@@ -279,13 +279,7 @@ const NoticeboardViewPage = () => {
   }, [scrollPosition, hasNextPage, isFetching, fetchNextPage]);
 
   if (buildingComplexQuery.error) {
-    console.log(buildingComplexQuery.error.message);
-    return (
-      <NextError
-        title={buildingComplexQuery.error.message}
-        statusCode={buildingComplexQuery.error.data?.httpStatus ?? 500}
-      />
-    );
+    return <NotFoundPage />;
   }
 
   if (buildingComplexQuery.status !== "success") {

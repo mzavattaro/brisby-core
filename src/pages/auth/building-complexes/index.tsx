@@ -9,7 +9,6 @@ import {
   BuildingLibraryIcon,
   ArrowLongRightIcon,
 } from "@heroicons/react/24/outline";
-import { classNames } from "../../../utils/classNames";
 
 const BuildingComplexes: NextPage = () => {
   const { data: buildingComplexes } =
@@ -89,7 +88,7 @@ const BuildingComplexes: NextPage = () => {
               href={"/auth/building-complexes/new"}
               type="button"
             >
-              Create builing complex
+              Create building complex
             </StyledLink>
           </div>
           <div className="mt-4 flex w-full flex-col items-center justify-center text-xs sm:mt-10 sm:flex-row sm:text-base">
