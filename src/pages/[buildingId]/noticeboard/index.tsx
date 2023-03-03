@@ -157,13 +157,14 @@ const Noticeboard: FC<NoticeboardProps> = ({
           <InfoBox>
             <h3 className="text-base font-bold">Notices</h3>
             <p className="text-sm">
-              Building notices represent important information that your
-              building residents need to know.
+              Notices represent important information that your building
+              residents need to be notified about.
             </p>
             <p className="mt-4 text-sm">
-              Notice status can be changed depending on when your building
-              residents need to be notified. View a list of notices within your
-              settings. Create a notice by clicking the <b>Create notice </b>
+              A notice&apos;s status can be changed depending on when your
+              building residents need to be notified. View a list of notices
+              within your settings. Create a notice by clicking the{" "}
+              <b>Create notice </b>
               button below.
             </p>
             <StyledLink
