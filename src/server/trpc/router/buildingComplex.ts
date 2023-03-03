@@ -55,6 +55,25 @@ export const buildingComplexRouter = router({
       });
     }),
 
+  findAnEntry: protectedProcedure.query(async ({ ctx }) => {
+    const { prisma } = ctx;
+
+    const buildingComplexes = await prisma.buildingComplex.findFirst({
+      select: {
+        id: true,
+      },
+    });
+
+    if (!buildingComplexes) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Building complexes not found",
+      });
+    }
+
+    return buildingComplexes;
+  }),
+
   // get single /api/buildingComplex by id
   byId: protectedProcedure
     .input(
@@ -105,6 +124,7 @@ export const buildingComplexRouter = router({
         type: true,
         totalOccupancies: true,
         streetAddress: true,
+        suburb: true,
       },
     });
 

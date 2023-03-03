@@ -46,7 +46,6 @@ const Noticeboard: FC<NoticeboardProps> = ({
   isFetchingNextPage,
   hasNextPage,
   buildingComplexData,
-  queryBuildingId,
 }) => {
   const { isShowing, toggle } = useModal();
   const cancelButtonRef = useRef(null);
@@ -280,6 +279,7 @@ const NoticeboardViewPage = () => {
   }, [scrollPosition, hasNextPage, isFetching, fetchNextPage]);
 
   if (buildingComplexQuery.error) {
+    console.log(buildingComplexQuery.error.message);
     return (
       <NextError
         title={buildingComplexQuery.error.message}

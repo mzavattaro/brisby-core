@@ -1,8 +1,10 @@
 import { signIn, signOut, useSession } from "next-auth/react";
+import { useStore } from "../store/useStore";
 import { trpc } from "../utils/trpc";
 
 const SignInButton: React.FC = () => {
   const { data: sessionData } = useSession();
+  const buildingComplexId = useStore((state) => state.id);
 
   const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery(
     undefined, // no input

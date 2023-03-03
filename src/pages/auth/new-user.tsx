@@ -54,7 +54,9 @@ const NewUser: React.FC<NewUserSchema> = () => {
       });
       await router.push("/organisation/new");
     } catch (error) {
-      console.log(error);
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
     }
   };
 

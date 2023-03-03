@@ -4,7 +4,10 @@ import Link from "next/link";
 
 type StyledLink = {
   type: "button" | "link";
-  href?: string | string | { pathname: string; query: { buildingId: string } };
+  href?:
+    | string
+    | string
+    | { pathname?: string; query?: { buildingId?: string } };
   className?: string;
   onClick?: () => void;
   children: ReactNode;

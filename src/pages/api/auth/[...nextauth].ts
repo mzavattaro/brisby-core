@@ -58,7 +58,7 @@ export const authOptions: NextAuthOptions = {
   ],
   pages: {
     signIn: "/auth/signin",
-    // verifyRequest: "/auth/verify",
+    verifyRequest: "/auth/verify",
     newUser: "/auth/new-user",
   },
   secret: process.env.NEXTAUTH_SECRET,

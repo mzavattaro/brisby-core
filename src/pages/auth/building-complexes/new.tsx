@@ -1,13 +1,13 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { trpc } from "../../utils/trpc";
+import { trpc } from "../../../utils/trpc";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { SubmitHandler } from "react-hook-form";
-import { classNames } from "../../utils/classNames";
+import { classNames } from "../../../utils/classNames";
 import { useRouter } from "next/router";
-import StyledLink from "../../components/StyledLink";
-import Button from "../../components/Button";
+import StyledLink from "../../../components/StyledLink";
+import Button from "../../../components/Button";
 import type { FC } from "react";
 
 const newBuildingSchema = z.object({
