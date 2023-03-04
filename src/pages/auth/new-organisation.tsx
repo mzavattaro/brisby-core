@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { SubmitHandler } from "react-hook-form";
 import { classNames } from "../../utils/classNames";
 import { useRouter } from "next/router";
+import { useNewUserStore } from "../../store/useNewUserStore";
 
 const organisationSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
@@ -17,6 +18,7 @@ type OrganisationSchema = z.infer<typeof organisationSchema>;
 const Organisation: NextPage = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const userName = useNewUserStore((state) => state.name);
 
   const {
     register,
@@ -37,6 +39,17 @@ const Organisation: NextPage = () => {
         }
       }
     },
+    onError: async (error) => {
+      if (error instanceof Error) {
+        try {
+          await router.push("/auth/building-complexes");
+        } catch (error) {
+          if (error instanceof Error) {
+            console.log(error.message);
+          }
+        }
+      }
+    },
   });
 
   const onSubmit: SubmitHandler<OrganisationSchema> = async (data) => {
@@ -53,7 +66,15 @@ const Organisation: NextPage = () => {
 
     try {
       await mutateAsync({ name: name });
-      await router.push("/noticeboard");
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+      return;
+    }
+
+    try {
+      await router.push("/auth/building-complexes");
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message);
@@ -62,10 +83,12 @@ const Organisation: NextPage = () => {
     }
   };
 
+  console.log("userName:", userName);
+
   return (
     <div className="mx-4 mt-6 text-center sm:mx-auto sm:w-full sm:max-w-2xl">
       <div className="text-center">
-        <h4>Step 2 of 2</h4>
+        <h4>Step 2 of 3</h4>
         <h4 className="text-3xl font-bold text-gray-900">Brisby</h4>
         <h2 className="mt-6 text-center text-4xl font-extrabold text-gray-900">
           Setup your company or organisation

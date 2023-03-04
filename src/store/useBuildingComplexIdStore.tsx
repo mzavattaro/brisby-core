@@ -6,7 +6,7 @@ type buildingComplexStore = {
   setBuildingComplexId: (id: string) => void;
 };
 
-export const useStore = create(
+export const useBuildingComplexIdStore = create(
   persist<buildingComplexStore>(
     (set) => ({
       // initial state

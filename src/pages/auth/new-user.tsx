@@ -52,7 +52,7 @@ const NewUser: React.FC<NewUserSchema> = () => {
         },
         id: sessionData?.user?.id,
       });
-      await router.push("/organisation/new");
+      await router.push("/auth/new-organisation");
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message);
@@ -63,7 +63,7 @@ const NewUser: React.FC<NewUserSchema> = () => {
   return (
     <div className="mx-4 mt-6 text-center sm:mx-auto sm:w-full sm:max-w-2xl">
       <div className="text-center">
-        <h4>Step 1 of 2</h4>
+        <h4>Step 1 of 3</h4>
         <h4 className="text-3xl font-bold text-gray-900">Brisby</h4>
         <h2 className="mt-6 text-center text-4xl font-extrabold text-gray-900">
           Setup your new account

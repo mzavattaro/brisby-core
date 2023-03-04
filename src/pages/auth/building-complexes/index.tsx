@@ -43,11 +43,9 @@ const BuildingComplexes: NextPage = () => {
         </InfoBox>
       ) : (
         <div className="flex w-full flex-col items-center">
-          <h1 className="my-6 text-2xl font-bold">Welcome back</h1>
+          <h1 className="my-6 text-2xl font-bold">Welcome back!</h1>
           <div className="flex h-14 w-full items-center rounded-t-lg border bg-indigo-50 px-4">
-            <h3 className="font-semibold">
-              Building complexes for Strata Logic
-            </h3>
+            <h3 className="font-semibold">Building complexes for {}</h3>
           </div>
           <ul
             role="list"

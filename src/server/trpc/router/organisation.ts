@@ -99,6 +99,13 @@ export const organisationRouter = router({
           suburb: true,
           state: true,
           postcode: true,
+          users: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
         },
       });
 

@@ -32,6 +32,11 @@ const SignIn: React.FC<SignInSchema> = ({ csrfToken }) => {
   const onSubmit: SubmitHandler<SignInSchema> = async (data) => {
     try {
       await axios.post("/api/auth/signin/email", data); // revisit...
+    } catch (error) {
+      console.error(error);
+    }
+
+    try {
       await router.push("/auth/verify");
     } catch (error) {
       console.error(error);

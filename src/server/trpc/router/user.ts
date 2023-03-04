@@ -71,6 +71,27 @@ export const userRouter = router({
       return user;
     }),
 
+  hasOrganisation: protectedProcedure
+    .input(z.object({ email: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { prisma } = ctx;
+      const { email } = input;
+
+      const userOrgansation = await prisma.user.findUnique({
+        where: { email },
+        select: { organisationId: true },
+      });
+
+      if (!userOrgansation) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User has no organisationId!",
+        });
+      }
+
+      return userOrgansation;
+    }),
+
   // check user exists by email /api/user
   byEmail: publicProcedure
     .input(z.object({ email: z.string().optional() }))

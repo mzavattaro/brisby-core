@@ -1,4 +1,4 @@
-import { useStore } from "../../store/useStore";
+import { useBuildingComplexIdStore } from "../../store/useBuildingComplexIdStore";
 import type { ReactElement } from "react";
 import type { NextPageWithLayout } from "../_app";
 import { trpc } from "../../utils/trpc";
@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 
 const Notices: NextPageWithLayout = () => {
   const { data: notices, isLoading } = trpc.notice.byOrganisation.useQuery();
-  const buildingComplexId = useStore((state) => state.id);
+  const buildingComplexId = useBuildingComplexIdStore((state) => state.id);
 
   return (
     <>

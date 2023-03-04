@@ -215,15 +215,10 @@ const Header: FC<Header> = ({ toggle }) => {
                                 "cursor-not-allowed opacity-50"
                             )}
                             type="button"
-                            href={
-                              user?.buildingComplex
-                                ? {
-                                    pathname:
-                                      "/[buildingId]/noticeboard/notice/new",
-                                    query: { buildingId: id },
-                                  }
-                                : ""
-                            }
+                            href={{
+                              pathname: "/[buildingId]/noticeboard/notice/new",
+                              query: { buildingId: id },
+                            }}
                           >
                             Create notice
                           </StyledLink>
@@ -238,7 +233,13 @@ const Header: FC<Header> = ({ toggle }) => {
             <Disclosure.Panel className="absolute left-0 z-10 w-full rounded-b-lg bg-white shadow-md sm:hidden">
               <div className="space-y-1 pt-2">
                 {/* Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" */}
-                <Link className="w-full" href="/noticeboard">
+                <Link
+                  className="w-full"
+                  href={{
+                    pathname: "/[buildingId]/noticeboard/",
+                    query: { buildingId: id },
+                  }}
+                >
                   <Disclosure.Button
                     className={classNames(
                       "block w-full border-l-4 py-2 px-3 text-left text-base font-medium",
@@ -250,7 +251,12 @@ const Header: FC<Header> = ({ toggle }) => {
                     All notices
                   </Disclosure.Button>
                 </Link>
-                <Link href="/noticeboard/published">
+                <Link
+                  href={{
+                    pathname: "/[buildingId]/noticeboard/published",
+                    query: { buildingId: id },
+                  }}
+                >
                   <Disclosure.Button
                     className={classNames(
                       "block w-full border-l-4 py-2 px-3 text-left text-base font-medium",
@@ -263,7 +269,12 @@ const Header: FC<Header> = ({ toggle }) => {
                   </Disclosure.Button>
                 </Link>
 
-                <Link href="/noticeboard/drafts">
+                <Link
+                  href={{
+                    pathname: "/[buildingId]/noticeboard/drafts",
+                    query: { buildingId: id },
+                  }}
+                >
                   <Disclosure.Button
                     className={classNames(
                       "block w-full border-l-4 py-2 px-3 text-left text-base font-medium",
@@ -275,7 +286,12 @@ const Header: FC<Header> = ({ toggle }) => {
                     Drafts
                   </Disclosure.Button>
                 </Link>
-                <Link href="/noticeboard/archived">
+                <Link
+                  href={{
+                    pathname: "/[buildingId]/noticeboard/archived",
+                    query: { buildingId: id },
+                  }}
+                >
                   <Disclosure.Button
                     className={classNames(
                       "block w-full border-l-4 py-2 px-3 text-left text-base font-medium",

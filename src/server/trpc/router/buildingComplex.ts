@@ -125,6 +125,11 @@ export const buildingComplexRouter = router({
         totalOccupancies: true,
         streetAddress: true,
         suburb: true,
+        organisation: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
 

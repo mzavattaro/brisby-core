@@ -1,12 +1,12 @@
 import type { FC } from "react";
-import { useStore } from "../store/useStore";
+import { useBuildingComplexIdStore } from "../store/useBuildingComplexIdStore";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLongLeftIcon } from "@heroicons/react/24/outline";
 
 const BackButton: FC = () => {
-  const buildingComplexId = useStore((state) => state.id);
+  const buildingComplexId = useBuildingComplexIdStore((state) => state.id);
   const [backLink, setBackLink] = useState("/");
   const { isReady } = useRouter();
 

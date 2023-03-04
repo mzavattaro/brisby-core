@@ -2,8 +2,7 @@ import type { Notice } from "@prisma/client";
 import type { FC } from "react";
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/router";
-import { useStore } from "../../../store/useStore";
-import Link from "next/link";
+import { useBuildingComplexIdStore } from "../../../store/useBuildingComplexIdStore";
 import { trpc } from "../../../utils/trpc";
 import useScrollPosition from "../../../utils/useScrollPosition";
 import Header from "../../../components/Header";
@@ -16,8 +15,6 @@ import ScrollVertical from "../../../../public/ScrollVertical";
 import InfoBox from "../../../components/InfoBox";
 import StyledLink from "../../../components/StyledLink";
 import Modal from "../../../components/Modal";
-import { RadioGroup } from "@headlessui/react";
-import { classNames } from "../../../utils/classNames";
 import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
 import NotFoundPage from "../../404";
 
@@ -188,25 +185,21 @@ const Noticeboard: FC<NoticeboardProps> = ({
 
 const NoticeboardViewPage = () => {
   const id = useRouter().query.buildingId as string;
-  const setBuildingComplexId = useStore((state) => state.setBuildingComplexId);
+  const setBuildingComplexId = useBuildingComplexIdStore(
+    (state) => state.setBuildingComplexId
+  );
 
   const buildingComplexQuery = trpc.buildingComplex.byId.useQuery({ id });
-  const {
-    data,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-    isFetching,
-    error,
-  } = trpc.notice.infiniteList.useInfiniteQuery(
-    {
-      limit: 5,
-      id: id,
-    },
-    {
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-    }
-  );
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isFetching } =
+    trpc.notice.infiniteList.useInfiniteQuery(
+      {
+        limit: 5,
+        id: id,
+      },
+      {
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+      }
+    );
 
   const scrollPosition = useScrollPosition();
 
