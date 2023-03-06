@@ -3,7 +3,6 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { trpc } from "../../../utils/trpc";
 import InfoBox from "../../../components/InfoBox";
 import StyledLink from "../../../components/StyledLink";
-import Button from "../../../components/Button";
 import {
   HomeIcon,
   BuildingOfficeIcon,
