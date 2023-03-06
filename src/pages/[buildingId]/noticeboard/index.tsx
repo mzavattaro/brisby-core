@@ -120,7 +120,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
 
       <Header toggle={toggle} />
 
-      <div className="mx-auto mt-4 flex max-w-md flex-col sm:max-w-full md:mt-6">
+      <div className="mx-auto mt-4 flex max-w-lg flex-col sm:max-w-full md:mt-6">
         <p className="text-sm font-bold md:text-lg">{name || ""}</p>
         <p className="text-xs md:text-sm">
           {buildingComplexData ? buildingComplexAddress : ""}

@@ -71,8 +71,10 @@ const NoticeItem: FC<NoticeItem> = ({ notice, toggle }) => {
       >
         <div className="-mt-px flex divide-x divide-gray-200 border-b text-center">
           <div className="my-2 flex w-full flex-col justify-center">
-            <p className="text-sm font-semibold uppercase">notice period</p>
-            <p className="text-sm text-gray-500">
+            <p className="text-xs font-semibold uppercase sm:text-sm">
+              notice period
+            </p>
+            <p className="text-xs text-gray-500 sm:text-sm">
               {`${dayjs(startDate).format("D MMM YYYY")} -
                   ${dayjs(endDate).format("D MMM YYYY")}`}
             </p>
@@ -87,14 +89,14 @@ const NoticeItem: FC<NoticeItem> = ({ notice, toggle }) => {
               <Badge status={status}>{status}</Badge>
             </div>
 
-            <h3 className="mb-2 text-base font-semibold text-gray-900 line-clamp-2">
-              {title}
+            <h3 className="mb-2 mt-2 text-sm font-semibold text-gray-900 line-clamp-2 sm:mt-4 sm:text-base">
+              {title} as asdasda asdsadsad asd asdsa dsa das d
             </h3>
             <div className="flex place-content-between items-center">
               <div className="flex flex-col sm:w-40">
                 <span className="text-sm text-gray-900">Uploaded by</span>
-                <span className=" truncate text-sm text-gray-500">
-                  {author?.name}
+                <span className="w-26 truncate text-sm text-gray-500 sm:w-40">
+                  {author?.name} adadsdasdasdsadasdsad asdas daasdasasd
                 </span>
               </div>
               <DropdownMenu

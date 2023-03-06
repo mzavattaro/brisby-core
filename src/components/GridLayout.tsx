@@ -17,7 +17,7 @@ const GridLayout: FC<GridLayout> = ({
     <>
       <div
         role="list"
-        className="mx-auto grid max-w-md grid-cols-1 gap-6 pt-6 pb-12 sm:max-w-full sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+        className="mx-auto grid max-w-lg grid-cols-2 gap-6 pt-6 pb-12 sm:max-w-full sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
       >
         {children}
       </div>
