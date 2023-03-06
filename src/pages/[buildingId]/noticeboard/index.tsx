@@ -1,6 +1,6 @@
 import type { Notice } from "@prisma/client";
 import type { FC } from "react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useBuildingComplexIdStore } from "../../../store/useBuildingComplexIdStore";
 import { trpc } from "../../../utils/trpc";
@@ -19,12 +19,14 @@ import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
 import NotFoundPage from "../../404";
 
 type NoticeboardProps = {
-  notices: (Notice & {
-    author: {
-      id: string;
-      name: string | null;
-    };
-  })[];
+  notices:
+    | (Notice & {
+        author: {
+          id: string;
+          name: string | null;
+        };
+      })[]
+    | undefined;
   isFetching: boolean;
   isFetchingNextPage: boolean;
   hasNextPage: boolean | undefined;
@@ -35,6 +37,8 @@ type NoticeboardProps = {
     suburb: string;
   };
   queryBuildingId: string;
+  handleFetchNextPage: () => void;
+  handleFetchPreviousPage: () => void;
 };
 
 const Noticeboard: FC<NoticeboardProps> = ({
@@ -44,6 +48,8 @@ const Noticeboard: FC<NoticeboardProps> = ({
   hasNextPage,
   buildingComplexData,
   queryBuildingId,
+  handleFetchNextPage,
+  handleFetchPreviousPage,
 }) => {
   const { isShowing, toggle } = useModal();
   const cancelButtonRef = useRef(null);
@@ -127,29 +133,25 @@ const Noticeboard: FC<NoticeboardProps> = ({
         </p>
       </div>
 
-      {buildingComplexData && notices.length > 0 && !isFetching && (
+      {buildingComplexData && !isFetching ? (
         <GridLayout
           isFetching={isFetching}
           isFetchingNextPage={isFetchingNextPage}
         >
-          {notices.map((notice) => (
+          {notices?.map((notice) => (
             <NoticeItem key={notice.id} notice={notice} toggle={toggle} />
           ))}
-          {hasNextPage && !isFetchingNextPage && (
-            <div className="flex flex-col items-center justify-center font-bold text-slate-300">
-              <ScrollVertical />
-              <span>Scroll for more notices</span>
-            </div>
-          )}
           {isFetchingNextPage && (
             <div className="flex flex-col items-center justify-center font-bold text-slate-300">
               Fetching notices...
             </div>
           )}
         </GridLayout>
+      ) : (
+        <span>notices.length broke</span>
       )}
 
-      {buildingComplexData && notices.length === 0 && !isFetching && (
+      {buildingComplexData && notices?.length === 0 && !isFetching && (
         <div className="mt-20 flex flex-col items-center justify-center">
           <InfoBox>
             <h3 className="text-base font-bold">Notices</h3>
@@ -177,6 +179,8 @@ const Noticeboard: FC<NoticeboardProps> = ({
           </InfoBox>
         </div>
       )}
+      <button onClick={() => handleFetchPreviousPage()}>Previous page</button>
+      <button onClick={() => handleFetchNextPage()}>Next page</button>
 
       {/* <ToastNofication isShowing={isShowing} toggle={toggle} /> */}
     </Container>
@@ -185,22 +189,43 @@ const Noticeboard: FC<NoticeboardProps> = ({
 
 const NoticeboardViewPage = () => {
   const id = useRouter().query.buildingId as string;
+  const [page, setPage] = useState(0);
+
   const setBuildingComplexId = useBuildingComplexIdStore(
     (state) => state.setBuildingComplexId
   );
 
   const buildingComplexQuery = trpc.buildingComplex.byId.useQuery({ id });
 
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isFetching } =
-    trpc.notice.infiniteList.useInfiniteQuery(
-      {
-        limit: 5,
-        id: id,
-      },
-      {
-        getNextPageParam: (lastPage) => lastPage.nextCursor,
-      }
-    );
+  const {
+    data,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isFetching,
+    fetchPreviousPage,
+  } = trpc.notice.infiniteList.useInfiniteQuery(
+    {
+      limit: 4,
+      id: id,
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
+  );
+
+  const handleFetchNextPage = async () => {
+    try {
+      await fetchNextPage();
+    } catch (error) {
+      console.log(error);
+    }
+    setPage((prev) => prev + 1);
+  };
+
+  const handleFetchPreviousPage = () => {
+    setPage((prev) => prev - 1);
+  };
 
   const scrollPosition = useScrollPosition();
 
@@ -208,11 +233,11 @@ const NoticeboardViewPage = () => {
     setBuildingComplexId(id);
   }, [id, setBuildingComplexId]);
 
-  useEffect(() => {
-    if (scrollPosition > 90 && hasNextPage && !isFetching) {
-      fetchNextPage().catch(console.error);
-    }
-  }, [scrollPosition, hasNextPage, isFetching, fetchNextPage]);
+  // useEffect(() => {
+  //   if (scrollPosition > 90 && hasNextPage && !isFetching) {
+  //     fetchNextPage().catch(console.error);
+  //   }
+  // }, [scrollPosition, hasNextPage, isFetching, fetchNextPage]);
 
   if (buildingComplexQuery.error) {
     return <NotFoundPage />;
@@ -224,7 +249,13 @@ const NoticeboardViewPage = () => {
 
   const { data: buildingComplexData } = buildingComplexQuery;
 
-  const notices = data?.pages.flatMap((page) => page.notices) ?? [];
+  // const notices = data?.pages.flatMap((page) => page.notices) ?? [];
+  const notices = data?.pages[page]?.notices;
+  // console.log("data", data);
+  // console.log("Pages data", data?.pages);
+  console.log("page: ", page);
+  console.log("notices: ", notices);
+  console.log("data: ", data);
 
   return (
     <Noticeboard
@@ -234,6 +265,8 @@ const NoticeboardViewPage = () => {
       isFetchingNextPage={isFetchingNextPage}
       hasNextPage={hasNextPage}
       queryBuildingId={id}
+      handleFetchNextPage={handleFetchNextPage}
+      handleFetchPreviousPage={handleFetchPreviousPage}
     />
   );
 };

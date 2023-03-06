@@ -116,15 +116,16 @@ export const noticeRouter = router({
   infiniteList: protectedProcedure
     .input(
       z.object({
-        limit: z.number().min(1).max(100).default(10),
-        cursor: z.string().optional(),
+        limit: z.number(),
+        cursor: z.string().nullish(),
+        skip: z.number().optional(),
         organisationId: z.string().optional(),
         id: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
       const { prisma, session } = ctx;
-      const { limit, cursor, id } = input;
+      const { limit, skip, cursor, id } = input;
 
       const sessionOrganisationId = session.user.organisationId;
 
@@ -134,8 +135,9 @@ export const noticeRouter = router({
           buildingComplexId: id,
         },
         take: limit + 1,
-        orderBy: [{ createdAt: "desc" }],
+        skip: skip,
         cursor: cursor ? { id: cursor } : undefined,
+        orderBy: [{ createdAt: "desc" }],
         include: {
           author: {
             select: {
