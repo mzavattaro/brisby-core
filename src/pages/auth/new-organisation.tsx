@@ -7,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { SubmitHandler } from "react-hook-form";
 import { classNames } from "../../utils/classNames";
 import { useRouter } from "next/router";
-import { useNewUserStore } from "../../store/useNewUserStore";
 
 const organisationSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
@@ -18,7 +17,6 @@ type OrganisationSchema = z.infer<typeof organisationSchema>;
 const Organisation: NextPage = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
-  const userName = useNewUserStore((state) => state.name);
 
   const {
     register,
@@ -82,8 +80,6 @@ const Organisation: NextPage = () => {
       return;
     }
   };
-
-  console.log("userName:", userName);
 
   return (
     <div className="mx-4 mt-6 text-center sm:mx-auto sm:w-full sm:max-w-2xl">

@@ -60,6 +60,7 @@ export const authOptions: NextAuthOptions = {
     signIn: "/auth/signin",
     verifyRequest: "/auth/verify",
     newUser: "/auth/new-user",
+    error: "/auth/error",
   },
   secret: process.env.NEXTAUTH_SECRET,
 };

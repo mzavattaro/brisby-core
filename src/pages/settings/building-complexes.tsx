@@ -1,8 +1,8 @@
-import SettingsLayout from "../../components/SettingsLayout";
-import type { ReactElement } from "react";
-import { trpc } from "../../utils/trpc";
 import type { NextPageWithLayout } from "../_app";
 import Link from "next/link";
+import type { ReactElement } from "react";
+import { trpc } from "../../utils/trpc";
+import SettingsLayout from "../../components/SettingsLayout";
 
 const BuildingComplexes: NextPageWithLayout = () => {
   const { data: buildingComplexes, isLoading } =

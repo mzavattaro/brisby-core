@@ -198,7 +198,7 @@ const Header: FC<Header> = ({ toggle }) => {
                                 ? () => signOut({ callbackUrl: "/" })
                                 : () =>
                                     signIn("email", {
-                                      callbackUrl: "/noticeboard",
+                                      callbackUrl: "/auth/check-credentials",
                                     })
                             }
                           >

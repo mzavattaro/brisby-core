@@ -1,7 +1,8 @@
+import type { FC } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 
-const SignInButton: React.FC = () => {
+const SignInButton: FC = () => {
   const { data: sessionData } = useSession();
 
   const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery(
@@ -22,7 +23,7 @@ const SignInButton: React.FC = () => {
             ? () => signOut()
             : () =>
                 signIn("email", {
-                  callbackUrl: "/auth/credential-check",
+                  callbackUrl: "/auth/check-credentials",
                 })
         }
       >
