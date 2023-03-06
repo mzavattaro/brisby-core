@@ -190,6 +190,7 @@ const NoticeboardViewPage = () => {
   );
 
   const buildingComplexQuery = trpc.buildingComplex.byId.useQuery({ id });
+
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isFetching } =
     trpc.notice.infiniteList.useInfiniteQuery(
       {
