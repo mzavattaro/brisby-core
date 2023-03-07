@@ -137,7 +137,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
         </p>
       </div>
 
-      {buildingComplexData && !isFetching ? (
+      {buildingComplexData && !isFetching && (
         <GridLayout
           isFetching={isFetching}
           isFetchingNextPage={isFetchingNextPage}
@@ -157,8 +157,6 @@ const Noticeboard: FC<NoticeboardProps> = ({
             </div>
           )}
         </GridLayout>
-      ) : (
-        <span>notices.length broke</span>
       )}
 
       {buildingComplexData && notices?.length === 0 && !isFetching && (
