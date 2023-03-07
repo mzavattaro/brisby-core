@@ -1,4 +1,5 @@
 import type { FC } from "react";
+import type { Notice } from "@prisma/client";
 import { useQueryClient } from "@tanstack/react-query";
 import type { RouterOutputs } from "../utils/trpc";
 import { trpc } from "../utils/trpc";
@@ -10,9 +11,23 @@ import Badge from "./Badge";
 type NoticeItem = {
   notice: RouterOutputs["notice"]["infiniteList"]["notices"][number];
   toggle: () => void;
+  handleFetchPreviousPage: () => void;
+  notices:
+    | (Notice & {
+        author: {
+          id: string;
+          name: string | null;
+        };
+      })[]
+    | undefined;
 };
 
-const NoticeItem: FC<NoticeItem> = ({ notice, toggle }) => {
+const NoticeItem: FC<NoticeItem> = ({
+  notice,
+  toggle,
+  handleFetchPreviousPage,
+  notices,
+}) => {
   const { id, title, startDate, endDate, status, uploadUrl, author } = notice;
 
   const queryClient = useQueryClient();
@@ -25,6 +40,9 @@ const NoticeItem: FC<NoticeItem> = ({ notice, toggle }) => {
         if (error instanceof Error) {
           console.log(error.message);
         }
+      }
+      if (notices?.length === 1) {
+        handleFetchPreviousPage();
       }
     },
   });
