@@ -53,7 +53,8 @@ const Noticeboard: FC<NoticeboardProps> = ({
   handleFetchPreviousPage,
   nextCursor,
 }) => {
-  const { isShowing, toggle } = useModal();
+  const { toggle } = useModal();
+  const { isShowing: isShowingModal, toggle: toggleModal } = useModal();
   const cancelButtonRef = useRef(null);
 
   const { name, streetAddress, suburb } = buildingComplexData;
@@ -66,8 +67,8 @@ const Noticeboard: FC<NoticeboardProps> = ({
   return (
     <Container className="text-gray-900">
       <Modal
-        isShowing={isShowing}
-        hide={toggle}
+        isShowing={isShowingModal}
+        hide={toggleModal}
         cancelButtonRef={cancelButtonRef}
         className="h-112"
       >
@@ -101,6 +102,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
                 </p>
               </div>
               <StyledLink
+                onClick={toggleModal}
                 type="link"
                 href={{
                   pathname: "/[buildingId]/noticeboard",
@@ -126,7 +128,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
         </div>
       </Modal>
 
-      <Header toggle={toggle} />
+      <Header toggle={toggleModal} />
 
       <div className="mx-auto mt-4 flex max-w-lg flex-col sm:max-w-full md:mt-6">
         <p className="text-sm font-bold md:text-lg">{name || ""}</p>
