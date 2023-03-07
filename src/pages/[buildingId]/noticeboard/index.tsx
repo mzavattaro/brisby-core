@@ -182,12 +182,14 @@ const Noticeboard: FC<NoticeboardProps> = ({
         </div>
       )}
 
-      <Pagination
-        handleFetchNextPage={handleFetchNextPage}
-        handleFetchPreviousPage={handleFetchPreviousPage}
-        hasNextPage={hasNextPage}
-        nextCursor={nextCursor}
-      />
+      {buildingComplexData && !!notices?.length && !isFetching && (
+        <Pagination
+          handleFetchNextPage={handleFetchNextPage}
+          handleFetchPreviousPage={handleFetchPreviousPage}
+          hasNextPage={hasNextPage}
+          nextCursor={nextCursor}
+        />
+      )}
 
       {/* <ToastNofication isShowing={isShowing} toggle={toggle} /> */}
     </Container>
