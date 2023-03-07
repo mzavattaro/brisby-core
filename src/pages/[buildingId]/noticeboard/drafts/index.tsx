@@ -160,7 +160,13 @@ const Drafts: FC<typeof NoticeboardProps> = () => {
           isFetchingNextPage={isFetchingNextPage}
         >
           {notices?.map((notice) => (
-            <NoticeItem key={notice.id} notice={notice} toggle={toggle} />
+            <NoticeItem
+              key={notice.id}
+              notice={notice}
+              toggle={toggle}
+              notices={notices}
+              handleFetchPreviousPage={handleFetchPreviousPage}
+            />
           ))}
           {isFetchingNextPage && (
             <div className="flex flex-col items-center justify-center font-bold text-slate-300">

@@ -160,7 +160,13 @@ const Archived: FC<typeof NoticeboardProps> = () => {
           isFetchingNextPage={isFetchingNextPage}
         >
           {notices?.map((notice) => (
-            <NoticeItem key={notice.id} notice={notice} toggle={toggle} />
+            <NoticeItem
+              notices={notices}
+              handleFetchPreviousPage={handleFetchPreviousPage}
+              key={notice.id}
+              notice={notice}
+              toggle={toggle}
+            />
           ))}
           {isFetchingNextPage && (
             <div className="flex flex-col items-center justify-center font-bold text-slate-300">
