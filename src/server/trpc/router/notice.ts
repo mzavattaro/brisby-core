@@ -134,7 +134,7 @@ export const noticeRouter = router({
           organisationId: sessionOrganisationId,
           buildingComplexId: id,
         },
-        take: limit + 1,
+        take: limit + 1 /* +1 for hasNextPage */,
         skip: skip,
         cursor: cursor ? { id: cursor } : undefined,
         orderBy: [{ createdAt: "desc" }],

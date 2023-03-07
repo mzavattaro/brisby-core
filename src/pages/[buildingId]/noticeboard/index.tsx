@@ -3,20 +3,20 @@ import type { FC } from "react";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useBuildingComplexIdStore } from "../../../store/useBuildingComplexIdStore";
+import { useNoticePageStore } from "../../../store/useNoticePageStore";
 import { trpc } from "../../../utils/trpc";
-import useScrollPosition from "../../../utils/useScrollPosition";
 import Header from "../../../components/Header";
 import GridLayout from "../../../components/GridLayout";
 import NoticeItem from "../../../components/NoticeItem";
 import Container from "../../../components/Container";
 import ToastNofication from "../../../components/ToastNotification";
 import useModal from "../../../utils/useModal";
-import ScrollVertical from "../../../../public/ScrollVertical";
 import InfoBox from "../../../components/InfoBox";
 import StyledLink from "../../../components/StyledLink";
 import Modal from "../../../components/Modal";
 import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
 import NotFoundPage from "../../404";
+import Pagination from "../../../components/Pagination";
 
 type NoticeboardProps = {
   notices:
@@ -39,6 +39,7 @@ type NoticeboardProps = {
   queryBuildingId: string;
   handleFetchNextPage: () => void;
   handleFetchPreviousPage: () => void;
+  nextCursor: string | undefined;
 };
 
 const Noticeboard: FC<NoticeboardProps> = ({
@@ -50,6 +51,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
   queryBuildingId,
   handleFetchNextPage,
   handleFetchPreviousPage,
+  nextCursor,
 }) => {
   const { isShowing, toggle } = useModal();
   const cancelButtonRef = useRef(null);
@@ -179,8 +181,13 @@ const Noticeboard: FC<NoticeboardProps> = ({
           </InfoBox>
         </div>
       )}
-      <button onClick={() => handleFetchPreviousPage()}>Previous page</button>
-      <button onClick={() => handleFetchNextPage()}>Next page</button>
+
+      <Pagination
+        handleFetchNextPage={handleFetchNextPage}
+        handleFetchPreviousPage={handleFetchPreviousPage}
+        hasNextPage={hasNextPage}
+        nextCursor={nextCursor}
+      />
 
       {/* <ToastNofication isShowing={isShowing} toggle={toggle} /> */}
     </Container>
@@ -195,30 +202,29 @@ const NoticeboardViewPage = () => {
     (state) => state.setBuildingComplexId
   );
 
+  const setNoticePage = useNoticePageStore((state) => state.setNoticePage);
+
   const buildingComplexQuery = trpc.buildingComplex.byId.useQuery({ id });
 
-  const {
-    data,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-    isFetching,
-    fetchPreviousPage,
-  } = trpc.notice.infiniteList.useInfiniteQuery(
-    {
-      limit: 4,
-      id: id,
-    },
-    {
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-    }
-  );
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isFetching } =
+    trpc.notice.infiniteList.useInfiniteQuery(
+      {
+        limit: 8,
+        id: id,
+      },
+      {
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+      }
+    );
 
   const handleFetchNextPage = async () => {
     try {
       await fetchNextPage();
     } catch (error) {
-      console.log(error);
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+      return;
     }
     setPage((prev) => prev + 1);
   };
@@ -227,17 +233,11 @@ const NoticeboardViewPage = () => {
     setPage((prev) => prev - 1);
   };
 
-  const scrollPosition = useScrollPosition();
+  setNoticePage(page);
 
   useEffect(() => {
     setBuildingComplexId(id);
   }, [id, setBuildingComplexId]);
-
-  // useEffect(() => {
-  //   if (scrollPosition > 90 && hasNextPage && !isFetching) {
-  //     fetchNextPage().catch(console.error);
-  //   }
-  // }, [scrollPosition, hasNextPage, isFetching, fetchNextPage]);
 
   if (buildingComplexQuery.error) {
     return <NotFoundPage />;
@@ -249,13 +249,8 @@ const NoticeboardViewPage = () => {
 
   const { data: buildingComplexData } = buildingComplexQuery;
 
-  // const notices = data?.pages.flatMap((page) => page.notices) ?? [];
   const notices = data?.pages[page]?.notices;
-  // console.log("data", data);
-  // console.log("Pages data", data?.pages);
-  console.log("page: ", page);
-  console.log("notices: ", notices);
-  console.log("data: ", data);
+  const nextCursor = data?.pages[page]?.nextCursor;
 
   return (
     <Noticeboard
@@ -267,6 +262,7 @@ const NoticeboardViewPage = () => {
       queryBuildingId={id}
       handleFetchNextPage={handleFetchNextPage}
       handleFetchPreviousPage={handleFetchPreviousPage}
+      nextCursor={nextCursor}
     />
   );
 };
