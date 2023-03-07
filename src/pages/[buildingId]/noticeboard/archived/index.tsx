@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import { trpc } from "../../../../utils/trpc";
 import { useBuildingComplexIdStore } from "../../../../store/useBuildingComplexIdStore";
 import { useNoticePageStore } from "../../../../store/useNoticePageStore";
-// import useScrollPosition from "../../../../utils/useScrollPosition";
 import Header from "../../../../components/Header";
 import Modal from "../../../../components/Modal";
 import GridLayout from "../../../../components/GridLayout";
@@ -12,7 +11,6 @@ import NoticeItem from "../../../../components/NoticeItem";
 import Container from "../../../../components/Container";
 import StyledLink from "../../../../components/StyledLink";
 import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
-// import ToastNofication from "../../../../components/ToastNotification";
 import useModal from "../../../../utils/useModal";
 import NotFoundPage from "../../../404";
 import type NoticeboardProps from "../../noticeboard/index";
@@ -182,7 +180,6 @@ const Archived: FC<typeof NoticeboardProps> = () => {
           nextCursor={nextCursor}
         />
       )}
-      {/* <ToastNofication isShowing={isShowing} toggle={toggle} /> */}
     </Container>
   );
 };
