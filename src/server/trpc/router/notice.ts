@@ -230,18 +230,27 @@ export const noticeRouter = router({
   published: protectedProcedure
     .input(
       z.object({
-        limit: z.number().min(1).max(100).default(10),
-        cursor: z.string().optional(),
-        status: z.string().optional(),
+        limit: z.number(),
+        cursor: z.string().nullish(),
+        skip: z.number().optional(),
+        organisationId: z.string().optional(),
+        id: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
-      const { limit, cursor } = input;
-      const { prisma } = ctx;
+      const { limit, skip, cursor, id } = input;
+      const { prisma, session } = ctx;
+
+      const sessionOrganisationId = session.user.organisationId;
 
       const notices = await prisma.notice.findMany({
-        where: { status: "published" },
+        where: {
+          organisationId: sessionOrganisationId,
+          buildingComplexId: id,
+          status: "published",
+        },
         take: limit + 1,
+        skip: skip,
         orderBy: [{ createdAt: "desc" }],
         cursor: cursor ? { id: cursor } : undefined,
         include: {
@@ -279,18 +288,27 @@ export const noticeRouter = router({
   drafts: protectedProcedure
     .input(
       z.object({
-        limit: z.number().min(1).max(100).default(10),
-        cursor: z.string().optional(),
-        status: z.string().optional(),
+        limit: z.number(),
+        cursor: z.string().nullish(),
+        skip: z.number().optional(),
+        organisationId: z.string().optional(),
+        id: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
-      const { limit, cursor } = input;
-      const { prisma } = ctx;
+      const { limit, skip, cursor, id } = input;
+      const { prisma, session } = ctx;
+
+      const sessionOrganisationId = session.user.organisationId;
 
       const notices = await prisma.notice.findMany({
-        where: { status: "draft" },
+        where: {
+          organisationId: sessionOrganisationId,
+          buildingComplexId: id,
+          status: "draft",
+        },
         take: limit + 1,
+        skip: skip,
         orderBy: [{ createdAt: "desc" }],
         cursor: cursor ? { id: cursor } : undefined,
         include: {
@@ -334,18 +352,27 @@ export const noticeRouter = router({
   archived: protectedProcedure
     .input(
       z.object({
-        limit: z.number().min(1).max(100).default(10),
-        cursor: z.string().optional(),
-        status: z.string().optional(),
+        limit: z.number(),
+        cursor: z.string().nullish(),
+        skip: z.number().optional(),
+        organisationId: z.string().optional(),
+        id: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
-      const { limit, cursor } = input;
-      const { prisma } = ctx;
+      const { limit, skip, cursor, id } = input;
+      const { prisma, session } = ctx;
+
+      const sessionOrganisationId = session.user.organisationId;
 
       const notices = await prisma.notice.findMany({
-        where: { status: "archived" },
+        where: {
+          organisationId: sessionOrganisationId,
+          buildingComplexId: id,
+          status: "archived",
+        },
         take: limit + 1,
+        skip: skip,
         orderBy: [{ createdAt: "desc" }],
         cursor: cursor ? { id: cursor } : undefined,
         include: {
@@ -357,7 +384,6 @@ export const noticeRouter = router({
           },
         },
       });
-
       if (!notices) {
         throw new TRPCError({
           code: "NOT_FOUND",

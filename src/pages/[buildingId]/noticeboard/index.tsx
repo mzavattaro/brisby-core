@@ -18,7 +18,7 @@ import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
 import NotFoundPage from "../../404";
 import Pagination from "../../../components/Pagination";
 
-type NoticeboardProps = {
+export type NoticeboardProps = {
   notices:
     | (Notice & {
         author: {
