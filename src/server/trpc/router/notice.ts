@@ -133,6 +133,7 @@ export const noticeRouter = router({
         where: {
           organisationId: sessionOrganisationId,
           buildingComplexId: id,
+          status: "published" || "draft",
         },
         take: limit + 1 /* +1 for hasNextPage */,
         skip: skip,

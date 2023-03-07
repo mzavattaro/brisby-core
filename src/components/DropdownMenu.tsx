@@ -10,6 +10,7 @@ type DropdownMenuProps = {
   handleDelete: () => void;
   handlePublishChange: () => void;
   handleDraftChange: () => void;
+  handleArchiveChange: () => void;
   uploadUrl: string;
   deleteMutationLoadingState: boolean;
   status: string | null;
@@ -20,6 +21,7 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
   handleDelete,
   handlePublishChange,
   handleDraftChange,
+  handleArchiveChange,
   deleteMutationLoadingState,
   status,
 }) => {
@@ -144,15 +146,18 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
               <div>
                 <Menu.Item>
                   {({ active }) => (
-                    <a
-                      href="#"
+                    <button
+                      type="button"
+                      disabled={status === "archived"}
+                      onClick={handleArchiveChange}
                       className={classNames(
-                        "block px-4 py-2 text-sm",
-                        active ? "bg-gray-100 text-gray-900" : "text-gray-700"
+                        "block w-full px-4 py-2 text-left text-sm",
+                        active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                        status === "archived" && "cursor-not-allowed opacity-50"
                       )}
                     >
                       Archive
-                    </a>
+                    </button>
                   )}
                 </Menu.Item>
               </div>

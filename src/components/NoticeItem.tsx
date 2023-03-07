@@ -79,6 +79,11 @@ const NoticeItem: FC<NoticeItem> = ({
     updateMutation.mutate({ data: { status: status }, id: id });
   };
 
+  const handleArchiveChange = () => {
+    const status = "archived";
+    updateMutation.mutate({ data: { status: status }, id: id });
+  };
+
   return (
     <>
       <div
@@ -119,6 +124,7 @@ const NoticeItem: FC<NoticeItem> = ({
                 handleDelete={handleDelete}
                 handlePublishChange={handlePublishChange}
                 handleDraftChange={handleDraftChange}
+                handleArchiveChange={handleArchiveChange}
                 uploadUrl={uploadUrl}
                 deleteMutationLoadingState={deleteMutationLoadingState}
                 status={status}
