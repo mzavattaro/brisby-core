@@ -16,9 +16,11 @@ const BuildingComplexes: NextPage = () => {
   const { data: buildingComplexes } =
     trpc.buildingComplex.byOrganisation.useQuery();
 
-  const organisationName = buildingComplexes?.flatMap(
-    (buildingComplex) => buildingComplex.organisation.name.toString() ?? []
+  const organisationArray = buildingComplexes?.flatMap(
+    (buildingComplex) => buildingComplex.organisation.name ?? []
   );
+
+  const organisationName = organisationArray?.shift();
 
   return (
     <div className="mx-4 mt-6 flex flex-col items-center sm:mx-auto sm:w-full sm:max-w-2xl">
