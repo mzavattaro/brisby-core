@@ -250,12 +250,9 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
               </div>
               <div>
                 <BackButton>Back to noticeboard</BackButton>
-                <h1 className="mt-4 text-2xl font-bold text-gray-900">
-                  {buildingComplex?.name}
+                <h1 className="mt-4 text-2xl font-bold text-gray-900 line-clamp-2">
+                  {title}
                 </h1>
-                <p className="text-sm font-medium text-gray-500">
-                  {buildingComplex?.streetAddress}, {buildingComplex?.suburb}
-                </p>
               </div>
             </div>
             <div className="justify-stretch mt-6 flex flex-col-reverse space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-y-0 sm:space-x-3 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
@@ -294,9 +291,12 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
                     <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
                       <div className="sm:col-span-1">
                         <dt className="text-sm font-medium text-gray-500">
-                          Title
+                          Noticeboard
                         </dt>
-                        <dd className="mt-1 text-sm text-gray-900">{title}</dd>
+                        {/* <dd className="mt-1 text-sm text-gray-900">{title}</dd>  */}
+                        <dd className="mt-1 text-sm text-gray-900">
+                          {buildingComplex?.name}
+                        </dd>
                       </div>
                       <div className="sm:col-span-1">
                         <dt className="text-sm font-medium text-gray-500">
@@ -324,7 +324,7 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
                       </div>
                       <div className="sm:col-span-1">
                         <dt className="text-sm font-medium text-gray-500">
-                          Orgnisation
+                          Description
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900">
                           Fugiat ipsum ipsum deserunt culpa aute sint do nostrud
@@ -337,7 +337,9 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
                           Preview
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900">
-                          <PdfViewer uploadUrl={uploadUrl} />
+                          <div className="">
+                            <PdfViewer uploadUrl={uploadUrl} />
+                          </div>
                         </dd>
                       </div>
                       <div className="sm:col-span-2">
