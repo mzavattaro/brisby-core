@@ -1,73 +1,240 @@
+import { useState, useRef } from "react";
 import NextError from "next/error";
 import { useRouter } from "next/router";
 import type { RouterOutputs } from "../../../../utils/trpc";
+import { useQueryClient } from "@tanstack/react-query";
 import { trpc } from "../../../../utils/trpc";
+import dayjs from "dayjs";
+import PdfViewer from "../../../../components/PdfViewer";
+import Badge from "../../../../components/Badge";
+import BackButton from "../../../../components/BackButton";
+import Dropdown from "../../../../components/Dropdown";
+import Modal from "../../../../components/Modal";
+import { PaperClipIcon } from "@heroicons/react/20/solid";
 import { classNames } from "../../../../utils/classNames";
-
-import {
-  CheckIcon,
-  HandThumbUpIcon,
-  PaperClipIcon,
-  UserIcon,
-} from "@heroicons/react/20/solid";
 
 type NoticeByIdOutput = RouterOutputs["notice"]["byId"];
 
-const attachments = [{ name: "resume_front_end_developer.pdf", href: "#" }];
-const eventTypes = {
-  applied: { icon: UserIcon, bgColorClass: "bg-gray-400" },
-  advanced: { icon: HandThumbUpIcon, bgColorClass: "bg-blue-500" },
-  completed: { icon: CheckIcon, bgColorClass: "bg-green-500" },
-};
-const timeline = [
-  {
-    id: 1,
-    type: eventTypes.applied,
-    content: "Applied to",
-    target: "Front End Developer",
-    date: "Sep 20",
-    datetime: "2020-09-20",
-  },
-  {
-    id: 2,
-    type: eventTypes.advanced,
-    content: "Advanced to phone screening by",
-    target: "Bethany Blake",
-    date: "Sep 22",
-    datetime: "2020-09-22",
-  },
-  {
-    id: 3,
-    type: eventTypes.completed,
-    content: "Completed phone screening with",
-    target: "Martha Gardner",
-    date: "Sep 28",
-    datetime: "2020-09-28",
-  },
-  {
-    id: 4,
-    type: eventTypes.advanced,
-    content: "Advanced to interview by",
-    target: "Bethany Blake",
-    date: "Sep 30",
-    datetime: "2020-09-30",
-  },
-  {
-    id: 5,
-    type: eventTypes.completed,
-    content: "Completed interview with",
-    target: "Katherine Snyder",
-    date: "Oct 4",
-    datetime: "2020-10-04",
-  },
-];
-
 const Notice = (props: { notice: NoticeByIdOutput }) => {
+  const [isShowingPublishModal, setIsShowingPublishModal] = useState(false);
+  const [isShowingDraftModal, setIsShowingDraftModal] = useState(false);
+  const [isShowingArchiveModal, setIsShowingArchiveModal] = useState(false);
+  const [isShowingDeleteModal, setIsShowingDeleteModal] = useState(false);
+  const queryClient = useQueryClient();
+  const cancelButtonRef = useRef(null);
+
+  const { mutate, isLoading } = trpc.notice.updateStatus.useMutation({
+    onSuccess: async () => {
+      try {
+        await queryClient.invalidateQueries();
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log(error.message);
+        }
+      }
+    },
+  });
   const { notice } = props;
-  console.log(notice);
+  const {
+    id,
+    title,
+    buildingComplex,
+    status,
+    startDate,
+    endDate,
+    author,
+    uploadUrl,
+    fileName,
+  } = notice;
+
+  const togglePublishModal = () => {
+    setIsShowingPublishModal(!isShowingPublishModal);
+  };
+
+  const toggleDraftModal = () => {
+    setIsShowingDraftModal(!isShowingDraftModal);
+  };
+
+  const toggleArchiveModal = () => {
+    setIsShowingArchiveModal(!isShowingArchiveModal);
+  };
+
+  const noticePeriod = `${dayjs(startDate).format("D MMMM YYYY")} -
+  ${dayjs(endDate).format("D MMMM YYYY")}`;
+
+  const handlePublishChange = () => {
+    const status = "published";
+    mutate({ data: { status: status }, id: id });
+    togglePublishModal();
+  };
+
+  const handleDraftChange = () => {
+    const status = "draft";
+    mutate({ data: { status: status }, id: id });
+    toggleDraftModal();
+  };
+
+  const handleArchiveChange = () => {
+    const status = "archived";
+    mutate({ data: { status: status }, id: id });
+    toggleArchiveModal();
+  };
+
+  const statusInfo = [
+    {
+      heading: "Published",
+      content: (
+        <p className="text-small text-gray-500">
+          The notice is{" "}
+          <span className="font-bold text-indigo-600">public</span> and viewable
+          by anyone. Noticeboard subscribers will be notified by email.
+        </p>
+      ),
+    },
+    {
+      heading: "Draft",
+      content: (
+        <p className="text-small text-gray-500">
+          The notice is{" "}
+          <span className="font-bold text-indigo-600">private</span> and only
+          viewable by members of your organisation. Noticeboard subscribers will
+          not be notified by email.
+        </p>
+      ),
+    },
+    {
+      heading: "Archived",
+      content: (
+        <p className="text-small text-gray-500">
+          The notice is{" "}
+          <span className="font-bold text-indigo-600">private</span> and only
+          viewable within the archive tab of the noticeboard. Noticeboard
+          subscribers will not be notified by email.
+        </p>
+      ),
+    },
+  ];
 
   return (
     <>
+      <Modal
+        isShowing={isShowingPublishModal}
+        hide={togglePublishModal}
+        cancelButtonRef={cancelButtonRef}
+      >
+        <h3 className="text-lg font-medium leading-6 text-gray-900">
+          Publish notice
+        </h3>
+        <div>
+          <div className="mt-2">
+            <p className="text-sm text-gray-500">
+              Are you sure you want to publish this notice? A published notice
+              is public and viewable to anyone who has access to the
+              noticeboard.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+          <button
+            type="button"
+            className={classNames(
+              "inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm",
+              isLoading && "cursor-not-allowed opacity-50"
+            )}
+            onClick={handlePublishChange}
+            disabled={isLoading}
+          >
+            {isLoading ? <span>Publishing...</span> : <span>Publish</span>}
+          </button>
+          <button
+            type="button"
+            className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
+            onClick={togglePublishModal}
+            ref={cancelButtonRef}
+          >
+            Cancel
+          </button>
+        </div>
+      </Modal>
+      <Modal
+        isShowing={isShowingDraftModal}
+        hide={toggleDraftModal}
+        cancelButtonRef={cancelButtonRef}
+      >
+        <h3 className="text-lg font-medium leading-6 text-gray-900">
+          Unpublish notice
+        </h3>
+        <div>
+          <div className="mt-2">
+            <p className="text-sm text-gray-500">
+              Are you sure you want to unpublish this notice? The notice will be
+              private and only viewable by members of your organisation.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+          <button
+            type="button"
+            className={classNames(
+              "inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm",
+              isLoading && "cursor-not-allowed opacity-50"
+            )}
+            onClick={handleDraftChange}
+            disabled={isLoading}
+          >
+            {isLoading ? <span>Unpublishing...</span> : <span>Unpublish</span>}
+          </button>
+          <button
+            type="button"
+            className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
+            onClick={toggleDraftModal}
+            ref={cancelButtonRef}
+          >
+            Cancel
+          </button>
+        </div>
+      </Modal>
+      <Modal
+        isShowing={isShowingArchiveModal}
+        hide={toggleDraftModal}
+        cancelButtonRef={cancelButtonRef}
+      >
+        <h3 className="text-lg font-medium leading-6 text-gray-900">
+          Archive notice
+        </h3>
+        <div>
+          <div className="mt-2">
+            <p className="text-sm text-gray-500">
+              Are you sure you want to archive this notice? The notice will be
+              private and only viewable by members of your organisation.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+          <button
+            type="button"
+            className={classNames(
+              "inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm",
+              isLoading && "cursor-not-allowed opacity-50"
+            )}
+            onClick={handleArchiveChange}
+            disabled={isLoading}
+          >
+            {isLoading ? <span>Archiving...</span> : <span>Archive</span>}
+          </button>
+          <button
+            type="button"
+            className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
+            onClick={toggleArchiveModal}
+            ref={cancelButtonRef}
+          >
+            Cancel
+          </button>
+        </div>
+      </Modal>
       <div className="min-h-full">
         <main className="py-10">
           {/* Page header */}
@@ -82,12 +249,12 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
                 </div>
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">
-                  {notice?.buildingComplex?.name}
+                <BackButton>Back to noticeboard</BackButton>
+                <h1 className="mt-4 text-2xl font-bold text-gray-900">
+                  {buildingComplex?.name}
                 </h1>
                 <p className="text-sm font-medium text-gray-500">
-                  {notice?.buildingComplex?.streetAddress},{" "}
-                  {notice?.buildingComplex?.suburb}
+                  {buildingComplex?.streetAddress}, {buildingComplex?.suburb}
                 </p>
               </div>
             </div>
@@ -127,45 +294,50 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
                     <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
                       <div className="sm:col-span-1">
                         <dt className="text-sm font-medium text-gray-500">
-                          Application for
+                          Title
+                        </dt>
+                        <dd className="mt-1 text-sm text-gray-900">{title}</dd>
+                      </div>
+                      <div className="sm:col-span-1">
+                        <dt className="text-sm font-medium text-gray-500">
+                          Status
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900">
-                          Backend Developer
+                          <Badge status={status}>{status}</Badge>
                         </dd>
                       </div>
                       <div className="sm:col-span-1">
                         <dt className="text-sm font-medium text-gray-500">
-                          Email address
+                          Notice Period
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900">
-                          ricardocooper@example.com
+                          {noticePeriod}
                         </dd>
                       </div>
                       <div className="sm:col-span-1">
                         <dt className="text-sm font-medium text-gray-500">
-                          Salary expectation
+                          Uploaded By
                         </dt>
-                        <dd className="mt-1 text-sm text-gray-900">$120,000</dd>
+                        <dd className="mt-1 text-sm text-gray-900">
+                          {author.name}
+                        </dd>
                       </div>
                       <div className="sm:col-span-1">
                         <dt className="text-sm font-medium text-gray-500">
-                          Phone
-                        </dt>
-                        <dd className="mt-1 text-sm text-gray-900">
-                          +1 555-555-5555
-                        </dd>
-                      </div>
-                      <div className="sm:col-span-2">
-                        <dt className="text-sm font-medium text-gray-500">
-                          About
+                          Orgnisation
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900">
                           Fugiat ipsum ipsum deserunt culpa aute sint do nostrud
-                          anim incididunt cillum culpa consequat. Excepteur qui
-                          ipsum aliquip consequat sint. Sit id mollit nulla
-                          mollit nostrud in ea officia proident. Irure nostrud
-                          pariatur mollit ad adipisicing reprehenderit deserunt
-                          qui eu.
+                          anim incididunt cillum culpa consequat.
+                        </dd>
+                      </div>
+                      <div className="sm:col-span-1"></div>
+                      <div className="sm:col-span-1">
+                        <dt className="text-sm font-medium text-gray-500">
+                          Preview
+                        </dt>
+                        <dd className="mt-1 text-sm text-gray-900">
+                          <PdfViewer uploadUrl={uploadUrl} />
                         </dd>
                       </div>
                       <div className="sm:col-span-2">
@@ -185,12 +357,12 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
                                     aria-hidden="true"
                                   />
                                   <span className="ml-2 w-0 flex-1 truncate">
-                                    {notice.fileName}
+                                    {fileName}
                                   </span>
                                 </div>
                                 <div className="ml-4 flex-shrink-0">
                                   <a
-                                    href={notice?.uploadUrl}
+                                    href={uploadUrl}
                                     className="font-medium text-blue-600 hover:text-blue-500"
                                   >
                                     Download
@@ -212,71 +384,45 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
               className="lg:col-span-1 lg:col-start-3"
             >
               <div className="border bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6">
-                <h2
-                  id="timeline-title"
-                  className="text-lg font-medium text-gray-900"
-                >
-                  Timeline
-                </h2>
+                <div className="flex place-content-between">
+                  <h2
+                    id="timeline-title"
+                    className="text-lg font-medium text-gray-900"
+                  >
+                    Notice Status
+                  </h2>
+                  <Badge status={status}>{status}</Badge>
+                </div>
+                <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                  Change the status of the notice.
+                </p>
 
-                {/* Activity Feed */}
-                <div className="mt-6 flow-root">
-                  <ul role="list" className="-mb-8">
-                    {timeline.map((item, itemIdx) => (
-                      <li key={item.id}>
-                        <div className="relative pb-8">
-                          {itemIdx !== timeline.length - 1 ? (
-                            <span
-                              className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200"
-                              aria-hidden="true"
-                            />
-                          ) : null}
-                          <div className="relative flex space-x-3">
-                            <div>
-                              <span
-                                className={classNames(
-                                  item.type.bgColorClass,
-                                  "flex h-8 w-8 items-center justify-center rounded-full ring-8 ring-white"
-                                )}
-                              >
-                                <item.type.icon
-                                  className="h-5 w-5 text-white"
-                                  aria-hidden="true"
-                                />
-                              </span>
-                            </div>
-                            <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
-                              <div>
-                                <p className="text-sm text-gray-500">
-                                  {item.content}{" "}
-                                  <a
-                                    href="#"
-                                    className="font-medium text-gray-900"
-                                  >
-                                    {item.target}
-                                  </a>
-                                </p>
-                              </div>
-                              <div className="whitespace-nowrap text-right text-sm text-gray-500">
-                                <time dateTime={item.datetime}>
-                                  {item.date}
-                                </time>
-                              </div>
-                            </div>
-                          </div>
+                <div className="justify-stretch mt-4 flex flex-col">
+                  {/* <StatusDropdown id={id} status={status} /> */}
+                  <Dropdown
+                    status={status}
+                    togglePublishModal={togglePublishModal}
+                    toggleDraftModal={toggleDraftModal}
+                    toggleArchiveModal={toggleArchiveModal}
+                  />
+                </div>
+
+                {/* Status */}
+                <div className="flow-root">
+                  <ul className="">
+                    {statusInfo.map((item) => (
+                      <li className="my-4" key={item.heading}>
+                        <div className="text-sm text-indigo-600">
+                          {item.heading}
                         </div>
+                        <div className="text-sm">{item.content}</div>
                       </li>
                     ))}
                   </ul>
                 </div>
-                <div className="justify-stretch mt-6 flex flex-col">
-                  <button
-                    type="button"
-                    className="inline-flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                  >
-                    Advance to offer
-                  </button>
-                </div>
+                {/* <div className="justify-stretch mt-6 flex flex-col">
+                  <StatusDropdown />
+                </div> */}
               </div>
             </section>
           </div>

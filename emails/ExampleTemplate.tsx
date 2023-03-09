@@ -1,9 +1,10 @@
+import * as React from "react";
 import { Html } from "@react-email/html";
 import { Text } from "@react-email/text";
 import { Section } from "@react-email/section";
 import { Container } from "@react-email/container";
 
-export default function WelcomeEmail() {
+export function ExampleTemplate() {
   return (
     <Html>
       <Section style={main}>

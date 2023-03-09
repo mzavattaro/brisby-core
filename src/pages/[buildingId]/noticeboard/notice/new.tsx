@@ -128,7 +128,7 @@ const New: NextPage = () => {
     const payload = {
       id: id,
       title: data.title,
-      status: selected?.status,
+      status: "draft", // selected?.status
       startDate: startDate,
       endDate: endDate,
       uploadUrl: transformedData.uploadUrl,
@@ -180,7 +180,7 @@ const New: NextPage = () => {
             </Link>
           </div>
           <p className="mt-2 text-base text-gray-500">
-            Upload your organisation’s strata notices and control when your
+            Upload your organisation&apos;s strata notices and control when your
             building community can view them.
           </p>
         </div>
@@ -273,11 +273,12 @@ const New: NextPage = () => {
             <h3 className=" text-xl font-semibold">Publish</h3>
             <p className="mt-2 text-gray-500">
               Select the date range for the notice to be published and visible
-              to your building community. If you don’t select an start or end
-              date, the notice will be unpublished as a draft.
+              to your building community. If you don&apos;t select an start or
+              end date, the notice will be unpublished as a draft.
             </p>
           </div>
-          <Listbox value={selected} onChange={setSelected}>
+
+          {/* <Listbox value={selected} onChange={setSelected}>
             {({ open }) => (
               <>
                 <Listbox.Label className="sr-only">
@@ -397,7 +398,7 @@ const New: NextPage = () => {
                 </div>
               </>
             )}
-          </Listbox>
+          </Listbox> */}
 
           {/* Datepicker */}
           <div className="mt-6 flex flex-col sm:flex-row">

@@ -7,6 +7,9 @@ import dayjs from "dayjs";
 import PdfViewer from "./PdfViewer";
 import DropdownMenu from "./DropdownMenu";
 import Badge from "./Badge";
+import { render } from "@react-email/render";
+import { ExampleTemplate } from "../../emails/ExampleTemplate";
+// import { sendEmail } from "../pages/api/sendEmail";
 
 type NoticeItem = {
   notice: RouterOutputs["notice"]["infiniteList"]["notices"][number];
@@ -64,9 +67,22 @@ const NoticeItem: FC<NoticeItem> = ({
       }
       toggle();
     },
-    onError: (error) => {
-      console.log(error);
-    },
+
+    // not working
+    //   try {
+    //     const html = render(<ExampleTemplate />);
+    //     await sendEmail({
+    //       to: "mwzavattaro@icloud.com",
+    //       subject: "Hello from Next.js!",
+    //       html,
+    //     });
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // },
+    // onError: (error) => {
+    //   console.log(error);
+    // },
   });
 
   const handlePublishChange = () => {
@@ -84,6 +100,9 @@ const NoticeItem: FC<NoticeItem> = ({
     updateMutation.mutate({ data: { status: status }, id: id });
   };
 
+  const noticePeriod = `${dayjs(startDate).format("D MMM YYYY")} -
+  ${dayjs(endDate).format("D MMM YYYY")}`;
+
   return (
     <>
       <div
@@ -95,10 +114,7 @@ const NoticeItem: FC<NoticeItem> = ({
             <p className="text-xs font-semibold uppercase sm:text-sm">
               notice period
             </p>
-            <p className="text-xs text-gray-500 sm:text-sm">
-              {`${dayjs(startDate).format("D MMM YYYY")} -
-                  ${dayjs(endDate).format("D MMM YYYY")}`}
-            </p>
+            <p className="text-xs text-gray-500 sm:text-sm">{noticePeriod}</p>
           </div>
         </div>
         <div className="relative flex flex-1 flex-col">
@@ -128,6 +144,7 @@ const NoticeItem: FC<NoticeItem> = ({
                 uploadUrl={uploadUrl}
                 deleteMutationLoadingState={deleteMutationLoadingState}
                 status={status}
+                id={id}
               />
             </div>
           </div>

@@ -200,6 +200,12 @@ export const noticeRouter = router({
           fileName: true,
           uploadUrl: true,
           key: true,
+          author: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
           buildingComplex: {
             select: {
               name: true,

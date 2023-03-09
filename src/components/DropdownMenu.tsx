@@ -1,10 +1,12 @@
 import type { FC } from "react";
 import { classNames } from "../utils/classNames";
+import { useBuildingComplexIdStore } from "../store/useBuildingComplexIdStore";
 import { Fragment, useRef } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 import useModal from "../utils/useModal";
 import Modal from "./Modal";
+import Link from "next/link";
 
 type DropdownMenuProps = {
   handleDelete: () => void;
@@ -14,6 +16,7 @@ type DropdownMenuProps = {
   uploadUrl: string;
   deleteMutationLoadingState: boolean;
   status: string | null;
+  id: string | null;
 };
 
 const DropdownMenu: FC<DropdownMenuProps> = ({
@@ -24,9 +27,11 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
   handleArchiveChange,
   deleteMutationLoadingState,
   status,
+  id,
 }) => {
   const { isShowing, toggle } = useModal();
   const cancelButtonRef = useRef(null);
+  const buildingComplexId = useBuildingComplexIdStore((state) => state.id);
 
   return (
     <>
@@ -105,6 +110,22 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
                     >
                       Download
                     </a>
+                  )}
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <Link
+                      href={{
+                        pathname: "/[buildingId]/noticeboard/notice/[id]",
+                        query: { buildingId: buildingComplexId, id: id },
+                      }}
+                      className={classNames(
+                        "block px-4 py-2 text-sm",
+                        active ? "bg-gray-100 text-gray-900" : "text-gray-700"
+                      )}
+                    >
+                      View
+                    </Link>
                   )}
                 </Menu.Item>
               </div>

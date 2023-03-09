@@ -10,8 +10,6 @@ import {
   Bars3Icon,
   BuildingOffice2Icon,
   CreditCardIcon,
-  HomeIcon,
-  InboxIcon,
   UserIcon,
   UsersIcon,
   XMarkIcon,
@@ -30,16 +28,16 @@ const navigation = [
     icon: BuildingOffice2Icon,
   },
   { name: "Team", href: "/settings/team", icon: UsersIcon },
-  {
-    name: "Building complexes",
-    href: "/settings/building-complexes",
-    icon: HomeIcon,
-  },
-  {
-    name: "Notices",
-    href: "/settings/notices",
-    icon: InboxIcon,
-  },
+  // {
+  //   name: "Building complexes",
+  //   href: "/settings/building-complexes",
+  //   icon: HomeIcon,
+  // },
+  // {
+  //   name: "Notices",
+  //   href: "/settings/notices",
+  //   icon: InboxIcon,
+  // },
   {
     name: "Billing",
     href: "/settings/billing",
@@ -113,7 +111,9 @@ const SettingsLayout: FC<SetttingsLayout> = ({ children }) => {
                     </div>
                   </Transition.Child>
                   <div className="h-0 flex-1 overflow-y-auto pt-5 pb-4">
-                    <BackButton />
+                    <div className="ml-4">
+                      <BackButton>Back to noticeboard</BackButton>
+                    </div>
 
                     <nav className="mt-4 space-y-1 px-2">
                       <h1 className="pl-2 text-xl font-semibold">Settings</h1>
@@ -170,7 +170,9 @@ const SettingsLayout: FC<SetttingsLayout> = ({ children }) => {
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white">
             <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
-              <BackButton />
+              <div className="ml-4">
+                <BackButton>Back to noticeboard</BackButton>
+              </div>
               <nav className="mt-4 flex-1 space-y-1 bg-white px-2">
                 <h1 className="pl-2 text-xl font-semibold">Settings</h1>
                 {navigation.map((item) => (
