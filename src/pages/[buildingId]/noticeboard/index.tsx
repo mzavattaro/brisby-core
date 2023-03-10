@@ -55,6 +55,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
 }) => {
   const { toggle } = useModal();
   const { isShowing: isShowingModal, toggle: toggleModal } = useModal();
+
   const cancelButtonRef = useRef(null);
 
   const { name, streetAddress, suburb } = buildingComplexData;

@@ -20,7 +20,7 @@ const PdfViewer: FC<PdfViewer> = ({ uploadUrl }) => {
 
   return (
     <>
-      <Document className="border  bg-white" file={uploadUrl}>
+      <Document className="bg-white" file={uploadUrl}>
         <Page
           scale={0.4}
           renderTextLayer={false}
