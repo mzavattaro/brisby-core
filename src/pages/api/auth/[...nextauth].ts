@@ -1,89 +1,68 @@
-import type { Theme } from "next-auth";
-import NextAuth, { type NextAuthOptions, type DefaultSession } from "next-auth";
-import type { SendVerificationRequestParams } from "next-auth/providers/email";
-import EmailProvider from "next-auth/providers/email";
+import type { Theme } from 'next-auth';
+import NextAuth, { type NextAuthOptions } from 'next-auth';
+import emailProvider from 'next-auth/providers/email';
 
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { PrismaAdapter as prismaAdapter } from '@next-auth/prisma-adapter';
 
-import { env } from "../../../env/server.mjs";
-import { prisma } from "../../../server/db/client";
-import { createTransport } from "nodemailer";
-
-declare module "next-auth" {
-  interface Session extends DefaultSession {
-    user: {
-      id: string;
-      // ...other properties
-      buildingComplexId?: string;
-      organisationId?: string;
-    } & DefaultSession["user"];
-  }
-
-  interface User {
-    // ...other properties
-    buildingComplexId?: string;
-    organisationId?: string;
-  }
-}
+import { env } from '../../../env/server.mjs';
+import { prisma } from '../../../server/db/client';
+import { createTransport } from 'nodemailer';
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
   callbacks: {
     session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
-        session.user.buildingComplexId = user.buildingComplexId;
-        session.user.organisationId = user.organisationId;
-      }
+      session.user.id = user.id;
+      session.user.buildingComplexId = user.buildingComplexId;
+      session.user.organisationId = user.organisationId;
+
       return session;
     },
   },
   // Configure one or more authentication providers
-  adapter: PrismaAdapter(prisma),
+  adapter: prismaAdapter(prisma),
   providers: [
-    EmailProvider({
+    emailProvider({
       server: {
-        host: "smtp.sendgrid.net",
+        host: 'smtp.sendgrid.net',
         port: 465,
         auth: {
           user: env.EMAIL_SERVER_USER,
           pass: env.EMAIL_SERVER_PASSWORD,
         },
       },
-      from: "no-reply@getbrisby.com",
-      sendVerificationRequest,
-      maxAge: 10 * 60, // Magic links are valid for 10 min only
+      from: 'no-reply@getbrisby.com',
+      sendVerificationRequest: async ({ identifier, url, provider, theme }) => {
+        const { host } = new URL(url);
+        // NOTE: You are not required to use `nodemailer`, use whatever you want.
+        const transport = createTransport(provider.server);
+        const result = await transport.sendMail({
+          to: identifier,
+          from: provider.from,
+          subject: `Sign in to ${host}`,
+          text: text({ url, host }),
+          html: html({ url, host, theme }),
+        });
+        const failed = result.rejected.concat(result.pending).filter(Boolean);
+        if (failed.length) {
+          throw new Error(`Email(s) (${failed.join(', ')}) could not be sent`);
+        }
+      },
+      // Magic links are valid for 10 min only
+      maxAge: 10 * 60,
     }),
     // ...add more providers here
   ],
   pages: {
-    signIn: "/auth/signin",
-    verifyRequest: "/auth/verify",
-    newUser: "/auth/new-user",
-    error: "/auth/error",
+    signIn: '/auth/signin',
+    verifyRequest: '/auth/verify',
+    newUser: '/auth/new-user',
+    error: '/auth/error',
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
 
 export default NextAuth(authOptions);
-
-async function sendVerificationRequest(params: SendVerificationRequestParams) {
-  const { identifier, url, provider, theme } = params;
-  const { host } = new URL(url);
-  // NOTE: You are not required to use `nodemailer`, use whatever you want.
-  const transport = createTransport(provider.server);
-  const result = await transport.sendMail({
-    to: identifier,
-    from: provider.from,
-    subject: `Sign in to ${host}`,
-    text: text({ url, host }),
-    html: html({ url, host, theme }),
-  });
-  const failed = result.rejected.concat(result.pending).filter(Boolean);
-  if (failed.length) {
-    throw new Error(`Email(s) (${failed.join(", ")}) could not be sent`);
-  }
-}
 
 /**
  * Email HTML body
@@ -96,16 +75,16 @@ async function sendVerificationRequest(params: SendVerificationRequestParams) {
 function html(params: { url: string; host: string; theme: Theme }) {
   const { url, host, theme } = params;
 
-  const escapedHost = host.replace(/\./g, "&#8203;.");
+  const escapedHost = host.replace(/\./g, '&#8203;.');
 
-  const brandColor = theme.brandColor || "#346df1";
+  const brandColor = theme.brandColor || '#346df1';
   const color = {
-    background: "#f9f9f9",
-    text: "#444",
-    mainBackground: "#fff",
+    background: '#f9f9f9',
+    text: '#444',
+    mainBackground: '#fff',
     buttonBackground: brandColor,
     buttonBorder: brandColor,
-    buttonText: theme.buttonText || "#fff",
+    buttonText: theme.buttonText || '#fff',
   };
 
   return `
