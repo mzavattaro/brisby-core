@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 type noticePageStore = {
   page: number;
@@ -12,10 +12,10 @@ export const useNoticePageStore = create(
       // initial state
       page: 0,
       // setting noticePage into state
-      setNoticePage: (page) => set(() => ({ page: page })),
+      setNoticePage: (page) => set(() => ({ page })),
     }),
     {
-      name: "noticePage",
+      name: 'noticePage',
     }
   )
 );

@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 type buildingComplexStore = {
   id: string;
@@ -10,12 +10,12 @@ export const useBuildingComplexIdStore = create(
   persist<buildingComplexStore>(
     (set) => ({
       // initial state
-      id: "",
+      id: '',
       // setting buildingComplexId into state
-      setBuildingComplexId: (id) => set(() => ({ id: id })),
+      setBuildingComplexId: (id) => set(() => ({ id })),
     }),
     {
-      name: "buildingComplexId",
+      name: 'buildingComplexId',
     }
   )
 );
