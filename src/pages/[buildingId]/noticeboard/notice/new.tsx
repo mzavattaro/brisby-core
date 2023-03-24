@@ -1,53 +1,51 @@
-import type { ChangeEventHandler } from "react";
-import { Fragment, useState } from "react";
-import { useRouter } from "next/router";
-import { type NextPage } from "next";
-import { useQueryClient } from "@tanstack/react-query";
-import Link from "next/link";
-import axios from "axios";
-import { trpc } from "../../../../utils/trpc";
-import { classNames } from "../../../../utils/classNames";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import type { SubmitHandler } from "react-hook-form";
-import { Listbox, Transition } from "@headlessui/react";
-import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
-import { XMarkIcon } from "@heroicons/react/24/solid";
-import Button from "../../../../components/Button";
-import StyledLink from "../../../../components/StyledLink";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import type { ChangeEventHandler } from 'react';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { type NextPage } from 'next';
+import { useQueryClient } from '@tanstack/react-query';
+import Link from 'next/link';
+import axios from 'axios';
+import { trpc } from '../../../../utils/trpc';
+import { classNames } from '../../../../utils/classNames';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import type { SubmitHandler } from 'react-hook-form';
+import { XMarkIcon } from '@heroicons/react/24/solid';
+import Button from '../../../../components/Button';
+import StyledLink from '../../../../components/StyledLink';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const publishingOptions = [
   {
-    status: "draft",
-    description: "This notice will no longer be publicly accessible.",
+    status: 'draft',
+    description: 'This notice will no longer be publicly accessible.',
   },
   {
-    status: "published",
-    description: "This notice can be viewed by anyone who has the link.",
+    status: 'published',
+    description: 'This notice can be viewed by anyone who has the link.',
   },
 ];
 
 const noticeSchema = z
   .object({
-    title: z.string().min(1, { message: "Title is required" }),
+    title: z.string().min(1, { message: 'Title is required' }),
     fileList:
-      typeof window === "undefined" ? z.never() : z.instanceof(FileList),
+      typeof window === 'undefined' ? z.never() : z.instanceof(FileList),
     fileName: z.string().optional(),
     status: z.string().optional(),
     startDate: z.date().nullable().optional(),
     endDate: z.date().nullable().optional(),
   })
-  .refine((data) => data?.fileList[0], {
-    message: "File is required",
-    path: ["fileList"],
+  .refine((data) => data.fileList[0], {
+    message: 'File is required',
+    path: ['fileList'],
   });
 
 type NoticeSchema = z.infer<typeof noticeSchema>;
 
-async function uploadToS3(data: FileList) {
+const uploadToS3 = async (data: FileList) => {
   const file = data[0];
   if (!file) {
     return null;
@@ -69,7 +67,7 @@ async function uploadToS3(data: FileList) {
   };
 
   return transformedData;
-}
+};
 
 const New: NextPage = () => {
   const [selected, setSelected] = useState(publishingOptions[0]);
@@ -94,15 +92,15 @@ const New: NextPage = () => {
 
   const { mutateAsync } = trpc.notice.create.useMutation({
     onSuccess: async (data) => {
-      queryClient.setQueryData([["notice"], data.id], data);
+      queryClient.setQueryData([['notice'], data.id], data);
 
       try {
         await queryClient.invalidateQueries();
       } catch (error) {
         if (error instanceof Error) {
+          // eslint-disable-next-line no-console
           console.log(error.message);
         }
-        return;
       }
     },
   });
@@ -112,6 +110,7 @@ const New: NextPage = () => {
       noticeSchema.parse(data);
     } catch (error) {
       if (error instanceof Error) {
+        // eslint-disable-next-line no-console
         console.log(error.message);
       }
       return;
@@ -121,21 +120,23 @@ const New: NextPage = () => {
 
     if (!transformedData?.uploadUrl) {
       // massive issue can occur here
-      console.log("An error has occured, please try again later.");
+      // eslint-disable-next-line no-console
+      console.log('An error has occured, please try again later.');
       return;
     }
 
     const payload = {
-      id: id,
+      id,
       title: data.title,
-      status: "draft", // selected?.status
-      startDate: startDate,
-      endDate: endDate,
+      // selected?.status
+      status: 'draft',
+      startDate,
+      endDate,
       uploadUrl: transformedData.uploadUrl,
-      key: transformedData?.key,
-      fileName: transformedData?.fileName,
-      fileSize: transformedData?.fileSize,
-      fileType: transformedData?.fileType,
+      key: transformedData.key,
+      fileName: transformedData.fileName,
+      fileSize: transformedData.fileSize,
+      fileType: transformedData.fileType,
     };
 
     try {
@@ -143,18 +144,18 @@ const New: NextPage = () => {
       router.back();
     } catch (error) {
       if (error instanceof Error) {
+        // eslint-disable-next-line no-console
         console.log(error.message);
       }
-      return;
     }
   };
 
   const getFileParameters: ChangeEventHandler<HTMLInputElement> = (event) => {
-    if (!event?.target.files?.length) {
+    if (!event.target.files?.length) {
       return;
     }
 
-    const file = event?.target.files[0];
+    const file = event.target.files[0];
 
     if (!file) {
       return;
@@ -172,7 +173,7 @@ const New: NextPage = () => {
             <h3 className=" text-xl font-semibold">Upload new strata notice</h3>
             <Link
               href={{
-                pathname: "/[buildingId]/noticeboard",
+                pathname: '/[buildingId]/noticeboard',
                 query: { buildingId: id },
               }}
             >
@@ -191,21 +192,21 @@ const New: NextPage = () => {
           </label>
           <input
             className={classNames(
-              "h-10 w-full rounded-md border border-slate-200 bg-slate-50 px-4 focus:ring-1",
+              'h-10 w-full rounded-md border border-slate-200 bg-slate-50 px-4 focus:ring-1',
               errors.title
-                ? "focus:border-rose-500 focus:ring-rose-500"
-                : "focus:border-blue-600 focus:ring-blue-600"
+                ? 'focus:border-rose-500 focus:ring-rose-500'
+                : 'focus:border-blue-600 focus:ring-blue-600'
             )}
             id="title"
             type="text"
-            {...register("title", { required: true })}
+            {...register('title', { required: true })}
             placeholder="Title..."
           />
           <div className="absolute">
             {errors.title && (
               <p className="mt-2 text-sm font-bold text-rose-500">
-                {" "}
-                {errors.title?.message}
+                {' '}
+                {errors.title.message}
               </p>
             )}
           </div>
@@ -239,7 +240,7 @@ const New: NextPage = () => {
                     <span>Upload a file</span>
                     <input
                       id="fileList"
-                      {...register("fileList")}
+                      {...register('fileList')}
                       accept="application/pdf"
                       type="file"
                       className="sr-only"
@@ -263,7 +264,7 @@ const New: NextPage = () => {
             )}
             {errors.fileList && !fileName && (
               <span className="absolute text-sm font-bold text-red-500">
-                {errors.fileList?.message?.toString()}
+                {errors.fileList.message?.toString()}
               </span>
             )}
           </div>
@@ -405,17 +406,17 @@ const New: NextPage = () => {
             <div className="sm:mr-9">
               <h3
                 className={classNames(
-                  "text-sm font-semibold",
-                  selected?.status === "draft"
-                    ? "text-gray-400"
-                    : "text-gray-900"
+                  'text-sm font-semibold',
+                  selected?.status === 'draft'
+                    ? 'text-gray-400'
+                    : 'text-gray-900'
                 )}
               >
                 Start date
               </h3>
               <DatePicker
                 showPopperArrow={false}
-                selected={selected?.status === "published" ? startDate : null}
+                selected={selected?.status === 'published' ? startDate : null}
                 onChange={(date) => setStartDate(date)}
                 selectsStart
                 startDate={startDate}
@@ -423,24 +424,24 @@ const New: NextPage = () => {
                 dateFormat="dd MMMM yyyy"
                 nextMonthButtonLabel=">"
                 previousMonthButtonLabel="<"
-                disabled={selected?.status === "draft" ? true : false}
+                disabled={selected?.status === 'draft'}
                 placeholderText="Unavailable for drafts"
               />
             </div>
             <div className="mt-6 sm:mt-0">
               <h3
                 className={classNames(
-                  "text-sm font-semibold",
-                  selected?.status === "draft"
-                    ? "text-gray-400"
-                    : "text-gray-900"
+                  'text-sm font-semibold',
+                  selected?.status === 'draft'
+                    ? 'text-gray-400'
+                    : 'text-gray-900'
                 )}
               >
                 End date
               </h3>
               <DatePicker
                 showPopperArrow={false}
-                selected={selected?.status === "published" ? endDate : null}
+                selected={selected?.status === 'published' ? endDate : null}
                 onChange={(date) => setEndDate(date)}
                 selectsEnd
                 startDate={startDate}
@@ -449,7 +450,7 @@ const New: NextPage = () => {
                 dateFormat="dd MMMM yyyy"
                 nextMonthButtonLabel=">"
                 previousMonthButtonLabel="<"
-                disabled={selected?.status === "draft" ? true : false}
+                disabled={selected?.status === 'draft'}
                 placeholderText="Unavailable for drafts"
               />
             </div>
@@ -460,7 +461,7 @@ const New: NextPage = () => {
             <StyledLink
               className="mr-6"
               href={{
-                pathname: "/[buildingId]/noticeboard",
+                pathname: '/[buildingId]/noticeboard',
                 query: { buildingId: id },
               }}
               onClick={() => router.back()}
@@ -469,12 +470,12 @@ const New: NextPage = () => {
               Cancel
             </StyledLink>
             <Button
-              disabled={isSubmitting ? true : false}
+              disabled={Boolean(isSubmitting)}
               type="submit"
               size="md"
-              style="primary"
+              variant="primary"
             >
-              {isSubmitting ? "Uploading..." : "Submit"}
+              {isSubmitting ? 'Uploading...' : 'Submit'}
             </Button>
           </div>
         </form>

@@ -1,25 +1,26 @@
-import type { RouterOutputs } from "../../utils/trpc";
-import { getCsrfToken } from "next-auth/react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import type { SubmitHandler } from "react-hook-form";
-import axios from "axios";
-import { useRouter } from "next/router";
-import { classNames } from "../../utils/classNames";
-import Email from "../../../public/Email";
-import type { CtxOrReq } from "next-auth/client/_utils";
+import type { RouterOutputs } from '../../utils/trpc';
+import { getCsrfToken } from 'next-auth/react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import type { SubmitHandler } from 'react-hook-form';
+import axios from 'axios';
+import { useRouter } from 'next/router';
+import { classNames } from '../../utils/classNames';
+import Email from '../../../public/Email';
+import type { FC } from 'react';
+import type { GetServerSideProps } from 'next';
 
 const signInSchema = z.object({
   csrfToken: z.string(),
-  email: z.string().email({ message: "Invalid email address" }),
+  email: z.string().email({ message: 'Invalid email address' }),
 });
 
 type SignInSchema = z.infer<typeof signInSchema> & {
-  UserEmailOutput: RouterOutputs["user"]["byEmail"];
+  UserEmailOutput: RouterOutputs['user']['byEmail'];
 };
 
-const SignIn: React.FC<SignInSchema> = ({ csrfToken }) => {
+const SignIn: FC<SignInSchema> = ({ csrfToken }) => {
   const router = useRouter();
   const {
     register,
@@ -31,14 +32,17 @@ const SignIn: React.FC<SignInSchema> = ({ csrfToken }) => {
 
   const onSubmit: SubmitHandler<SignInSchema> = async (data) => {
     try {
-      await axios.post("/api/auth/signin/email", data); // revisit...
+      // revisit...
+      await axios.post('/api/auth/signin/email', data);
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error(error);
     }
 
     try {
-      await router.push("/auth/verify");
+      await router.push('/auth/verify');
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error(error);
     }
   };
@@ -59,27 +63,27 @@ const SignIn: React.FC<SignInSchema> = ({ csrfToken }) => {
           <input
             type="hidden"
             defaultValue={csrfToken}
-            {...register("csrfToken", { required: true })}
+            {...register('csrfToken', { required: true })}
           />
           <label className="block text-left text-sm font-semibold text-gray-900">
             Email address
             <input
               className={classNames(
-                "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
+                'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm',
                 errors.email
-                  ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
-                  : "focus:border-blue-600 focus:ring-blue-600"
+                  ? 'bg-rose-50 focus:border-rose-500 focus:ring-rose-500'
+                  : 'focus:border-blue-600 focus:ring-blue-600'
               )}
               type="text"
               id="email"
               placeholder="you@company.com"
-              {...register("email", { required: true })}
+              {...register('email', { required: true })}
             />
             <div className="absolute max-w-xl">
               {errors.email && (
                 <p className="mt-1 h-10 text-sm font-bold text-rose-500">
-                  {" "}
-                  {errors.email?.message}
+                  {' '}
+                  {errors.email.message}
                 </p>
               )}
             </div>
@@ -87,8 +91,8 @@ const SignIn: React.FC<SignInSchema> = ({ csrfToken }) => {
           <button
             disabled={isSubmitting}
             className={classNames(
-              "mt-10 flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
-              isSubmitting && "cursor-not-allowed opacity-50"
+              'mt-10 flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
+              isSubmitting && 'cursor-not-allowed opacity-50'
             )}
             type="submit"
           >
@@ -109,9 +113,9 @@ const SignIn: React.FC<SignInSchema> = ({ csrfToken }) => {
 
 export default SignIn;
 
-export async function getServerSideProps(context: CtxOrReq | undefined) {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const csrfToken = await getCsrfToken(context);
   return {
     props: { csrfToken },
   };
-}
+};

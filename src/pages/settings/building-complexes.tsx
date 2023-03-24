@@ -1,8 +1,8 @@
-import type { NextPageWithLayout } from "../_app";
-import Link from "next/link";
-import type { ReactElement } from "react";
-import { trpc } from "../../utils/trpc";
-import SettingsLayout from "../../components/SettingsLayout";
+import type { NextPageWithLayout } from '../_app';
+import Link from 'next/link';
+import type { ReactElement } from 'react';
+import { trpc } from '../../utils/trpc';
+import SettingsLayout from '../../components/SettingsLayout';
 
 const BuildingComplexes: NextPageWithLayout = () => {
   const { data: buildingComplexes, isLoading } =
@@ -25,9 +25,12 @@ const BuildingComplexes: NextPageWithLayout = () => {
 
         <Link
           className="sm:col-end-13 sm:justify-self-end"
-          href={"/auth/building-complexes/new"}
+          href="/auth/building-complexes/new"
         >
-          <button className="font-base h-10 w-31 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">
+          <button
+            className="font-base h-10 w-31 rounded-md bg-indigo-600 text-white hover:bg-indigo-700"
+            type="button"
+          >
             Add building
           </button>
         </Link>
@@ -75,52 +78,50 @@ const BuildingComplexes: NextPageWithLayout = () => {
                   </td>
                 </tr>
               ) : (
-                <>
-                  {buildingComplexes?.map((building) => (
-                    <>
-                      {isLoading ? (
-                        <span>Loading...</span>
-                      ) : (
-                        <tr key={building.id}>
-                          <td className="w-full max-w-0 py-4 pl-4 pr-3 text-xs font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
-                            {building.name}
-                            <dl className="font-normal lg:hidden">
-                              <dt className="sr-only">Building Type</dt>
-                              <dd className="mt-1 truncate text-gray-700">
-                                {building.type}
-                              </dd>
-                              <dt className="sr-only sm:hidden">
-                                Total Occupancies
-                              </dt>
-                              <dd className="mt-1 truncate text-gray-500 sm:hidden">
-                                {building.totalOccupancies}
-                              </dd>
-                              <dt className="sr-only sm:hidden">Address</dt>
-                            </dl>
-                          </td>
-                          <td className="hidden px-3 py-4 text-xs text-gray-500 lg:table-cell">
+                buildingComplexes?.map((building) =>
+                  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                  isLoading ? (
+                    <span key={building.id}>Loading...</span>
+                  ) : (
+                    <tr key={building.id}>
+                      <td className="w-full max-w-0 py-4 pl-4 pr-3 text-xs font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
+                        {building.name}
+                        <dl className="font-normal lg:hidden">
+                          <dt className="sr-only">Building Type</dt>
+                          <dd className="mt-1 truncate text-gray-700">
                             {building.type}
-                          </td>
-                          <td className="hidden px-3 py-4 text-xs text-gray-500 sm:table-cell">
+                          </dd>
+                          <dt className="sr-only sm:hidden">
+                            Total Occupancies
+                          </dt>
+                          <dd className="mt-1 truncate text-gray-500 sm:hidden">
                             {building.totalOccupancies}
-                          </td>
-                          <td className="px-3 py-4 text-xs text-gray-500">
-                            {building.streetAddress}
-                          </td>
-                          <td className="py-4 pl-3 pr-4 text-right text-xs font-medium sm:pr-6">
-                            <a
-                              href="#"
-                              className="text-indigo-600 hover:text-indigo-900"
-                            >
-                              View
-                              <span className="sr-only">, {building.name}</span>
-                            </a>
-                          </td>
-                        </tr>
-                      )}
-                    </>
-                  ))}
-                </>
+                          </dd>
+                          <dt className="sr-only sm:hidden">Address</dt>
+                        </dl>
+                      </td>
+                      <td className="hidden px-3 py-4 text-xs text-gray-500 lg:table-cell">
+                        {building.type}
+                      </td>
+                      <td className="hidden px-3 py-4 text-xs text-gray-500 sm:table-cell">
+                        {building.totalOccupancies}
+                      </td>
+                      <td className="px-3 py-4 text-xs text-gray-500">
+                        {building.streetAddress}
+                      </td>
+                      <td className="py-4 pl-3 pr-4 text-right text-xs font-medium sm:pr-6">
+                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                        <a
+                          href="#"
+                          className="text-indigo-600 hover:text-indigo-900"
+                        >
+                          View
+                          <span className="sr-only">, {building.name}</span>
+                        </a>
+                      </td>
+                    </tr>
+                  )
+                )
               )}
             </tbody>
           </table>

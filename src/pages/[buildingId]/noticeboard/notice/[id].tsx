@@ -1,19 +1,20 @@
-import { useState, useRef } from "react";
-import NextError from "next/error";
-import { useRouter } from "next/router";
-import type { RouterOutputs } from "../../../../utils/trpc";
-import { useQueryClient } from "@tanstack/react-query";
-import { trpc } from "../../../../utils/trpc";
-import dayjs from "dayjs";
-import PdfViewer from "../../../../components/PdfViewer";
-import Badge from "../../../../components/Badge";
-import BackButton from "../../../../components/BackButton";
-import Dropdown from "../../../../components/Dropdown";
-import Modal from "../../../../components/Modal";
-import { PaperClipIcon } from "@heroicons/react/20/solid";
-import { classNames } from "../../../../utils/classNames";
+import type { FC } from 'react';
+import { useState, useRef } from 'react';
+import NextError from 'next/error';
+import { useRouter } from 'next/router';
+import type { RouterOutputs } from '../../../../utils/trpc';
+import { useQueryClient } from '@tanstack/react-query';
+import { trpc } from '../../../../utils/trpc';
+import dayjs from 'dayjs';
+import PdfViewer from '../../../../components/PdfViewer';
+import Badge from '../../../../components/Badge';
+import BackButton from '../../../../components/BackButton';
+import Dropdown from '../../../../components/Dropdown';
+import Modal from '../../../../components/Modal';
+import { PaperClipIcon } from '@heroicons/react/20/solid';
+import { classNames } from '../../../../utils/classNames';
 
-type NoticeByIdOutput = RouterOutputs["notice"]["byId"];
+type NoticeByIdOutput = RouterOutputs['notice']['byId'];
 
 const Notice = (props: { notice: NoticeByIdOutput }) => {
   const [isShowingPublishModal, setIsShowingPublishModal] = useState(false);
@@ -29,6 +30,7 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
         await queryClient.invalidateQueries();
       } catch (error) {
         if (error instanceof Error) {
+          // eslint-disable-next-line no-console
           console.log(error.message);
         }
       }
@@ -63,24 +65,24 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
     setIsShowingDeleteModal(!isShowingDeleteModal);
   };
 
-  const noticePeriod = `${dayjs(startDate).format("D MMMM YYYY")} -
-  ${dayjs(endDate).format("D MMMM YYYY")}`;
+  const noticePeriod = `${dayjs(startDate).format('D MMMM YYYY')} -
+  ${dayjs(endDate).format('D MMMM YYYY')}`;
 
   const handlePublishChange = () => {
-    const status = "published";
-    mutate({ data: { status: status }, id: id });
+    const newStatus = 'published';
+    mutate({ data: { status: newStatus }, id });
     togglePublishModal();
   };
 
   const handleDraftChange = () => {
-    const status = "draft";
-    mutate({ data: { status: status }, id: id });
+    const newStatus = 'draft';
+    mutate({ data: { status: newStatus }, id });
     toggleDraftModal();
   };
 
   const handleArchiveChange = () => {
-    const status = "archived";
-    mutate({ data: { status: status }, id: id });
+    const newStatus = 'archived';
+    mutate({ data: { status: newStatus }, id });
     toggleArchiveModal();
   };
 
@@ -90,18 +92,21 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
         await queryClient.invalidateQueries();
       } catch (error) {
         if (error instanceof Error) {
+          // eslint-disable-next-line no-console
           console.log(error.message);
         }
       }
 
-      // finish this redirect to noticeboard page
-      // try {
-      //   await router.push();
-      // } catch (error) {
-      //   if (error instanceof Error) {
-      //     console.log(error.message);
-      //   }
-      // }
+      /*
+       * finish this redirect to noticeboard page
+       * try {
+       *   await router.push();
+       * } catch (error) {
+       *   if (error instanceof Error) {
+       *     console.log(error.message);
+       *   }
+       * }
+       */
     },
   });
 
@@ -113,20 +118,20 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
 
   const statusInfo = [
     {
-      heading: "Published",
+      heading: 'Published',
       content: (
         <p className="text-small text-gray-500">
-          The notice is{" "}
+          The notice is{' '}
           <span className="font-bold text-indigo-600">public</span> and viewable
           by anyone. Noticeboard subscribers will be notified by email.
         </p>
       ),
     },
     {
-      heading: "Draft",
+      heading: 'Draft',
       content: (
         <p className="text-small text-gray-500">
-          The notice is{" "}
+          The notice is{' '}
           <span className="font-bold text-indigo-600">private</span> and only
           viewable by members of your organisation. Noticeboard subscribers will
           not be notified by email.
@@ -134,10 +139,10 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
       ),
     },
     {
-      heading: "Archived",
+      heading: 'Archived',
       content: (
         <p className="text-small text-gray-500">
-          The notice is{" "}
+          The notice is{' '}
           <span className="font-bold text-indigo-600">private</span> and only
           viewable within the archive tab of the noticeboard. Noticeboard
           subscribers will not be notified by email.
@@ -170,8 +175,8 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
           <button
             type="button"
             className={classNames(
-              "inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm",
-              isLoading && "cursor-not-allowed opacity-50"
+              'inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm',
+              isLoading && 'cursor-not-allowed opacity-50'
             )}
             onClick={handlePublishChange}
             disabled={isLoading}
@@ -209,8 +214,8 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
           <button
             type="button"
             className={classNames(
-              "inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm",
-              isLoading && "cursor-not-allowed opacity-50"
+              'inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm',
+              isLoading && 'cursor-not-allowed opacity-50'
             )}
             onClick={handleDraftChange}
             disabled={isLoading}
@@ -248,8 +253,8 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
           <button
             type="button"
             className={classNames(
-              "inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm",
-              isLoading && "cursor-not-allowed opacity-50"
+              'inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm',
+              isLoading && 'cursor-not-allowed opacity-50'
             )}
             onClick={handleArchiveChange}
             disabled={isLoading}
@@ -278,7 +283,7 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
           <div className="mt-2">
             <p className="text-sm text-gray-500">
               Are you sure you want to delete this notice? It will be
-              permanently removed from the noticeboard.{" "}
+              permanently removed from the noticeboard.{' '}
               <span className="font-bold">This action cannot be undone.</span>
             </p>
           </div>
@@ -288,8 +293,8 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
           <button
             type="button"
             className={classNames(
-              "inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm",
-              deleteMutationLoadingState && "cursor-not-allowed opacity-50"
+              'inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm',
+              deleteMutationLoadingState && 'cursor-not-allowed opacity-50'
             )}
             onClick={handleDelete}
             disabled={deleteMutationLoadingState}
@@ -408,7 +413,7 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
                           anim incididunt cillum culpa consequat.
                         </dd>
                       </div>
-                      <div className="sm:col-span-1"></div>
+                      <div className="sm:col-span-1" />
                       <div className="sm:col-span-1">
                         <dt className="text-sm font-medium text-gray-500">
                           Preview
@@ -424,31 +429,26 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
                           Attachment
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900">
-                          <ul
-                            role="list"
-                            className="divide-y divide-gray-200 rounded-md border border-gray-200"
-                          >
-                            {
-                              <div className="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
-                                <div className="flex w-0 flex-1 items-center">
-                                  <PaperClipIcon
-                                    className="h-5 w-5 flex-shrink-0 text-gray-400"
-                                    aria-hidden="true"
-                                  />
-                                  <span className="ml-2 w-0 flex-1 truncate">
-                                    {fileName}
-                                  </span>
-                                </div>
-                                <div className="ml-4 flex-shrink-0">
-                                  <a
-                                    href={uploadUrl}
-                                    className="font-medium text-blue-600 hover:text-blue-500"
-                                  >
-                                    Download
-                                  </a>
-                                </div>
+                          <ul className="divide-y divide-gray-200 rounded-md border border-gray-200">
+                            <div className="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
+                              <div className="flex w-0 flex-1 items-center">
+                                <PaperClipIcon
+                                  className="h-5 w-5 flex-shrink-0 text-gray-400"
+                                  aria-hidden="true"
+                                />
+                                <span className="ml-2 w-0 flex-1 truncate">
+                                  {fileName}
+                                </span>
                               </div>
-                            }
+                              <div className="ml-4 flex-shrink-0">
+                                <a
+                                  href={uploadUrl}
+                                  className="font-medium text-blue-600 hover:text-blue-500"
+                                >
+                                  Download
+                                </a>
+                              </div>
+                            </div>
                           </ul>
                         </dd>
                       </div>
@@ -511,7 +511,7 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
   );
 };
 
-const NoticeViewPage = () => {
+const NoticeViewPage: FC = () => {
   const id = useRouter().query.id as string;
   const noticeQuery = trpc.notice.byId.useQuery({ id });
 
@@ -524,7 +524,7 @@ const NoticeViewPage = () => {
     );
   }
 
-  if (noticeQuery.status !== "success") {
+  if (noticeQuery.status !== 'success') {
     return <>Loading...</>;
   }
 

@@ -1,20 +1,21 @@
-import { useSession } from "next-auth/react";
-import { useQueryClient } from "@tanstack/react-query";
-import { trpc } from "../../utils/trpc";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import type { SubmitHandler } from "react-hook-form";
-import { classNames } from "../../utils/classNames";
-import { useRouter } from "next/router";
+import { useSession } from 'next-auth/react';
+import { useQueryClient } from '@tanstack/react-query';
+import { trpc } from '../../utils/trpc';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import type { SubmitHandler } from 'react-hook-form';
+import { classNames } from '../../utils/classNames';
+import { useRouter } from 'next/router';
+import type { FC } from 'react';
 
 const newUserSchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }),
+  name: z.string().min(1, { message: 'Name is required' }),
 });
 
 type NewUserSchema = z.infer<typeof newUserSchema>;
 
-const NewUser: React.FC<NewUserSchema> = () => {
+const NewUser: FC<NewUserSchema> = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
@@ -30,12 +31,13 @@ const NewUser: React.FC<NewUserSchema> = () => {
 
   const { mutateAsync, isLoading } = trpc.user.updateUser.useMutation({
     onSuccess: async (data) => {
-      queryClient.setQueryData([["user"], data.id], data);
+      queryClient.setQueryData([['user'], data.id], data);
 
       try {
         await queryClient.invalidateQueries();
       } catch (error) {
         if (error instanceof Error) {
+          // eslint-disable-next-line no-console
           console.log(error.message);
         }
       }
@@ -48,13 +50,14 @@ const NewUser: React.FC<NewUserSchema> = () => {
     try {
       await mutateAsync({
         data: {
-          name: name,
+          name,
         },
-        id: sessionData?.user?.id,
+        id: sessionData?.user.id,
       });
-      await router.push("/auth/new-organisation");
+      await router.push('/auth/new-organisation');
     } catch (error) {
       if (error instanceof Error) {
+        // eslint-disable-next-line no-console
         console.log(error.message);
       }
     }
@@ -80,22 +83,22 @@ const NewUser: React.FC<NewUserSchema> = () => {
               Name
               <input
                 className={classNames(
-                  "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
+                  'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm',
                   errors.name
-                    ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
-                    : "focus:border-blue-600 focus:ring-blue-600"
+                    ? 'bg-rose-50 focus:border-rose-500 focus:ring-rose-500'
+                    : 'focus:border-blue-600 focus:ring-blue-600'
                 )}
                 type="text"
                 id="firstName"
                 placeholder="Joe Bloggs"
-                {...register("name", { required: true })}
+                {...register('name', { required: true })}
                 autoComplete="name"
               />
               <div className="absolute max-w-xl">
                 {errors.name && (
                   <p className="mt-1 h-10 text-sm font-bold text-rose-500">
-                    {" "}
-                    {errors.name?.message}
+                    {' '}
+                    {errors.name.message}
                   </p>
                 )}
               </div>
@@ -105,8 +108,8 @@ const NewUser: React.FC<NewUserSchema> = () => {
           <button
             disabled={isLoading}
             className={classNames(
-              "mt-10 flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:mt-10",
-              isLoading && "cursor-not-allowed opacity-50"
+              'mt-10 flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:mt-10',
+              isLoading && 'cursor-not-allowed opacity-50'
             )}
             type="submit"
           >

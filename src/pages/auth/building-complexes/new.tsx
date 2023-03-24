@@ -1,25 +1,25 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { trpc } from "../../../utils/trpc";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import type { SubmitHandler } from "react-hook-form";
-import { classNames } from "../../../utils/classNames";
-import { useRouter } from "next/router";
-import StyledLink from "../../../components/StyledLink";
-import Button from "../../../components/Button";
-import type { FC } from "react";
+import { useQueryClient } from '@tanstack/react-query';
+import { trpc } from '../../../utils/trpc';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import type { SubmitHandler } from 'react-hook-form';
+import { classNames } from '../../../utils/classNames';
+import { useRouter } from 'next/router';
+import StyledLink from '../../../components/StyledLink';
+import Button from '../../../components/Button';
+import type { FC } from 'react';
 
 const newBuildingSchema = z.object({
   name: z
     .string()
-    .min(1, { message: "Community or building complex name is required" }),
+    .min(1, { message: 'Community or building complex name is required' }),
   type: z.string(),
   totalOccupancies: z.coerce.number().nonnegative(),
-  streetAddress: z.string().min(1, { message: "Street address is required" }),
-  suburb: z.string().min(1, { message: "Suburb address is required" }),
-  state: z.string().min(1, { message: "State address is required" }),
-  postcode: z.string().min(1, { message: "Postcode address is required" }),
+  streetAddress: z.string().min(1, { message: 'Street address is required' }),
+  suburb: z.string().min(1, { message: 'Suburb address is required' }),
+  state: z.string().min(1, { message: 'State address is required' }),
+  postcode: z.string().min(1, { message: 'Postcode address is required' }),
 });
 
 type NewBuildingSchema = z.infer<typeof newBuildingSchema>;
@@ -38,11 +38,12 @@ const NewUser: FC<NewBuildingSchema> = () => {
 
   const { mutateAsync } = trpc.buildingComplex.create.useMutation({
     onSuccess: async (data) => {
-      queryClient.setQueryData([["buildingComplex"], data.id], data);
+      queryClient.setQueryData([['buildingComplex'], data.id], data);
       try {
         await queryClient.invalidateQueries();
       } catch (error) {
         if (error instanceof Error) {
+          // eslint-disable-next-line no-console
           console.log(error.message);
         }
       }
@@ -65,6 +66,7 @@ const NewUser: FC<NewBuildingSchema> = () => {
       newBuildingSchema.parse(data);
     } catch (error) {
       if (error instanceof Error) {
+        // eslint-disable-next-line no-console
         console.log(error.message);
       }
       return;
@@ -72,19 +74,19 @@ const NewUser: FC<NewBuildingSchema> = () => {
 
     try {
       await mutateAsync({
-        name: name,
-        type: type,
-        totalOccupancies: totalOccupancies,
-        streetAddress: streetAddress,
-        suburb: suburb,
-        state: state,
-        postcode: postcode,
+        name,
+        type,
+        totalOccupancies,
+        streetAddress,
+        suburb,
+        state,
+        postcode,
       });
     } catch (error) {
       if (error instanceof Error) {
+        // eslint-disable-next-line no-console
         console.log(error.message);
       }
-      return;
     }
   };
 
@@ -113,20 +115,20 @@ const NewUser: FC<NewBuildingSchema> = () => {
           Building complex name
           <input
             className={classNames(
-              "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:h-10 sm:text-sm",
+              'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:h-10 sm:text-sm',
               errors.name
-                ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
-                : "focus:border-blue-600 focus:ring-blue-600"
+                ? 'bg-rose-50 focus:border-rose-500 focus:ring-rose-500'
+                : 'focus:border-blue-600 focus:ring-blue-600'
             )}
             type="text"
             id="name"
-            {...register("name", { required: true })}
+            {...register('name', { required: true })}
           />
           <div className="absolute max-w-xl">
             {errors.name && (
               <p className="mt-1 h-10 text-sm font-bold text-rose-500">
-                {" "}
-                {errors.name?.message}
+                {' '}
+                {errors.name.message}
               </p>
             )}
           </div>
@@ -137,13 +139,13 @@ const NewUser: FC<NewBuildingSchema> = () => {
           Building type
           <select
             className={classNames(
-              "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
+              'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm',
               errors.type
-                ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
-                : "focus:border-blue-600 focus:ring-blue-600"
+                ? 'bg-rose-50 focus:border-rose-500 focus:ring-rose-500'
+                : 'focus:border-blue-600 focus:ring-blue-600'
             )}
             id="type"
-            {...register("type", { required: true })}
+            {...register('type', { required: true })}
           >
             <option value="residential">Residential</option>
             <option value="commercial">Commercial</option>
@@ -158,20 +160,20 @@ const NewUser: FC<NewBuildingSchema> = () => {
           No. of units or apartments
           <input
             className={classNames(
-              "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
+              'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm',
               errors.totalOccupancies
-                ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
-                : "focus:border-blue-600 focus:ring-blue-600"
+                ? 'bg-rose-50 focus:border-rose-500 focus:ring-rose-500'
+                : 'focus:border-blue-600 focus:ring-blue-600'
             )}
             type="number"
             id="totalOccupancies"
-            {...register("totalOccupancies", { required: true })}
+            {...register('totalOccupancies', { required: true })}
           />
           <div className="absolute max-w-xl">
             {errors.totalOccupancies && (
               <p className="mt-1 h-10 text-sm font-bold text-rose-500">
-                {" "}
-                {errors.totalOccupancies?.message}
+                {' '}
+                {errors.totalOccupancies.message}
               </p>
             )}
           </div>
@@ -186,20 +188,20 @@ const NewUser: FC<NewBuildingSchema> = () => {
           Street address
           <input
             className={classNames(
-              "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
+              'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm',
               errors.streetAddress
-                ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
-                : "focus:border-blue-600 focus:ring-blue-600"
+                ? 'bg-rose-50 focus:border-rose-500 focus:ring-rose-500'
+                : 'focus:border-blue-600 focus:ring-blue-600'
             )}
             type="text"
             id="streetAddress"
-            {...register("streetAddress", { required: true })}
+            {...register('streetAddress', { required: true })}
             autoComplete="street-address"
           />
           <div className="absolute max-w-xl">
             {errors.streetAddress && (
               <p className="mt-1 h-10 text-sm font-bold text-rose-500">
-                {errors.streetAddress?.message}
+                {errors.streetAddress.message}
               </p>
             )}
           </div>
@@ -210,20 +212,20 @@ const NewUser: FC<NewBuildingSchema> = () => {
           Suburb
           <input
             className={classNames(
-              "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
+              'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm',
               errors.suburb
-                ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
-                : "focus:border-blue-600 focus:ring-blue-600"
+                ? 'bg-rose-50 focus:border-rose-500 focus:ring-rose-500'
+                : 'focus:border-blue-600 focus:ring-blue-600'
             )}
             type="text"
             id="suburb"
-            {...register("suburb", { required: true })}
+            {...register('suburb', { required: true })}
           />
           <div className="absolute max-w-xl">
             {errors.suburb && (
               <p className="mt-1 h-10 text-sm font-bold text-rose-500">
-                {" "}
-                {errors.suburb?.message}
+                {' '}
+                {errors.suburb.message}
               </p>
             )}
           </div>
@@ -234,15 +236,15 @@ const NewUser: FC<NewBuildingSchema> = () => {
           State/Territory
           <select
             className={classNames(
-              "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
+              'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm',
               errors.state
-                ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
-                : "focus:border-blue-600 focus:ring-blue-600"
+                ? 'bg-rose-50 focus:border-rose-500 focus:ring-rose-500'
+                : 'focus:border-blue-600 focus:ring-blue-600'
             )}
             id="state"
-            {...register("state", { required: true })}
+            {...register('state', { required: true })}
           >
-            {["ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"].map(
+            {['ACT', 'NSW', 'NT', 'QLD', 'SA', 'TAS', 'VIC', 'WA'].map(
               (state) => (
                 <option key={state} value={state}>
                   {state}
@@ -257,20 +259,20 @@ const NewUser: FC<NewBuildingSchema> = () => {
           Postcode
           <input
             className={classNames(
-              "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
+              'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm',
               errors.postcode
-                ? "bg-rose-50 focus:border-rose-500 focus:ring-rose-500"
-                : "focus:border-blue-600 focus:ring-blue-600"
+                ? 'bg-rose-50 focus:border-rose-500 focus:ring-rose-500'
+                : 'focus:border-blue-600 focus:ring-blue-600'
             )}
             type="text"
             id="postcode"
-            {...register("postcode", { required: true })}
+            {...register('postcode', { required: true })}
             autoComplete="postal-code"
           />
           <div className="absolute max-w-xl">
             {errors.postcode && (
               <p className="mt-1 h-10 text-sm font-bold text-rose-500">
-                {errors.postcode?.message}
+                {errors.postcode.message}
               </p>
             )}
           </div>
@@ -282,7 +284,7 @@ const NewUser: FC<NewBuildingSchema> = () => {
             className="mr-6"
             onClick={() => router.back()}
             type="link"
-            href={""}
+            href=""
           >
             Cancel
           </StyledLink>
@@ -290,7 +292,7 @@ const NewUser: FC<NewBuildingSchema> = () => {
             disabled={isSubmitting}
             type="submit"
             size="md"
-            style="primary"
+            variant="primary"
           >
             {isSubmitting ? <span>Creating...</span> : <span>Submit</span>}
           </Button>

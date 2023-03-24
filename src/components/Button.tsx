@@ -2,7 +2,7 @@ import type { FC, ReactNode } from 'react';
 import { classNames } from '../utils/classNames';
 
 const Button: FC<{
-  style: 'primary' | 'secondary' | 'tertiary' | 'none';
+  variant: 'primary' | 'secondary' | 'tertiary' | 'none';
   size: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
   // onClick?: () => void;
@@ -10,7 +10,7 @@ const Button: FC<{
   type: 'button' | 'submit' | 'reset';
   disabled?: boolean;
 }> = (props) => {
-  const { className, style, size, type, children, disabled } = props;
+  const { className, variant, size, type, children, disabled } = props;
 
   return (
     <button
@@ -20,13 +20,13 @@ const Button: FC<{
       className={classNames(
         'inline-flex items-center border border-transparent font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2',
         className,
-        style === 'primary' &&
+        variant === 'primary' &&
           'rounded bg-indigo-600 text-white hover:bg-indigo-700',
-        style === 'secondary' &&
+        variant === 'secondary' &&
           'rounded bg-indigo-100 text-indigo-700 hover:bg-indigo-200',
-        style === 'tertiary' &&
+        variant === 'tertiary' &&
           'rounded border-gray-300 bg-white hover:bg-gray-50',
-        style === 'none' && '',
+        variant === 'none' && '',
         size === 'xs' && 'px-2.5 py-1.5 text-xs',
         size === 'sm' && 'px-3 py-2 text-sm',
         size === 'md' && 'px-4 py-2 text-sm',

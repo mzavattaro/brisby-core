@@ -1,8 +1,7 @@
-import type { NextPage } from "next/types";
-import { useState } from "react";
-import { useEffect } from "react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import type { NextPage } from 'next/types';
+import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 const CredentialCheck: NextPage = () => {
   const { data, status } = useSession();
@@ -13,38 +12,45 @@ const CredentialCheck: NextPage = () => {
     if (!data) return;
 
     if (
-      status === "authenticated" &&
-      !data?.user.name &&
-      !data?.user.organisationId
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      status === 'authenticated' &&
+      !data.user.name &&
+      !data.user.organisationId
     ) {
       if (calledPush) {
-        return; // no need to call router.push() again
+        // no need to call router.push() again
+        return;
       }
-      setTimeout(() => void router.push("/auth/new-user"), 2000);
-      setCalledPush(true); // this is a hack to make sure the useEffect() is called after the first render
-    }
-
-    if (
-      status === "authenticated" &&
-      data?.user.name &&
-      !data?.user.organisationId
-    ) {
-      if (calledPush) {
-        return; // no need to call router.push() again
-      }
-      setTimeout(() => void router.push("/auth/new-organisation"), 2000);
+      setTimeout(async () => router.push('/auth/new-user'), 2000);
+      // this is a hack to make sure the useEffect() is called after the first render
       setCalledPush(true);
     }
 
     if (
-      status === "authenticated" &&
-      data?.user.name &&
-      data?.user.organisationId
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      status === 'authenticated' &&
+      data.user.name &&
+      !data.user.organisationId
     ) {
       if (calledPush) {
-        return; // no need to call router.push() again
+        // no need to call router.push() again
+        return;
       }
-      setTimeout(() => void router.push("/auth/building-complexes"), 2000);
+      setTimeout(async () => router.push('/auth/new-organisation'), 2000);
+      setCalledPush(true);
+    }
+
+    if (
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      status === 'authenticated' &&
+      data.user.name &&
+      data.user.organisationId
+    ) {
+      if (calledPush) {
+        // no need to call router.push() again
+        return;
+      }
+      setTimeout(async () => router.push('/auth/building-complexes'), 2000);
       setCalledPush(true);
     }
   }, [calledPush, data, router, status]);

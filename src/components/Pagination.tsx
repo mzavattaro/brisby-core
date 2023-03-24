@@ -5,13 +5,14 @@ import { classNames } from '../utils/classNames';
 type PaginationProps = {
   handleFetchPreviousPage: () => void;
   handleFetchNextPage: () => void;
-  // hasNextPage: boolean | undefined;
+  hasNextPage: boolean | undefined;
   nextCursor: string | undefined;
 };
 
 const Pagination: FC<PaginationProps> = ({
   handleFetchPreviousPage,
   handleFetchNextPage,
+  hasNextPage,
   nextCursor,
 }) => {
   const noticePage = useNoticePageStore((state) => state.page);
@@ -42,7 +43,7 @@ const Pagination: FC<PaginationProps> = ({
               ? 'text-gray-900 hover:bg-gray-50'
               : 'cursor-not-allowed text-gray-400'
           )}
-          disabled={!nextCursor}
+          disabled={!nextCursor || !hasNextPage}
           type="button"
           onClick={() => handleFetchNextPage()}
         >
