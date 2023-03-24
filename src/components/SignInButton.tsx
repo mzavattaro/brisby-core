@@ -1,33 +1,35 @@
-import type { FC } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { trpc } from "../utils/trpc";
+import type { FC } from 'react';
+import { signIn, signOut, useSession } from 'next-auth/react';
+import { trpc } from '../utils/trpc';
 
 const SignInButton: FC = () => {
   const { data: sessionData } = useSession();
 
   const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery(
-    undefined, // no input
+    // no input
+    undefined,
     { enabled: sessionData?.user !== undefined }
   );
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <p className="text-center text-2xl text-white">
-        {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
+        {sessionData && <span>Logged in as {sessionData.user.name}</span>}
         {secretMessage && <span> - {secretMessage}</span>}
       </p>
       <button
+        type="button"
         className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
         onClick={
           sessionData
-            ? () => signOut()
-            : () =>
-                signIn("email", {
-                  callbackUrl: "/auth/check-credentials",
+            ? async () => signOut()
+            : async () =>
+                signIn('email', {
+                  callbackUrl: '/auth/check-credentials',
                 })
         }
       >
-        {sessionData ? "Sign out" : "Sign in"}
+        {sessionData ? 'Sign out' : 'Sign in'}
       </button>
     </div>
   );

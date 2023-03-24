@@ -1,12 +1,12 @@
-import type { FC } from "react";
-import { classNames } from "../utils/classNames";
-import { useBuildingComplexIdStore } from "../store/useBuildingComplexIdStore";
-import { Fragment, useRef } from "react";
-import { Menu, Transition } from "@headlessui/react";
-import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
-import useModal from "../utils/useModal";
-import Modal from "./Modal";
-import Link from "next/link";
+import type { FC } from 'react';
+import { classNames } from '../utils/classNames';
+import { useBuildingComplexIdStore } from '../store/useBuildingComplexIdStore';
+import { Fragment, useRef } from 'react';
+import { Menu, Transition } from '@headlessui/react';
+import { EllipsisVerticalIcon } from '@heroicons/react/20/solid';
+import useModal from '../utils/useModal';
+import Modal from './Modal';
+import Link from 'next/link';
 
 type DropdownMenuProps = {
   handleDelete: () => void;
@@ -47,7 +47,7 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
           <div className="mt-2">
             <p className="text-sm text-gray-500">
               Are you sure you want to delete this notice? It will be
-              permanently removed from the noticeboard.{" "}
+              permanently removed from the noticeboard.{' '}
               <span className="font-bold">This action cannot be undone.</span>
             </p>
           </div>
@@ -57,8 +57,8 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
           <button
             type="button"
             className={classNames(
-              "inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm",
-              deleteMutationLoadingState && "cursor-not-allowed opacity-50"
+              'inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm',
+              deleteMutationLoadingState && 'cursor-not-allowed opacity-50'
             )}
             onClick={handleDelete}
             disabled={deleteMutationLoadingState}
@@ -104,8 +104,8 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
                     <a
                       href={uploadUrl}
                       className={classNames(
-                        "block px-4 py-2 text-sm",
-                        active ? "bg-gray-100 text-gray-900" : "text-gray-700"
+                        'block px-4 py-2 text-sm',
+                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
                       )}
                     >
                       Download
@@ -116,12 +116,12 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
                   {({ active }) => (
                     <Link
                       href={{
-                        pathname: "/[buildingId]/noticeboard/notice/[id]",
-                        query: { buildingId: buildingComplexId, id: id },
+                        pathname: '/[buildingId]/noticeboard/notice/[id]',
+                        query: { buildingId: buildingComplexId, id },
                       }}
                       className={classNames(
-                        "block px-4 py-2 text-sm",
-                        active ? "bg-gray-100 text-gray-900" : "text-gray-700"
+                        'block px-4 py-2 text-sm',
+                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
                       )}
                     >
                       View
@@ -134,13 +134,13 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
                   {({ active }) => (
                     <button
                       type="button"
-                      disabled={status === "published"}
+                      disabled={status === 'published'}
                       onClick={handlePublishChange}
                       className={classNames(
-                        "block w-full px-4 py-2 text-left text-sm",
-                        active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        status === "published" &&
-                          "cursor-not-allowed opacity-50"
+                        'block w-full px-4 py-2 text-left text-sm',
+                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                        status === 'published' &&
+                          'cursor-not-allowed opacity-50'
                       )}
                     >
                       Publish
@@ -151,12 +151,12 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
                   {({ active }) => (
                     <button
                       type="button"
-                      disabled={status === "draft"}
+                      disabled={status === 'draft'}
                       onClick={handleDraftChange}
                       className={classNames(
-                        "block w-full px-4 py-2 text-left text-sm",
-                        active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        status === "draft" && "cursor-not-allowed opacity-50"
+                        'block w-full px-4 py-2 text-left text-sm',
+                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                        status === 'draft' && 'cursor-not-allowed opacity-50'
                       )}
                     >
                       Draft
@@ -169,12 +169,12 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
                   {({ active }) => (
                     <button
                       type="button"
-                      disabled={status === "archived"}
+                      disabled={status === 'archived'}
                       onClick={handleArchiveChange}
                       className={classNames(
-                        "block w-full px-4 py-2 text-left text-sm",
-                        active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        status === "archived" && "cursor-not-allowed opacity-50"
+                        'block w-full px-4 py-2 text-left text-sm',
+                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                        status === 'archived' && 'cursor-not-allowed opacity-50'
                       )}
                     >
                       Archive
@@ -186,10 +186,11 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
                 <Menu.Item>
                   {({ active }) => (
                     <button
+                      type="button"
                       onClick={toggle}
                       className={classNames(
-                        "block w-full px-4 py-2 text-left text-sm",
-                        active ? "bg-gray-100 text-gray-900" : "text-gray-700"
+                        'block w-full px-4 py-2 text-left text-sm',
+                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
                       )}
                     >
                       Delete

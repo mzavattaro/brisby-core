@@ -1,17 +1,17 @@
-import type { FC } from "react";
-import { useBuildingComplexIdStore } from "../store/useBuildingComplexIdStore";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { ArrowLongLeftIcon } from "@heroicons/react/24/outline";
+import type { FC, ReactNode } from 'react';
+import { useBuildingComplexIdStore } from '../store/useBuildingComplexIdStore';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { ArrowLongLeftIcon } from '@heroicons/react/24/outline';
 
-type BackButton = {
-  children: React.ReactNode;
+type BackButtonProps = {
+  children: ReactNode;
 };
 
-const BackButton: FC<BackButton> = ({ children }) => {
+const BackButton: FC<BackButtonProps> = ({ children }) => {
   const buildingComplexId = useBuildingComplexIdStore((state) => state.id);
-  const [backLink, setBackLink] = useState("/");
+  const [backLink, setBackLink] = useState('/');
   const { isReady } = useRouter();
 
   useEffect(() => {
