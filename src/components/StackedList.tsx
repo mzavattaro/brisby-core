@@ -1,8 +1,8 @@
-import Image from "next/image";
-import Link from "next/link";
-import strataLogo from "../../public/stratalogo.jpg";
+import Image from 'next/image';
+import Link from 'next/link';
+import type { FC } from 'react';
 
-type communityNoticeProps = {
+type CommunityNoticeProps = {
   id: string;
   created_at: string;
   flag?: string;
@@ -13,15 +13,15 @@ type communityNoticeProps = {
   archived: boolean;
 };
 
-type communityNoticesProps = {
-  communityNotices: communityNoticeProps[];
+type StackedListProps = {
+  communityNotices: CommunityNoticeProps[];
 };
 
-const StackedList = (props: communityNoticesProps) => {
+const StackedList: FC<StackedListProps> = (props) => {
   const { communityNotices } = props;
 
   return (
-    <ul role="list" className="relative overflow-hidden">
+    <ul className="relative overflow-hidden">
       {communityNotices.map((communityNotice) => (
         <li
           key={communityNotice.id}
@@ -34,7 +34,7 @@ const StackedList = (props: communityNoticesProps) => {
               </div>
               <div className="min-w-0 py-5 pl-21 pr-5">
                 <div className="mb-2 flex place-content-between items-center">
-                  <Image src={strataLogo} alt="logo" />
+                  <Image src="/stratalogo.jpg" alt="logo" />
                   <div className="leading-tight text-gray-500">27 Jul</div>
                 </div>
                 <div className="md:font- text-sm leading-tight text-gray-900 line-clamp-2">

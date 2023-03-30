@@ -1,32 +1,31 @@
-import SettingsLayout from "../../components/SettingsLayout";
-import { useQueryClient } from "@tanstack/react-query";
-import type { RouterOutputs } from "../../utils/trpc";
-import { trpc } from "../../utils/trpc";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import type { SubmitHandler } from "react-hook-form";
-import type { ReactElement } from "react";
-import { useRef } from "react";
-import { useState } from "react";
-import type { NextPageWithLayout } from "../_app";
-import Modal from "../../components/Modal";
-import { classNames } from "../../utils/classNames";
+import SettingsLayout from '../../components/SettingsLayout';
+import { useQueryClient } from '@tanstack/react-query';
+import type { RouterOutputs } from '../../utils/trpc';
+import { trpc } from '../../utils/trpc';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import type { SubmitHandler } from 'react-hook-form';
+import type { ReactElement } from 'react';
+import { useRef, useState } from 'react';
+import type { NextPageWithLayout } from '../_app';
+import Modal from '../../components/Modal';
+import { classNames } from '../../utils/classNames';
 
 const billingSettingsSchema = z.object({
-  fullName: z.string().min(1, { message: "Full name is required" }).optional(),
-  phone: z.string().min(1, { message: "Phone is required" }).optional(),
-  email: z.string().min(1, { message: "Email is required" }).optional(),
+  fullName: z.string().min(1, { message: 'Full name is required' }).optional(),
+  phone: z.string().min(1, { message: 'Phone is required' }).optional(),
+  email: z.string().min(1, { message: 'Email is required' }).optional(),
   streetAddress: z
     .string()
-    .min(1, { message: "Street address is required" })
+    .min(1, { message: 'Street address is required' })
     .optional(),
-  suburb: z.string().min(1, { message: "Suburb is required" }).optional(),
-  state: z.string().min(1, { message: "State is required" }).optional(),
-  postcode: z.string().min(1, { message: "Postcode is required" }).optional(),
+  suburb: z.string().min(1, { message: 'Suburb is required' }).optional(),
+  state: z.string().min(1, { message: 'State is required' }).optional(),
+  postcode: z.string().min(1, { message: 'Postcode is required' }).optional(),
 });
 
-type OrganisationBillingOutput = RouterOutputs["organisation"];
+type OrganisationBillingOutput = RouterOutputs['organisation'];
 
 type BillingSettingsSchema = z.infer<typeof billingSettingsSchema> &
   OrganisationBillingOutput;
@@ -49,11 +48,12 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
   const { mutateAsync: createMutateAsync, isLoading: isCreating } =
     trpc.billing.create.useMutation({
       onSuccess: async (data) => {
-        queryClient.setQueryData([["billing"], data?.id], data);
+        queryClient.setQueryData([['billing'], data?.id], data);
         try {
           await queryClient.invalidateQueries();
         } catch (error) {
           if (error instanceof Error) {
+            // eslint-disable-next-line no-console
             console.log(error.message);
           }
         }
@@ -64,11 +64,12 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
   const { mutateAsync: updateMutateAsync, isLoading: isUpdating } =
     trpc.billing.update.useMutation({
       onSuccess: async (data) => {
-        queryClient.setQueryData([["billing"], data?.id], data);
+        queryClient.setQueryData([['billing'], data?.id], data);
         try {
           await queryClient.invalidateQueries();
         } catch (error) {
           if (error instanceof Error) {
+            // eslint-disable-next-line no-console
             console.log(error.message);
           }
         }
@@ -99,41 +100,44 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
       billingSettingsSchema.parse(data);
     } catch (error) {
       if (error instanceof Error) {
+        // eslint-disable-next-line no-console
         console.log(error.message);
       }
       return;
     }
 
-    if (!billing?.id) {
+    if (billing?.id) {
       try {
-        await createMutateAsync({
-          fullName: fullName,
-          email: email,
-          phone: phone,
-          streetAddress: streetAddress,
-          suburb: suburb,
-          state: state,
-          postcode: postcode,
+        await updateMutateAsync({
+          id: billing.id,
+          fullName,
+          email,
+          phone,
+          streetAddress,
+          suburb,
+          state,
+          postcode,
         });
       } catch (error) {
         if (error instanceof Error) {
+          // eslint-disable-next-line no-console
           console.log(error.message);
         }
       }
     } else {
       try {
-        await updateMutateAsync({
-          id: billing.id,
-          fullName: fullName,
-          email: email,
-          phone: phone,
-          streetAddress: streetAddress,
-          suburb: suburb,
-          state: state,
-          postcode: postcode,
+        await createMutateAsync({
+          fullName,
+          email,
+          phone,
+          streetAddress,
+          suburb,
+          state,
+          postcode,
         });
       } catch (error) {
         if (error instanceof Error) {
+          // eslint-disable-next-line no-console
           console.log(error.message);
         }
       }
@@ -147,6 +151,7 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
       await updateOrCreateBilling(data);
     } catch (error) {
       if (error instanceof Error) {
+        // eslint-disable-next-line no-console
         console.log(error.message);
       }
     }
@@ -160,6 +165,7 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
       await updateOrCreateBilling(data);
     } catch (error) {
       if (error instanceof Error) {
+        // eslint-disable-next-line no-console
         console.log(error.message);
       }
     }
@@ -190,15 +196,15 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
                 Full name
                 <input
                   className={classNames(
-                    "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
+                    'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm',
                     errors.fullName
-                      ? "bg-rose-100 focus:border-rose-500 focus:ring-rose-500"
-                      : "focus:border-blue-600 focus:ring-blue-600"
+                      ? 'bg-rose-100 focus:border-rose-500 focus:ring-rose-500'
+                      : 'focus:border-blue-600 focus:ring-blue-600'
                   )}
                   id="fullName"
                   type="text"
-                  {...register("fullName")}
-                  defaultValue={billing?.fullName ?? ""}
+                  {...register('fullName')}
+                  defaultValue={billing?.fullName ?? ''}
                   autoComplete="name"
                 />
                 {errors.fullName && (
@@ -215,16 +221,16 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
                   Phone
                   <input
                     className={classNames(
-                      "mt-1 block h-10 w-56 appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
+                      'mt-1 block h-10 w-56 appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm',
                       errors.phone
-                        ? "bg-rose-100 focus:border-rose-500 focus:ring-rose-500"
-                        : "focus:border-blue-600 focus:ring-blue-600"
+                        ? 'bg-rose-100 focus:border-rose-500 focus:ring-rose-500'
+                        : 'focus:border-blue-600 focus:ring-blue-600'
                     )}
                     id="phone"
                     type="text"
-                    {...register("phone")}
-                    defaultValue={billing?.phone ?? ""}
-                    autoComplete="phone"
+                    {...register('phone')}
+                    defaultValue={billing?.phone ?? ''}
+                    autoComplete="tel"
                   />
                   {errors.phone && (
                     <p className="absolute text-xs italic text-red-500">
@@ -239,15 +245,15 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
                   Email
                   <input
                     className={classNames(
-                      "mt-1 block h-10 w-56 appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm",
+                      'mt-1 block h-10 w-56 appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm',
                       errors.email
-                        ? "bg-rose-100 focus:border-rose-500 focus:ring-rose-500"
-                        : "focus:border-blue-600 focus:ring-blue-600"
+                        ? 'bg-rose-100 focus:border-rose-500 focus:ring-rose-500'
+                        : 'focus:border-blue-600 focus:ring-blue-600'
                     )}
                     id="email"
                     type="email"
-                    {...register("email")}
-                    defaultValue={billing?.email ?? ""}
+                    {...register('email')}
+                    defaultValue={billing?.email ?? ''}
                     autoComplete="email"
                   />
                   {errors.email && (
@@ -263,9 +269,9 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
                   type="submit"
                   disabled={isCreating || isUpdating}
                   className={classNames(
-                    "inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm",
+                    'inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm',
                     (isCreating || isUpdating) &&
-                      "cursor-not-allowed opacity-50"
+                      'cursor-not-allowed opacity-50'
                   )}
                 >
                   {isCreating || isUpdating ? (
@@ -309,12 +315,12 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
                   Street address
                   <input
                     className={classNames(
-                      "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
+                      'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm'
                     )}
                     type="text"
                     id="streetAddress"
-                    defaultValue={billing?.streetAddress ?? ""}
-                    {...register("streetAddress")}
+                    defaultValue={billing?.streetAddress ?? ''}
+                    {...register('streetAddress')}
                     autoComplete="street-address"
                   />
                 </label>
@@ -324,12 +330,12 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
                   Suburb
                   <input
                     className={classNames(
-                      "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
+                      'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm'
                     )}
                     type="text"
                     id="suburb"
-                    defaultValue={billing?.suburb ?? ""}
-                    {...register("suburb")}
+                    defaultValue={billing?.suburb ?? ''}
+                    {...register('suburb')}
                   />
                 </label>
 
@@ -338,13 +344,13 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
                   State
                   <select
                     className={classNames(
-                      "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
+                      'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm'
                     )}
                     id="state"
-                    {...register("state")}
-                    defaultValue={billing?.state ?? ""}
+                    {...register('state')}
+                    defaultValue={billing?.state ?? ''}
                   >
-                    {["ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"].map(
+                    {['ACT', 'NSW', 'NT', 'QLD', 'SA', 'TAS', 'VIC', 'WA'].map(
                       (state) => (
                         <option key={state} value={state}>
                           {state}
@@ -359,12 +365,12 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
                   Postcode
                   <input
                     className={classNames(
-                      "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
+                      'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm'
                     )}
                     type="text"
                     id="postcode"
-                    defaultValue={billing?.postcode ?? ""}
-                    {...register("postcode")}
+                    defaultValue={billing?.postcode ?? ''}
+                    {...register('postcode')}
                     autoComplete="postal-code"
                   />
                 </label>
@@ -374,9 +380,9 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
                 <button
                   type="submit"
                   className={classNames(
-                    "inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm",
+                    'inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm',
                     (isCreating || isUpdating) &&
-                      "cursor-not-allowed opacity-50"
+                      'cursor-not-allowed opacity-50'
                   )}
                   disabled={isCreating || isUpdating}
                 >
@@ -427,7 +433,7 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
                 </h4>
                 <div className="w-fit text-gray-500">
                   {billing?.fullName ? (
-                    billing?.fullName
+                    billing.fullName
                   ) : (
                     <div className="italic">Add suburb</div>
                   )}
@@ -442,7 +448,7 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
                   </h4>
                   <div className="w-fit text-gray-500">
                     {billing?.phone ? (
-                      billing?.phone
+                      billing.phone
                     ) : (
                       <div className="italic">Add phone number</div>
                     )}
@@ -454,9 +460,9 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
                     Email
                   </h4>
                   <div className="w-fit text-gray-500">
-                    {" "}
+                    {' '}
                     {billing?.email ? (
-                      billing?.email
+                      billing.email
                     ) : (
                       <div className="italic">Add email</div>
                     )}
@@ -486,9 +492,9 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
                 Street address
               </h4>
               <div className="w-fit text-gray-500">
-                {" "}
+                {' '}
                 {billing?.streetAddress ? (
-                  billing?.streetAddress
+                  billing.streetAddress
                 ) : (
                   <div className="italic">Add street address</div>
                 )}
@@ -501,9 +507,9 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
                     Suburb
                   </h4>
                   <div className="w-fit text-gray-500">
-                    {" "}
+                    {' '}
                     {billing?.suburb ? (
-                      billing?.suburb
+                      billing.suburb
                     ) : (
                       <div className="italic">Add suburb</div>
                     )}
@@ -515,9 +521,9 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
                     State
                   </h4>
                   <div className="w-fit text-gray-500">
-                    {" "}
+                    {' '}
                     {billing?.state ? (
-                      billing?.state
+                      billing.state
                     ) : (
                       <div className="italic">Add state</div>
                     )}
@@ -529,9 +535,9 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
                     Postcode
                   </h4>
                   <div className="w-fit text-gray-500">
-                    {" "}
+                    {' '}
                     {billing?.postcode ? (
-                      billing?.postcode
+                      billing.postcode
                     ) : (
                       <div className="italic">Add postcode</div>
                     )}

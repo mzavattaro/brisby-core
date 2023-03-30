@@ -1,8 +1,12 @@
 // import { render } from "@react-email/render";
-import sendgrid from "@sendgrid/mail";
+import sendgrid from '@sendgrid/mail';
 // import { ExampleTemplate } from "../../../emails/ExampleTemplate";
 
-sendgrid.setApiKey(process.env.SENDGRID_API_KEY as string);
+if (!process.env.SENDGRID_API_KEY) {
+  throw new Error('Missing SENDGRID_API_KEY');
+}
+
+sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 type EmailPayload = {
   to: string;
@@ -10,12 +14,12 @@ type EmailPayload = {
   html: string;
 };
 
-export const sendEmail = async (props: EmailPayload) => {
+export const sendEmail = async (props: EmailPayload): Promise<void> => {
   try {
     const { to, subject, html } = props;
 
     const options = {
-      from: "no-reply@getbrisby.com",
+      from: 'no-reply@getbrisby.com',
       to,
       subject,
       html,
@@ -23,6 +27,7 @@ export const sendEmail = async (props: EmailPayload) => {
 
     await sendgrid.send(options);
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.log(error);
   }
 };

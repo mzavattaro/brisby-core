@@ -1,18 +1,18 @@
-import SettingsLayout from "../../components/SettingsLayout";
-import { useSession } from "next-auth/react";
-import { useRef } from "react";
-import type { ReactElement } from "react";
-import type { NextPageWithLayout } from "../_app";
-import { useQueryClient } from "@tanstack/react-query";
-import type { RouterOutputs } from "../../utils/trpc";
-import { trpc } from "../../utils/trpc";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import type { SubmitHandler } from "react-hook-form";
-import { classNames } from "../../utils/classNames";
-import useModal from "../../utils/useModal";
-import Modal from "../../components/Modal";
+import SettingsLayout from '../../components/SettingsLayout';
+import { useSession } from 'next-auth/react';
+import { useRef } from 'react';
+import type { ReactElement } from 'react';
+import type { NextPageWithLayout } from '../_app';
+import { useQueryClient } from '@tanstack/react-query';
+import type { RouterOutputs } from '../../utils/trpc';
+import { trpc } from '../../utils/trpc';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import type { SubmitHandler } from 'react-hook-form';
+import { classNames } from '../../utils/classNames';
+import useModal from '../../utils/useModal';
+import Modal from '../../components/Modal';
 
 const organisationSettingsSchema = z.object({
   name: z.string().optional(),
@@ -22,7 +22,7 @@ const organisationSettingsSchema = z.object({
   postcode: z.string().optional(),
 });
 
-type OrganisationByIdOutput = RouterOutputs["organisation"]["byId"];
+type OrganisationByIdOutput = RouterOutputs['organisation']['byId'];
 
 type OrganisationSettingsSchema = z.infer<typeof organisationSettingsSchema> &
   OrganisationByIdOutput;
@@ -35,17 +35,18 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
 
   const { data: organisation, isLoading: isFetching } =
     trpc.organisation.byId.useQuery({
-      id: sessionData?.user?.organisationId,
+      id: sessionData?.user.organisationId,
     });
 
   const { mutateAsync, isLoading } = trpc.organisation.update.useMutation({
     onSuccess: async (data) => {
-      queryClient.setQueryData([["organisation"], data.id], data);
+      queryClient.setQueryData([['organisation'], data.id], data);
 
       try {
         await queryClient.invalidateQueries();
       } catch (error) {
         if (error instanceof Error) {
+          // eslint-disable-next-line no-console
           console.log(error.message);
         }
       }
@@ -62,14 +63,15 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
 
     try {
       await mutateAsync({
-        name: name,
-        streetAddress: streetAddress,
-        suburb: suburb,
-        state: state,
-        postcode: postcode,
+        name,
+        streetAddress,
+        suburb,
+        state,
+        postcode,
       });
     } catch (error) {
       if (error instanceof Error) {
+        // eslint-disable-next-line no-console
         console.log(error.message);
       }
     }
@@ -93,12 +95,12 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
               Company or organisastion
               <input
                 className={classNames(
-                  "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
+                  'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm'
                 )}
                 type="text"
                 id="name"
-                defaultValue={organisation?.name ?? ""}
-                {...register("name")}
+                defaultValue={organisation?.name ?? ''}
+                {...register('name')}
               />
             </label>
 
@@ -107,12 +109,12 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
               Street address
               <input
                 className={classNames(
-                  "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
+                  'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm'
                 )}
                 type="text"
                 id="streetAddress"
-                defaultValue={organisation?.streetAddress ?? ""}
-                {...register("streetAddress")}
+                defaultValue={organisation?.streetAddress ?? ''}
+                {...register('streetAddress')}
                 autoComplete="street-address"
               />
             </label>
@@ -122,12 +124,12 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
               Suburb
               <input
                 className={classNames(
-                  "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
+                  'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm'
                 )}
                 type="text"
                 id="suburb"
-                defaultValue={organisation?.suburb ?? ""}
-                {...register("suburb")}
+                defaultValue={organisation?.suburb ?? ''}
+                {...register('suburb')}
               />
             </label>
 
@@ -136,13 +138,13 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
               State
               <select
                 className={classNames(
-                  "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
+                  'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm'
                 )}
                 id="state"
-                {...register("state")}
-                defaultValue={organisation?.state ?? ""}
+                {...register('state')}
+                defaultValue={organisation?.state ?? ''}
               >
-                {["ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"].map(
+                {['ACT', 'NSW', 'NT', 'QLD', 'SA', 'TAS', 'VIC', 'WA'].map(
                   (state) => (
                     <option key={state} value={state}>
                       {state}
@@ -157,12 +159,12 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
               Postcode
               <input
                 className={classNames(
-                  "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
+                  'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm'
                 )}
                 type="text"
                 id="postcode"
-                defaultValue={organisation?.postcode ?? ""}
-                {...register("postcode")}
+                defaultValue={organisation?.postcode ?? ''}
+                {...register('postcode')}
                 autoComplete="postal-code"
               />
             </label>
@@ -180,8 +182,8 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
             <button
               disabled={isLoading}
               className={classNames(
-                "flex w-fit justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 pl-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
-                isLoading && "cursor-not-allowed opacity-50"
+                'flex w-fit justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 pl-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
+                isLoading && 'cursor-not-allowed opacity-50'
               )}
               type="submit"
             >
@@ -227,7 +229,7 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
               </h4>
               <div className="w-fit text-gray-500">
                 {organisation?.streetAddress ? (
-                  organisation?.streetAddress
+                  organisation.streetAddress
                 ) : (
                   <p className="italic">Add street address</p>
                 )}
@@ -242,7 +244,7 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
                 </h4>
                 <div className="w-fit text-gray-500">
                   {organisation?.suburb ? (
-                    organisation?.suburb
+                    organisation.suburb
                   ) : (
                     <p className="italic">Add suburb</p>
                   )}
@@ -255,7 +257,7 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
                 </h4>
                 <div className="w-fit text-gray-500">
                   {organisation?.state ? (
-                    organisation?.state
+                    organisation.state
                   ) : (
                     <p className="italic">Add state</p>
                   )}
@@ -268,7 +270,7 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
                 </h4>
                 <div className="w-fit text-gray-500">
                   {organisation?.postcode ? (
-                    organisation?.postcode
+                    organisation.postcode
                   ) : (
                     <p className="italic">Add postcode</p>
                   )}

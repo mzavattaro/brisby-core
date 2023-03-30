@@ -1,5 +1,5 @@
-import { Head, Html, Main, NextScript } from "next/document";
-import type { FC } from "react";
+import { Head, Html, Main, NextScript } from 'next/document';
+import type { FC } from 'react';
 
 const CustomDocument: FC = () => (
   <Html className="min-h-screen" lang="en">

@@ -1,12 +1,12 @@
-import SettingsLayout from "../../components/SettingsLayout";
-import type { ReactElement } from "react";
-import type { NextPageWithLayout } from "../_app";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import type { SubmitHandler } from "react-hook-form";
-import { classNames } from "../../utils/classNames";
-import { EnvelopeIcon } from "@heroicons/react/24/outline";
+import SettingsLayout from '../../components/SettingsLayout';
+import type { ReactElement } from 'react';
+import type { NextPageWithLayout } from '../_app';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import type { SubmitHandler } from 'react-hook-form';
+import { classNames } from '../../utils/classNames';
+import { EnvelopeIcon } from '@heroicons/react/24/outline';
 
 const teamSchema = z.object({
   email: z.string().email(),
@@ -24,29 +24,30 @@ const Team: NextPageWithLayout<TeamSchema> = () => {
   });
 
   const onSubmit: SubmitHandler<TeamSchema> = (data) => {
+    // eslint-disable-next-line no-console
     console.log(data);
   };
 
   const users = [
     {
-      name: "Michael Zavattaro",
-      email: "mwzavattaro@icloud.com",
-      joined: "12 January 2023",
+      name: 'Michael Zavattaro',
+      email: 'mwzavattaro@icloud.com',
+      joined: '12 January 2023',
     },
     {
-      name: "Tom Cook",
-      email: "example1@gmail.com",
-      joined: "12 January 2023",
+      name: 'Tom Cook',
+      email: 'example1@gmail.com',
+      joined: '12 January 2023',
     },
     {
-      name: "Joe Bloggs",
-      email: "example2@gmail.com",
-      joined: "12 January 2023",
+      name: 'Joe Bloggs',
+      email: 'example2@gmail.com',
+      joined: '12 January 2023',
     },
     {
-      name: "Ameda Smith",
-      email: "example3@gmail.com",
-      joined: "12 January 2023",
+      name: 'Ameda Smith',
+      email: 'example3@gmail.com',
+      joined: '12 January 2023',
     },
   ];
 
@@ -70,18 +71,18 @@ const Team: NextPageWithLayout<TeamSchema> = () => {
             Add new user email
             <input
               className={classNames(
-                "mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
+                'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm'
               )}
               type="text"
               id="email"
               placeholder="example@email.com"
-              {...register("email")}
+              {...register('email')}
               autoComplete="email"
             />
             <div className="absolute max-w-xl">
               {errors.email && (
                 <p className="mt-1 h-10 text-sm font-bold text-rose-500">
-                  {errors.email?.message}
+                  {errors.email.message}
                 </p>
               )}
             </div>
@@ -89,8 +90,8 @@ const Team: NextPageWithLayout<TeamSchema> = () => {
           <button
             disabled={isSubmitting}
             className={classNames(
-              "col-span-1 flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:col-span-2 sm:col-end-13",
-              isSubmitting && "cursor-not-allowed opacity-50"
+              'col-span-1 flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:col-span-2 sm:col-end-13',
+              isSubmitting && 'cursor-not-allowed opacity-50'
             )}
             type="submit"
           >

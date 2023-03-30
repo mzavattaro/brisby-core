@@ -1,14 +1,14 @@
-import type { NextPage } from "next";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { trpc } from "../../../utils/trpc";
-import InfoBox from "../../../components/InfoBox";
-import StyledLink from "../../../components/StyledLink";
+import type { NextPage } from 'next';
+import { signIn, signOut, useSession } from 'next-auth/react';
+import { trpc } from '../../../utils/trpc';
+import InfoBox from '../../../components/InfoBox';
+import StyledLink from '../../../components/StyledLink';
 import {
   HomeIcon,
   BuildingOfficeIcon,
   BuildingLibraryIcon,
   ArrowLongRightIcon,
-} from "@heroicons/react/24/outline";
+} from '@heroicons/react/24/outline';
 
 const BuildingComplexes: NextPage = () => {
   const { data: sessionData } = useSession();
@@ -17,7 +17,7 @@ const BuildingComplexes: NextPage = () => {
     trpc.buildingComplex.byOrganisation.useQuery();
 
   const organisationArray = buildingComplexes?.flatMap(
-    (buildingComplex) => buildingComplex.organisation.name ?? []
+    (buildingComplex) => buildingComplex.organisation.name
   );
 
   const organisationName = organisationArray?.shift();
@@ -43,7 +43,7 @@ const BuildingComplexes: NextPage = () => {
           </p>
           <StyledLink
             className="mt-10 px-5"
-            href={"/auth/building-complexes/new"}
+            href="/auth/building-complexes/new"
             type="button"
           >
             Create builing complex
@@ -54,14 +54,11 @@ const BuildingComplexes: NextPage = () => {
           <h1 className="my-6 text-2xl font-bold">View a noticeboard</h1>
           <div className="flex h-14 w-full items-center rounded-t-lg border bg-indigo-50 px-4">
             <h3>
-              Building complexes for{" "}
+              Building complexes for{' '}
               <span className="font-semibold">{organisationName}</span>
             </h3>
           </div>
-          <ul
-            role="list"
-            className="h-96 w-full divide-y divide-gray-200 overflow-scroll rounded-b-lg border-l border-r border-b px-4"
-          >
+          <ul className="h-96 w-full divide-y divide-gray-200 overflow-scroll rounded-b-lg border-l border-r border-b px-4">
             {buildingComplexes?.map((buildingComplex) => (
               <li
                 key={buildingComplex.id}
@@ -76,7 +73,7 @@ const BuildingComplexes: NextPage = () => {
                 <StyledLink
                   type="link"
                   href={{
-                    pathname: "/[buildingId]/noticeboard",
+                    pathname: '/[buildingId]/noticeboard',
                     query: { buildingId: buildingComplex.id },
                   }}
                   className="mt-2 flex flex-row items-center sm:mt-0"
@@ -94,7 +91,7 @@ const BuildingComplexes: NextPage = () => {
             </h3>
             <StyledLink
               className="mt-4 px-5 sm:mt-0"
-              href={"/auth/building-complexes/new"}
+              href="/auth/building-complexes/new"
               type="button"
             >
               Create building complex
@@ -107,16 +104,16 @@ const BuildingComplexes: NextPage = () => {
               type="button"
               onClick={
                 sessionData
-                  ? () => signOut({ callbackUrl: "/" })
-                  : () =>
-                      signIn("email", {
-                        callbackUrl: "/auth/check-credentials",
+                  ? async () => signOut({ callbackUrl: '/' })
+                  : async () =>
+                      signIn('email', {
+                        callbackUrl: '/auth/check-credentials',
                       })
               }
             >
               {sessionData
-                ? "Sign out and use a different email address"
-                : "Sign in"}
+                ? 'Sign out and use a different email address'
+                : 'Sign in'}
               <ArrowLongRightIcon className="ml-1 h-6 w-6" />
             </button>
           </div>

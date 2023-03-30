@@ -1,26 +1,24 @@
-import Heading from "./Heading";
+import type { FC } from 'react';
+import Heading from './Heading';
 
-type notice = {
+type NoticeProps = {
   id: number;
   noticeTitle: string;
   uploadDate: string;
   strataName: string;
 };
 
-type notices = {
-  strataNotices: notice[];
+type NoticeCardProps = {
+  strataNotices: NoticeProps[];
 };
 
-const NoticeCard = (props: notices) => {
+const NoticeCard: FC<NoticeCardProps> = (props) => {
   const { strataNotices } = props;
   return (
     <div className="notice-card">
       <section>
         <Heading headingSize="h3">Strata notices</Heading>
-        <ul
-          role="list"
-          className="mt-3 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4"
-        >
+        <ul className="mt-3 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
           {strataNotices.map((notice, index) => (
             <li key={index} className="col-span-1 flex rounded-md shadow-sm">
               <div className="flex flex-1 items-center justify-between truncate rounded-md border border-gray-200 bg-white">

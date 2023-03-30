@@ -1,22 +1,22 @@
-import type { Notice } from "@prisma/client";
-import type { FC } from "react";
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/router";
-import { useBuildingComplexIdStore } from "../../../store/useBuildingComplexIdStore";
-import { useNoticePageStore } from "../../../store/useNoticePageStore";
-import { trpc } from "../../../utils/trpc";
-import Header from "../../../components/Header";
-import GridLayout from "../../../components/GridLayout";
-import NoticeItem from "../../../components/NoticeItem";
-import Container from "../../../components/Container";
-import ToastNofication from "../../../components/ToastNotification";
-import useModal from "../../../utils/useModal";
-import InfoBox from "../../../components/InfoBox";
-import StyledLink from "../../../components/StyledLink";
-import Modal from "../../../components/Modal";
-import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
-import NotFoundPage from "../../404";
-import Pagination from "../../../components/Pagination";
+import type { Notice } from '@prisma/client';
+import type { FC } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useBuildingComplexIdStore } from '../../../store/useBuildingComplexIdStore';
+import { useNoticePageStore } from '../../../store/useNoticePageStore';
+import { trpc } from '../../../utils/trpc';
+import Header from '../../../components/Header';
+import GridLayout from '../../../components/GridLayout';
+import NoticeItem from '../../../components/NoticeItem';
+import Container from '../../../components/Container';
+// import ToastNofication from '../../../components/ToastNotification';
+import useModal from '../../../utils/useModal';
+import InfoBox from '../../../components/InfoBox';
+import StyledLink from '../../../components/StyledLink';
+import Modal from '../../../components/Modal';
+import { ArrowLongRightIcon } from '@heroicons/react/24/outline';
+import NotFoundPage from '../../404';
+import Pagination from '../../../components/Pagination';
 
 export type NoticeboardProps = {
   notices:
@@ -63,7 +63,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
   const { data: buildingComplexes } =
     trpc.buildingComplex.byOrganisation.useQuery();
 
-  const buildingComplexAddress = `${streetAddress || ""}, ${suburb || ""}`;
+  const buildingComplexAddress = `${streetAddress || ''}, ${suburb || ''}`;
 
   return (
     <Container className="text-gray-900">
@@ -87,10 +87,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
             <h4>All building complexes</h4>
           </div>
         </div>
-        <ul
-          role="list"
-          className="h-96 w-full divide-y divide-gray-200 overflow-scroll rounded-lg border"
-        >
+        <ul className="h-96 w-full divide-y divide-gray-200 overflow-scroll rounded-lg border">
           {buildingComplexes?.map((buildingComplex) => (
             <li
               key={buildingComplex.id}
@@ -106,7 +103,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
                 onClick={toggleModal}
                 type="link"
                 href={{
-                  pathname: "/[buildingId]/noticeboard",
+                  pathname: '/[buildingId]/noticeboard',
                   query: { buildingId: buildingComplex.id },
                 }}
                 className="mt-2 flex flex-row items-center sm:mt-0"
@@ -132,12 +129,14 @@ const Noticeboard: FC<NoticeboardProps> = ({
       <Header toggle={toggleModal} />
 
       <div className="mx-auto mt-4 flex max-w-lg flex-col sm:max-w-full md:mt-6">
-        <p className="text-sm font-bold md:text-lg">{name || ""}</p>
+        <p className="text-sm font-bold md:text-lg">{name || ''}</p>
         <p className="text-xs md:text-sm">
-          {buildingComplexData ? buildingComplexAddress : ""}
+          {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
+          {buildingComplexData ? buildingComplexAddress : ''}
         </p>
       </div>
 
+      {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
       {buildingComplexData && !isFetching && (
         <GridLayout
           isFetching={isFetching}
@@ -160,6 +159,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
         </GridLayout>
       )}
 
+      {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
       {buildingComplexData && notices?.length === 0 && !isFetching && (
         <div className="mt-20 flex flex-col items-center justify-center">
           <InfoBox>
@@ -171,14 +171,14 @@ const Noticeboard: FC<NoticeboardProps> = ({
             <p className="mt-4 text-sm">
               A notice&apos;s status can be changed depending on when your
               building residents need to be notified. View a list of notices
-              within your settings. Create a notice by clicking the{" "}
+              within your settings. Create a notice by clicking the{' '}
               <b>Create notice </b>
               button below.
             </p>
             <StyledLink
               type="button"
               href={{
-                pathname: "/[buildingId]/noticeboard/notice/new",
+                pathname: '/[buildingId]/noticeboard/notice/new',
                 query: { buildingId: queryBuildingId },
               }}
               className="mt-4 px-4 text-sm"
@@ -189,7 +189,8 @@ const Noticeboard: FC<NoticeboardProps> = ({
         </div>
       )}
 
-      {buildingComplexData && !!notices?.length && !isFetching && (
+      {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
+      {buildingComplexData && Boolean(notices?.length) && !isFetching && (
         <Pagination
           handleFetchNextPage={handleFetchNextPage}
           handleFetchPreviousPage={handleFetchPreviousPage}
@@ -203,7 +204,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
   );
 };
 
-const NoticeboardViewPage = () => {
+const NoticeboardViewPage: FC = () => {
   const id = useRouter().query.buildingId as string;
   const [page, setPage] = useState(0);
 
@@ -219,7 +220,7 @@ const NoticeboardViewPage = () => {
     trpc.notice.infiniteList.useInfiniteQuery(
       {
         limit: 8,
-        id: id,
+        id,
       },
       {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -231,6 +232,7 @@ const NoticeboardViewPage = () => {
       await fetchNextPage();
     } catch (error) {
       if (error instanceof Error) {
+        // eslint-disable-next-line no-console
         console.log(error.message);
       }
       return;
@@ -252,7 +254,7 @@ const NoticeboardViewPage = () => {
     return <NotFoundPage />;
   }
 
-  if (buildingComplexQuery.status !== "success") {
+  if (buildingComplexQuery.status !== 'success') {
     return <>Loading...</>;
   }
 

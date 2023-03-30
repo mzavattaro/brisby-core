@@ -1,14 +1,14 @@
-import type { ReactElement, ReactNode, FC } from "react";
-import "@total-typescript/ts-reset";
-import type { NextPage } from "next";
-import { type Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { trpc } from "../utils/trpc";
-import "../styles/globals.css";
-import { Inter } from "@next/font/google";
+import type { ReactElement, ReactNode, FC } from 'react';
+import '@total-typescript/ts-reset';
+import type { NextPage } from 'next';
+import { type Session } from 'next-auth';
+import { SessionProvider } from 'next-auth/react';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { trpc } from '../utils/trpc';
+import '../styles/globals.css';
+import { Inter as createInter } from '@next/font/google';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = createInter({ subsets: ['latin'] });
 
 export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;

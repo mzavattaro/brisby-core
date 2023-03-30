@@ -1,20 +1,20 @@
-import { useEffect, useState, useRef } from "react";
-import type { FC } from "react";
-import { useRouter } from "next/router";
-import { trpc } from "../../../../utils/trpc";
-import { useBuildingComplexIdStore } from "../../../../store/useBuildingComplexIdStore";
-import { useNoticePageStore } from "../../../../store/useNoticePageStore";
-import Header from "../../../../components/Header";
-import Modal from "../../../../components/Modal";
-import GridLayout from "../../../../components/GridLayout";
-import NoticeItem from "../../../../components/NoticeItem";
-import Container from "../../../../components/Container";
-import StyledLink from "../../../../components/StyledLink";
-import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
-import useModal from "../../../../utils/useModal";
-import NotFoundPage from "../../../404";
-import type NoticeboardProps from "../../noticeboard/index";
-import Pagination from "../../../../components/Pagination";
+import { useEffect, useState, useRef } from 'react';
+import type { FC } from 'react';
+import { useRouter } from 'next/router';
+import { trpc } from '../../../../utils/trpc';
+import { useBuildingComplexIdStore } from '../../../../store/useBuildingComplexIdStore';
+import { useNoticePageStore } from '../../../../store/useNoticePageStore';
+import Header from '../../../../components/Header';
+import Modal from '../../../../components/Modal';
+import GridLayout from '../../../../components/GridLayout';
+import NoticeItem from '../../../../components/NoticeItem';
+import Container from '../../../../components/Container';
+import StyledLink from '../../../../components/StyledLink';
+import { ArrowLongRightIcon } from '@heroicons/react/24/outline';
+import useModal from '../../../../utils/useModal';
+import NotFoundPage from '../../../404';
+import type NoticeboardProps from '../../noticeboard/index';
+import Pagination from '../../../../components/Pagination';
 
 const Drafts: FC<typeof NoticeboardProps> = () => {
   const [page, setPage] = useState(0);
@@ -36,7 +36,7 @@ const Drafts: FC<typeof NoticeboardProps> = () => {
     trpc.notice.drafts.useInfiniteQuery(
       {
         limit: 8,
-        id: id,
+        id,
       },
       {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -69,7 +69,7 @@ const Drafts: FC<typeof NoticeboardProps> = () => {
     return <NotFoundPage />;
   }
 
-  if (buildingComplexQuery.status !== "success") {
+  if (buildingComplexQuery.status !== 'success') {
     return <>Loading...</>;
   }
 
@@ -80,7 +80,7 @@ const Drafts: FC<typeof NoticeboardProps> = () => {
 
   const { name, streetAddress, suburb } = buildingComplexData;
 
-  const buildingComplexAddress = `${streetAddress || ""}, ${suburb || ""}`;
+  const buildingComplexAddress = `${streetAddress || ''}, ${suburb || ''}`;
 
   return (
     <Container className="text-gray-900">
@@ -104,10 +104,7 @@ const Drafts: FC<typeof NoticeboardProps> = () => {
             <h4>All building complexes</h4>
           </div>
         </div>
-        <ul
-          role="list"
-          className="h-96 w-full divide-y divide-gray-200 overflow-scroll rounded-lg border"
-        >
+        <ul className="h-96 w-full divide-y divide-gray-200 overflow-scroll rounded-lg border">
           {buildingComplexes?.map((buildingComplex) => (
             <li
               key={buildingComplex.id}
@@ -122,7 +119,7 @@ const Drafts: FC<typeof NoticeboardProps> = () => {
               <StyledLink
                 type="link"
                 href={{
-                  pathname: "/[buildingId]/noticeboard",
+                  pathname: '/[buildingId]/noticeboard',
                   query: { buildingId: buildingComplex.id },
                 }}
                 className="mt-2 flex flex-row items-center sm:mt-0"
@@ -148,9 +145,9 @@ const Drafts: FC<typeof NoticeboardProps> = () => {
       <Header toggle={toggle} />
 
       <div className="mx-auto mt-4 flex max-w-lg flex-col sm:max-w-full md:mt-6">
-        <p className="text-sm font-bold md:text-lg">{name || ""}</p>
+        <p className="text-sm font-bold md:text-lg">{name || ''}</p>
         <p className="text-xs md:text-sm">
-          {buildingComplexData ? buildingComplexAddress : ""}
+          {buildingComplexData ? buildingComplexAddress : ''}
         </p>
       </div>
 
@@ -178,7 +175,7 @@ const Drafts: FC<typeof NoticeboardProps> = () => {
         <span>notices.length broke</span>
       )}
 
-      {buildingComplexData && !!notices?.length && !isFetching && (
+      {buildingComplexData && Boolean(notices?.length) && !isFetching && (
         <Pagination
           handleFetchNextPage={handleFetchNextPage}
           handleFetchPreviousPage={handleFetchPreviousPage}
