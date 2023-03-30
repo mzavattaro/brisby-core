@@ -39,14 +39,7 @@ const NoticeItem: FC<NoticeItemProps> = ({
 
   const deleteMutation = trpc.notice.delete.useMutation({
     onSuccess: async () => {
-      try {
-        await queryClient.invalidateQueries();
-      } catch (error) {
-        if (error instanceof Error) {
-          // eslint-disable-next-line no-console
-          console.log(error.message);
-        }
-      }
+      await queryClient.invalidateQueries();
       if (notices?.length === 1) {
         handleFetchPreviousPage();
       }
@@ -61,14 +54,7 @@ const NoticeItem: FC<NoticeItemProps> = ({
 
   const updateMutation = trpc.notice.updateStatus.useMutation({
     onSuccess: async () => {
-      try {
-        await queryClient.invalidateQueries();
-      } catch (error) {
-        if (error instanceof Error) {
-          // eslint-disable-next-line no-console
-          console.log(error.message);
-        }
-      }
+      await queryClient.invalidateQueries();
       toggle();
     },
 

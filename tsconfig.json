@@ -17,6 +17,13 @@
     "noUncheckedIndexedAccess": true,
     "strictNullChecks": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.cjs",
+    "**/*.mjs",
+    "eslint.config.mjs"
+  ],
   "exclude": ["node_modules"]
 }
