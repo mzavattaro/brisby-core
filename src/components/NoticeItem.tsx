@@ -91,7 +91,9 @@ const NoticeItem: FC<NoticeItem> = ({
   };
 
   const handleDraftChange = () => {
+    // Create a new status value
     const status = "draft";
+    // Call mutate with data and id
     updateMutation.mutate({ data: { status: status }, id: id });
   };
 

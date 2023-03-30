@@ -22,6 +22,7 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
   const [isShowingDeleteModal, setIsShowingDeleteModal] = useState(false);
   const queryClient = useQueryClient();
   const cancelButtonRef = useRef(null);
+  const router = useRouter();
 
   const { mutate, isLoading } = trpc.notice.updateStatus.useMutation({
     onSuccess: async () => {
@@ -88,6 +89,7 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
     onSuccess: async () => {
       try {
         await queryClient.invalidateQueries();
+        // await router.push("/");
       } catch (error) {
         if (error instanceof Error) {
           console.log(error.message);
