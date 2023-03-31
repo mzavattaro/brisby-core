@@ -7,7 +7,7 @@ import Link from 'next/link';
 import dayjs from 'dayjs';
 
 const Notices: NextPageWithLayout = () => {
-  const { data: notices, isLoading } = trpc.notice.byOrganisation.useQuery();
+  const { data: notices } = trpc.notice.byOrganisation.useQuery();
   const buildingComplexId = useBuildingComplexIdStore((state) => state.id);
 
   return (
@@ -81,55 +81,48 @@ const Notices: NextPageWithLayout = () => {
                   </td>
                 </tr>
               ) : (
-                notices?.map((notice) =>
-                  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                  isLoading ? (
-                    <span key={notice.id}>Loading...</span>
-                  ) : (
-                    <tr key={notice.id}>
-                      <td className="w-full max-w-0 py-4 pl-4 pr-3 text-xs font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
-                        {notice.fileName}
-                        <dl className="font-normal lg:hidden">
-                          <dt className="sr-only">Building Complex</dt>
-                          <dd className="mt-1 truncate text-gray-700">
-                            {notice.buildingComplex?.name}
-                          </dd>
-                          <dt className="sr-only sm:hidden">Notice Period</dt>
-                          <dd className="mt-1 truncate text-gray-500 sm:hidden">
-                            {`${dayjs(notice.startDate).format(
-                              'D MMMM YYYY'
-                            )} - ${dayjs(notice.endDate).format(
-                              'D MMMM YYYY'
-                            )}`}
-                          </dd>
-                        </dl>
-                      </td>
-                      <td className="hidden px-3 py-4 text-xs text-gray-500 lg:table-cell">
-                        {notice.buildingComplex?.name}
-                      </td>
-                      <td className="hidden px-3 py-4 text-xs text-gray-500 sm:table-cell">
-                        {`${dayjs(notice.startDate).format(
-                          'D MMMM YYYY'
-                        )} - ${dayjs(notice.endDate).format('D MMMM YYYY')}`}
-                      </td>
-                      <td className="px-3 py-4">
-                        <div className="inline-flex items-center rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
-                          {notice.status}
-                        </div>
-                      </td>
-                      <td className="py-4 pl-3 pr-4 text-right text-xs font-medium sm:pr-6">
-                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                        <a
-                          href="#"
-                          className="text-indigo-600 hover:text-indigo-900"
-                        >
-                          View
-                          <span className="sr-only">{notice.fileName}</span>
-                        </a>
-                      </td>
-                    </tr>
-                  )
-                )
+                notices?.map((notice) => (
+                  <tr key={notice.id}>
+                    <td className="w-full max-w-0 py-4 pl-4 pr-3 text-xs font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
+                      {notice.fileName}
+                      <dl className="font-normal lg:hidden">
+                        <dt className="sr-only">Building Complex</dt>
+                        <dd className="mt-1 truncate text-gray-700">
+                          {notice.buildingComplex?.name}
+                        </dd>
+                        <dt className="sr-only sm:hidden">Notice Period</dt>
+                        <dd className="mt-1 truncate text-gray-500 sm:hidden">
+                          {`${dayjs(notice.startDate).format(
+                            'D MMMM YYYY'
+                          )} - ${dayjs(notice.endDate).format('D MMMM YYYY')}`}
+                        </dd>
+                      </dl>
+                    </td>
+                    <td className="hidden px-3 py-4 text-xs text-gray-500 lg:table-cell">
+                      {notice.buildingComplex?.name}
+                    </td>
+                    <td className="hidden px-3 py-4 text-xs text-gray-500 sm:table-cell">
+                      {`${dayjs(notice.startDate).format(
+                        'D MMMM YYYY'
+                      )} - ${dayjs(notice.endDate).format('D MMMM YYYY')}`}
+                    </td>
+                    <td className="px-3 py-4">
+                      <div className="inline-flex items-center rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
+                        {notice.status}
+                      </div>
+                    </td>
+                    <td className="py-4 pl-3 pr-4 text-right text-xs font-medium sm:pr-6">
+                      {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                      <a
+                        href="#"
+                        className="text-indigo-600 hover:text-indigo-900"
+                      >
+                        View
+                        <span className="sr-only">{notice.fileName}</span>
+                      </a>
+                    </td>
+                  </tr>
+                ))
               )}
             </tbody>
           </table>
