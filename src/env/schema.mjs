@@ -21,14 +21,6 @@ export const serverSchema = z.object({
     // VERCEL_URL doesn't include `https` so it cant be validated as a URL
     process.env.VERCEL ? z.string() : z.string().url()
   ),
-  EMAIL_SERVER_USER: z.string(),
-  EMAIL_SERVER_PASSWORD: z.string(),
-  AWS_S3_ACCESS_KEY_ID: z.string(),
-  AWS_S3_SECRET_KEY: z.string(),
-  AWS_S3_BUCKET: z.string(),
-  AWS_S3_REGION: z.string(),
-  AWS_CLOUDFRONT_DISTRIBUTION_ID: z.string(),
-  SENDGRID_API_KEY: z.string(),
 });
 
 /**
@@ -38,6 +30,14 @@ export const serverSchema = z.object({
  */
 export const clientSchema = z.object({
   // NEXT_PUBLIC_CLIENTVAR: z.string(),
+  NEXT_PUBLIC_EMAIL_SERVER_USER: z.string(),
+  NEXT_PUBLIC_EMAIL_SERVER_PASSWORD: z.string(),
+  NEXT_PUBLIC_AWS_S3_ACCESS_KEY_ID: z.string(),
+  NEXT_PUBLIC_AWS_S3_SECRET_KEY: z.string(),
+  NEXT_PUBLIC_AWS_S3_BUCKET: z.string(),
+  NEXT_PUBLIC_AWS_S3_REGION: z.string(),
+  NEXT_PUBLIC_AWS_CLOUDFRONT_DISTRIBUTION_ID: z.string(),
+  NEXT_PUBLIC_SENDGRID_API_KEY: z.string(),
 });
 
 /**
@@ -47,17 +47,16 @@ export const clientSchema = z.object({
  * @type {{ [k in keyof z.infer<typeof clientSchema>]: z.infer<typeof clientSchema>[k] | undefined }}
  */
 export const clientEnv = {
-  // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
-  DATABASE_URL: process.env.DATABASE_URL,
-  NODE_ENV: process.env.NODE_ENV,
-  NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-  NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-  EMAIL_SERVER_USER: process.env.EMAIL_SERVER_USER,
-  EMAIL_SERVER_PASSWORD: process.env.EMAIL_SERVER_PASSWORD,
-  AWS_S3_ACCESS_KEY_ID: process.env.AWS_S3_ACCESS_KEY_ID,
-  AWS_S3_SECRET_KEY: process.env.AWS_S3_SECRET_KEY,
-  AWS_S3_BUCKET: process.env.AWS_S3_BUCKET,
-  AWS_S3_REGION: process.env.AWS_S3_REGION,
-  AWS_CLOUDFRONT_DISTRIBUTION_ID: process.env.AWS_CLOUDFRONT_DISTRIBUTION_ID,
-  SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
+  /*
+   * NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+   */
+  NEXT_PUBLIC_EMAIL_SERVER_USER: process.env.EMAIL_SERVER_USER,
+  NEXT_PUBLIC_EMAIL_SERVER_PASSWORD: process.env.EMAIL_SERVER_PASSWORD,
+  NEXT_PUBLIC_AWS_S3_ACCESS_KEY_ID: process.env.AWS_S3_ACCESS_KEY_ID,
+  NEXT_PUBLIC_AWS_S3_SECRET_KEY: process.env.AWS_S3_SECRET_KEY,
+  NEXT_PUBLIC_AWS_S3_BUCKET: process.env.AWS_S3_BUCKET,
+  NEXT_PUBLIC_AWS_S3_REGION: process.env.AWS_S3_REGION,
+  NEXT_PUBLIC_AWS_CLOUDFRONT_DISTRIBUTION_ID:
+    process.env.AWS_CLOUDFRONT_DISTRIBUTION_ID,
+  NEXT_PUBLIC_SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
 };
