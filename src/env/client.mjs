@@ -1,7 +1,8 @@
 // @ts-check
 import { clientEnv, clientSchema } from './schema.mjs';
 
-const parsedEnv = clientSchema.safeParse(clientEnv);
+// eslint-disable-next-line no-underscore-dangle
+const _clientEnv = clientSchema.safeParse(clientEnv);
 
 export const formatErrors = (
   /** @type {import('zod').ZodFormattedError<Map<string,string>,string>} */
@@ -16,16 +17,16 @@ export const formatErrors = (
     })
     .filter(Boolean);
 
-if (!parsedEnv.success) {
+if (!_clientEnv.success) {
   // eslint-disable-next-line no-console
   console.error(
     '❌ Invalid environment variables:\n',
-    ...formatErrors(parsedEnv.error.format())
+    ...formatErrors(_clientEnv.error.format())
   );
   throw new Error('Invalid environment variables');
 }
 
-for (const key of Object.keys(parsedEnv.data)) {
+for (const key of Object.keys(_clientEnv.data)) {
   if (!key.startsWith('NEXT_PUBLIC_')) {
     // eslint-disable-next-line no-console
     console.warn(
@@ -36,4 +37,4 @@ for (const key of Object.keys(parsedEnv.data)) {
   }
 }
 
-export const env = parsedEnv.data;
+export const env = _clientEnv.data;
