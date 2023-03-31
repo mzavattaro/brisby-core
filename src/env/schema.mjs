@@ -22,6 +22,13 @@ export const serverSchema = z.object({
     process.env.VERCEL ? z.string() : z.string().url()
   ),
   SENDGRID_API_KEY: z.string(),
+  EMAIL_SERVER_USER: z.string(),
+  EMAIL_SERVER_PASSWORD: z.string(),
+  AWS_S3_ACCESS_KEY_ID: z.string(),
+  AWS_S3_SECRET_KEY: z.string(),
+  AWS_S3_BUCKET: z.string(),
+  AWS_S3_REGION: z.string(),
+  AWS_CLOUDFRONT_DISTRIBUTION_ID: z.string(),
 });
 
 /**
@@ -31,13 +38,6 @@ export const serverSchema = z.object({
  */
 export const clientSchema = z.object({
   // NEXT_PUBLIC_CLIENTVAR: z.string(),
-  NEXT_PUBLIC_EMAIL_SERVER_USER: z.string(),
-  NEXT_PUBLIC_EMAIL_SERVER_PASSWORD: z.string(),
-  NEXT_PUBLIC_AWS_S3_ACCESS_KEY_ID: z.string(),
-  NEXT_PUBLIC_AWS_S3_SECRET_KEY: z.string(),
-  NEXT_PUBLIC_AWS_S3_BUCKET: z.string(),
-  NEXT_PUBLIC_AWS_S3_REGION: z.string(),
-  NEXT_PUBLIC_AWS_CLOUDFRONT_DISTRIBUTION_ID: z.string(),
 });
 
 /**
@@ -48,16 +48,6 @@ export const clientSchema = z.object({
  */
 export const clientEnv = {
   /*
-   * NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+   * CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
    */
-  NEXT_PUBLIC_EMAIL_SERVER_USER: process.env.NEXT_PUBLIC_EMAIL_SERVER_USER,
-  NEXT_PUBLIC_EMAIL_SERVER_PASSWORD:
-    process.env.NEXT_PUBLIC_EMAIL_SERVER_PASSWORD,
-  NEXT_PUBLIC_AWS_S3_ACCESS_KEY_ID:
-    process.env.NEXT_PUBLIC_AWS_S3_ACCESS_KEY_ID,
-  NEXT_PUBLIC_AWS_S3_SECRET_KEY: process.env.NEXT_PUBLIC_AWS_S3_SECRET_KEY,
-  NEXT_PUBLIC_AWS_S3_BUCKET: process.env.NEXT_PUBLIC_AWS_S3_BUCKET,
-  NEXT_PUBLIC_AWS_S3_REGION: process.env.NEXT_PUBLIC_AWS_S3_REGION,
-  NEXT_PUBLIC_AWS_CLOUDFRONT_DISTRIBUTION_ID:
-    process.env.NEXT_PUBLIC_AWS_CLOUDFRONT_DISTRIBUTION_ID,
 };
