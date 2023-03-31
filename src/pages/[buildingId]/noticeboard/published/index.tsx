@@ -147,14 +147,10 @@ const Published: FC<typeof NoticeboardProps> = () => {
 
       <div className="mx-auto mt-4 flex max-w-lg flex-col sm:max-w-full md:mt-6">
         <p className="text-sm font-bold md:text-lg">{name || ''}</p>
-        <p className="text-xs md:text-sm">
-          {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
-          {buildingComplexData ? buildingComplexAddress : ''}
-        </p>
+        <p className="text-xs md:text-sm">{buildingComplexAddress}</p>
       </div>
 
-      {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
-      {buildingComplexData && !isFetching ? (
+      {!isFetching && (
         <GridLayout
           isFetching={isFetching}
           isFetchingNextPage={isFetchingNextPage}
@@ -174,12 +170,9 @@ const Published: FC<typeof NoticeboardProps> = () => {
             </div>
           )}
         </GridLayout>
-      ) : (
-        <span>notices.length broke</span>
       )}
 
-      {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
-      {buildingComplexData && Boolean(notices?.length) && !isFetching && (
+      {Boolean(notices?.length) && !isFetching && (
         <Pagination
           handleFetchNextPage={handleFetchNextPage}
           handleFetchPreviousPage={handleFetchPreviousPage}
