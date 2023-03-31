@@ -1,7 +1,7 @@
 // import { PrismaClient } from "@prisma/client";
-import { TRPCError } from "@trpc/server";
-import { z } from "zod";
-import { protectedProcedure, router } from "../trpc";
+import { TRPCError } from '@trpc/server';
+import { z } from 'zod';
+import { protectedProcedure, router } from '../trpc';
 
 /**
  * Default selector for Post.
@@ -51,7 +51,7 @@ export const organisationRouter = router({
       const { prisma, session } = ctx;
       const { name, streetAddress, suburb, state, postcode } = input;
 
-      const organisationId = session.user.organisationId;
+      const { organisationId } = session.user;
 
       const uniqueOrganisation = await prisma.organisation.findUnique({
         where: {
@@ -61,8 +61,8 @@ export const organisationRouter = router({
 
       if (!uniqueOrganisation) {
         throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Organisation not found",
+          code: 'NOT_FOUND',
+          message: 'Organisation not found',
         });
       }
 
@@ -116,7 +116,7 @@ export const organisationRouter = router({
   getBilling: protectedProcedure.query(async ({ ctx }) => {
     const { prisma, session } = ctx;
 
-    const organisationId = session.user.organisationId;
+    const { organisationId } = session.user;
 
     const billing = await prisma.organisation
       .findUnique({
@@ -126,8 +126,8 @@ export const organisationRouter = router({
 
     if (!billing) {
       throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "No billing found",
+        code: 'NOT_FOUND',
+        message: 'No billing found',
       });
     }
 

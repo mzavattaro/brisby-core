@@ -1,11 +1,11 @@
 // import { Prisma } from "@prisma/client";
-import { TRPCError } from "@trpc/server";
-import { z } from "zod";
-import { protectedProcedure, router } from "../trpc";
-import s3 from "../../../utils/s3";
-import cloudFront from "../../../utils/cloudFront";
-import { DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { CreateInvalidationCommand } from "@aws-sdk/client-cloudfront";
+import { TRPCError } from '@trpc/server';
+import { z } from 'zod';
+import { protectedProcedure, router } from '../trpc';
+import s3 from '../../../utils/s3';
+import cloudFront from '../../../utils/cloudFront';
+import { DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { CreateInvalidationCommand } from '@aws-sdk/client-cloudfront';
 
 /**
  * Default selector for Notice.
@@ -88,7 +88,7 @@ export const noticeRouter = router({
 
     const notices = await prisma.notice.findMany({
       where: { organisationId: sessionOrganisationId },
-      orderBy: [{ createdAt: "desc" }],
+      orderBy: [{ createdAt: 'desc' }],
       select: {
         id: true,
         fileName: true,
@@ -102,12 +102,14 @@ export const noticeRouter = router({
       },
     });
 
-    if (!notices) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Notices not found",
-      });
-    }
+    /*
+     * if (!notices.length) {
+     *   throw new TRPCError({
+     *     code: 'NOT_FOUND',
+     *     message: 'Notices not found',
+     *   });
+     * }
+     */
 
     return notices;
   }),
@@ -133,12 +135,12 @@ export const noticeRouter = router({
         where: {
           organisationId: sessionOrganisationId,
           buildingComplexId: id,
-          OR: [{ status: "published" }, { status: "draft" }],
+          OR: [{ status: 'published' }, { status: 'draft' }],
         },
-        take: limit + 1 /* +1 for hasNextPage */,
-        skip: skip,
+        take: limit + 1,
+        skip,
         cursor: cursor ? { id: cursor } : undefined,
-        orderBy: [{ createdAt: "desc" }],
+        orderBy: [{ createdAt: 'desc' }],
         include: {
           author: {
             select: {
@@ -149,23 +151,17 @@ export const noticeRouter = router({
         },
       });
 
-      if (!notices) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Notices not found",
-        });
-      }
-
       for (const notice of notices) {
-        if (!notice.key) {
-          console.log("Notice key is undefined");
+        if (notice.key === null) {
+          // eslint-disable-next-line no-console
+          console.log('Notice key is null');
         } else {
           const url = `https://d1ve2d1xbf677h.cloudfront.net/${notice.key}`;
           notice.uploadUrl = url;
         }
       }
 
-      let nextCursor: typeof cursor | undefined = undefined;
+      let nextCursor: typeof cursor | undefined;
       if (notices.length > limit) {
         const nextItem = notices.pop();
         nextCursor = nextItem?.id;
@@ -218,18 +214,18 @@ export const noticeRouter = router({
 
       if (!notice) {
         throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Notice not found",
+          code: 'NOT_FOUND',
+          message: 'Notice not found',
         });
       }
 
-      if (!notice.key) {
-        console.log("Notice key is undefined");
-      } else {
+      if (notice.key) {
         const url = `https://d1ve2d1xbf677h.cloudfront.net/${notice.key}`;
         notice.uploadUrl = url;
+      } else {
+        // eslint-disable-next-line no-console
+        console.log('Notice key is undefined');
       }
-
       return notice;
     }),
 
@@ -254,11 +250,11 @@ export const noticeRouter = router({
         where: {
           organisationId: sessionOrganisationId,
           buildingComplexId: id,
-          status: "published",
+          status: 'published',
         },
         take: limit + 1,
-        skip: skip,
-        orderBy: [{ createdAt: "desc" }],
+        skip,
+        orderBy: [{ createdAt: 'desc' }],
         cursor: cursor ? { id: cursor } : undefined,
         include: {
           author: {
@@ -271,15 +267,16 @@ export const noticeRouter = router({
       });
 
       for (const notice of notices) {
-        if (!notice.key) {
-          console.log("Notice key is undefined");
-        } else {
+        if (notice.key) {
           const url = `https://d1ve2d1xbf677h.cloudfront.net/${notice.key}`;
           notice.uploadUrl = url;
+        } else {
+          // eslint-disable-next-line no-console
+          console.log('Notice key is undefined');
         }
       }
 
-      let nextCursor: typeof cursor | undefined = undefined;
+      let nextCursor: typeof cursor | undefined;
       if (notices.length > limit) {
         const nextItem = notices.pop();
         nextCursor = nextItem?.id;
@@ -312,11 +309,11 @@ export const noticeRouter = router({
         where: {
           organisationId: sessionOrganisationId,
           buildingComplexId: id,
-          status: "draft",
+          status: 'draft',
         },
         take: limit + 1,
-        skip: skip,
-        orderBy: [{ createdAt: "desc" }],
+        skip,
+        orderBy: [{ createdAt: 'desc' }],
         cursor: cursor ? { id: cursor } : undefined,
         include: {
           author: {
@@ -328,23 +325,17 @@ export const noticeRouter = router({
         },
       });
 
-      if (!notices) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Notices not found",
-        });
-      }
-
       for (const notice of notices) {
-        if (!notice.key) {
-          console.log("Notice key is undefined");
-        } else {
+        if (notice.key) {
           const url = `https://d1ve2d1xbf677h.cloudfront.net/${notice.key}`;
           notice.uploadUrl = url;
+        } else {
+          // eslint-disable-next-line no-console
+          console.log('Notice key is undefined');
         }
       }
 
-      let nextCursor: typeof cursor | undefined = undefined;
+      let nextCursor: typeof cursor | undefined;
       if (notices.length > limit) {
         const nextItem = notices.pop();
         nextCursor = nextItem?.id;
@@ -376,11 +367,11 @@ export const noticeRouter = router({
         where: {
           organisationId: sessionOrganisationId,
           buildingComplexId: id,
-          status: "archived",
+          status: 'archived',
         },
         take: limit + 1,
-        skip: skip,
-        orderBy: [{ createdAt: "desc" }],
+        skip,
+        orderBy: [{ createdAt: 'desc' }],
         cursor: cursor ? { id: cursor } : undefined,
         include: {
           author: {
@@ -391,23 +382,18 @@ export const noticeRouter = router({
           },
         },
       });
-      if (!notices) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Notices not found",
-        });
-      }
 
       for (const notice of notices) {
-        if (!notice.key) {
-          console.log("Notice key is undefined");
-        } else {
+        if (notice.key) {
           const url = `https://d1ve2d1xbf677h.cloudfront.net/${notice.key}`;
           notice.uploadUrl = url;
+        } else {
+          // eslint-disable-next-line no-console
+          console.log('Notice key is undefined');
         }
       }
 
-      let nextCursor: typeof cursor | undefined = undefined;
+      let nextCursor: typeof cursor | undefined;
       if (notices.length > limit) {
         const nextItem = notices.pop();
         nextCursor = nextItem?.id;
@@ -439,8 +425,8 @@ export const noticeRouter = router({
 
       if (!uniqueNotice) {
         throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Notice not found",
+          code: 'NOT_FOUND',
+          message: 'Notice not found',
         });
       }
 
@@ -450,13 +436,6 @@ export const noticeRouter = router({
         },
         data,
       });
-
-      if (!notice) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Notice not found",
-        });
-      }
 
       return notice;
     }),
@@ -473,25 +452,25 @@ export const noticeRouter = router({
 
       if (!notices) {
         throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Notice not found",
+          code: 'NOT_FOUND',
+          message: 'Notice not found',
         });
       }
 
+      const noticeskey = notices.key ?? '';
+
       const params = {
         Bucket: process.env.AWS_S3_BUCKET,
-        Key: notices.key as string,
+        Key: noticeskey,
       };
       // Delete from s3 bucket
       await s3.send(new DeleteObjectCommand(params));
-
-      const noticeskey = notices.key as string;
 
       // Invalidate the CloudFront cache
       const invalidationParams = {
         DistributionId: process.env.AWS_CLOUDFRONT_DISTRIBUTION_ID,
         InvalidationBatch: {
-          CallerReference: notices.key as string,
+          CallerReference: noticeskey,
           Paths: {
             Quantity: 1,
             Items: [`/${noticeskey}`],

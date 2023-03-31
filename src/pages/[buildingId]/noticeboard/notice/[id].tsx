@@ -23,7 +23,7 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
   const [isShowingDeleteModal, setIsShowingDeleteModal] = useState(false);
   const queryClient = useQueryClient();
   const cancelButtonRef = useRef(null);
-  const router = useRouter();
+  // const router = useRouter();
 
   const { mutate, isLoading } = trpc.notice.updateStatus.useMutation({
     onSuccess: async () => {

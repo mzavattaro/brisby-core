@@ -1,7 +1,7 @@
 // import { Prisma } from "@prisma/client";
-import { z } from "zod";
-import { protectedProcedure, router } from "../trpc";
-import { TRPCError } from "@trpc/server";
+import { z } from 'zod';
+import { protectedProcedure, router } from '../trpc';
+import { TRPCError } from '@trpc/server';
 
 export const buildingComplexRouter = router({
   // create building complex /api/buildingComplex/create
@@ -34,13 +34,13 @@ export const buildingComplexRouter = router({
 
       return prisma.buildingComplex.create({
         data: {
-          name: name,
-          type: type,
-          totalOccupancies: totalOccupancies,
-          streetAddress: streetAddress,
-          suburb: suburb,
-          state: state,
-          postcode: postcode,
+          name,
+          type,
+          totalOccupancies,
+          streetAddress,
+          suburb,
+          state,
+          postcode,
           organisation: {
             connect: {
               id: sessionOrganisationId,
@@ -66,8 +66,8 @@ export const buildingComplexRouter = router({
 
     if (!buildingComplexes) {
       throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Building complexes not found",
+        code: 'NOT_FOUND',
+        message: 'Building complexes not found',
       });
     }
 
@@ -99,13 +99,6 @@ export const buildingComplexRouter = router({
         },
       });
 
-      if (!buildingComplex) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Building complex not found",
-        });
-      }
-
       return buildingComplex;
     }),
 
@@ -117,7 +110,7 @@ export const buildingComplexRouter = router({
 
     const buildingComplexes = await prisma.buildingComplex.findMany({
       where: { organisationId: sessionOrganisationId },
-      orderBy: [{ createdAt: "desc" }],
+      orderBy: [{ createdAt: 'desc' }],
       select: {
         id: true,
         name: true,
@@ -132,13 +125,6 @@ export const buildingComplexRouter = router({
         },
       },
     });
-
-    if (!buildingComplexes) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Building complexes not found",
-      });
-    }
 
     return buildingComplexes;
   }),

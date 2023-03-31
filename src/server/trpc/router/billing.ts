@@ -1,7 +1,9 @@
-// import { PrismaClient } from "@prisma/client";
-// import { TRPCError } from "@trpc/server";
-import { z } from "zod";
-import { protectedProcedure, router } from "../trpc";
+/*
+ * import { PrismaClient } from "@prisma/client";
+ * import { TRPCError } from "@trpc/server";
+ */
+import { z } from 'zod';
+import { protectedProcedure, router } from '../trpc';
 
 /**
  * Default selector for Post.
@@ -30,29 +32,23 @@ export const billingRouter = router({
 
       const sessionOrganisationId = session.user.organisationId;
 
-      try {
-        const billing = await prisma.billing.create({
-          data: {
-            fullName,
-            email,
-            phone,
-            streetAddress,
-            suburb,
-            state,
-            postcode,
-            organisation: {
-              connect: {
-                id: sessionOrganisationId,
-              },
+      const billing = await prisma.billing.create({
+        data: {
+          fullName,
+          email,
+          phone,
+          streetAddress,
+          suburb,
+          state,
+          postcode,
+          organisation: {
+            connect: {
+              id: sessionOrganisationId,
             },
           },
-        });
-        return billing;
-      } catch (error) {
-        if (error instanceof Error) {
-          console.log(error.message);
-        }
-      }
+        },
+      });
+      return billing;
     }),
 
   // update /api/billing
@@ -82,43 +78,31 @@ export const billingRouter = router({
         postcode,
       } = input;
 
-      const organisationId = session.user.organisationId;
+      const { organisationId } = session.user;
 
-      try {
-        await prisma.billing.findUniqueOrThrow({
-          where: {
-            id,
-          },
-        });
-      } catch (error) {
-        if (error instanceof Error) {
-          console.log(error.message);
-        }
-      }
+      await prisma.billing.findUniqueOrThrow({
+        where: {
+          id,
+        },
+      });
 
-      try {
-        const organisation = await prisma.billing.update({
-          where: { id },
-          data: {
-            fullName,
-            email,
-            phone,
-            streetAddress,
-            suburb,
-            state,
-            postcode,
-            organisation: {
-              connect: {
-                id: organisationId,
-              },
+      const organisation = await prisma.billing.update({
+        where: { id },
+        data: {
+          fullName,
+          email,
+          phone,
+          streetAddress,
+          suburb,
+          state,
+          postcode,
+          organisation: {
+            connect: {
+              id: organisationId,
             },
           },
-        });
-        return organisation;
-      } catch (error) {
-        if (error instanceof Error) {
-          console.log(error.message);
-        }
-      }
+        },
+      });
+      return organisation;
     }),
 });

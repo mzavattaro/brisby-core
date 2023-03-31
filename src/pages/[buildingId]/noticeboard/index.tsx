@@ -31,11 +31,15 @@ export type NoticeboardProps = {
   isFetchingNextPage: boolean;
   hasNextPage: boolean | undefined;
   buildingComplexData: {
-    id: string;
     name: string;
     streetAddress: string;
     suburb: string;
-  };
+    notice: Notice[];
+    id: string;
+    // createdAt: Date;
+    type: string;
+    totalOccupancies: number;
+  } | null;
   queryBuildingId: string;
   handleFetchNextPage: () => void;
   handleFetchPreviousPage: () => void;
@@ -64,8 +68,6 @@ const Noticeboard: FC<NoticeboardProps> = ({
     trpc.buildingComplex.byOrganisation.useQuery();
 
   const buildingComplexAddress = `${streetAddress || ''}, ${suburb || ''}`;
-
-  console.log(notices?.length);
 
   return (
     <Container className="text-gray-900">

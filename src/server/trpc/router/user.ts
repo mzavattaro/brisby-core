@@ -1,6 +1,6 @@
-import { protectedProcedure, publicProcedure, router } from "../trpc";
-import { TRPCError } from "@trpc/server";
-import { z } from "zod";
+import { protectedProcedure, publicProcedure, router } from '../trpc';
+import { TRPCError } from '@trpc/server';
+import { z } from 'zod';
 
 export const userRouter = router({
   // get user by id /api/user
@@ -59,8 +59,8 @@ export const userRouter = router({
 
       if (!users) {
         throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found!",
+          code: 'NOT_FOUND',
+          message: 'User not found!',
         });
       }
 
@@ -84,8 +84,8 @@ export const userRouter = router({
 
       if (!userOrgansation) {
         throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User has no organisationId!",
+          code: 'NOT_FOUND',
+          message: 'User has no organisationId!',
         });
       }
 
@@ -106,7 +106,7 @@ export const userRouter = router({
 
       if (!exists) {
         throw new TRPCError({
-          code: "NOT_FOUND",
+          code: 'NOT_FOUND',
           message: "User doesn't exist",
         });
       }
