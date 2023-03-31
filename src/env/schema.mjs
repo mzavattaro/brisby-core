@@ -23,6 +23,12 @@ export const serverSchema = z.object({
   ),
   EMAIL_SERVER_USER: z.string(),
   EMAIL_SERVER_PASSWORD: z.string(),
+  AWS_S3_ACCESS_KEY_ID: z.string(),
+  AWS_S3_SECRET_KEY: z.string(),
+  AWS_S3_BUCKET: z.string(),
+  AWS_S3_REGION: z.string(),
+  AWS_CLOUDFRONT_DISTRIBUTION_ID: z.string(),
+  SENDGRID_API_KEY: z.string(),
 });
 
 /**
