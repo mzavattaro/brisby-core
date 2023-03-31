@@ -48,4 +48,16 @@ export const clientSchema = z.object({
  */
 export const clientEnv = {
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+  DATABASE_URL: process.env.DATABASE_URL,
+  NODE_ENV: process.env.NODE_ENV,
+  NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+  NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+  EMAIL_SERVER_USER: process.env.EMAIL_SERVER_USER,
+  EMAIL_SERVER_PASSWORD: process.env.EMAIL_SERVER_PASSWORD,
+  AWS_S3_ACCESS_KEY_ID: process.env.AWS_S3_ACCESS_KEY_ID,
+  AWS_S3_SECRET_KEY: process.env.AWS_S3_SECRET_KEY,
+  AWS_S3_BUCKET: process.env.AWS_S3_BUCKET,
+  AWS_S3_REGION: process.env.AWS_S3_REGION,
+  AWS_CLOUDFRONT_DISTRIBUTION_ID: process.env.AWS_CLOUDFRONT_DISTRIBUTION_ID,
+  SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
 };

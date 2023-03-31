@@ -3,6 +3,7 @@ import { clientEnv, clientSchema } from './schema.mjs';
 
 // eslint-disable-next-line no-underscore-dangle
 const _clientEnv = clientSchema.safeParse(clientEnv);
+console.log('parsed', _clientEnv);
 
 export const formatErrors = (
   /** @type {import('zod').ZodFormattedError<Map<string,string>,string>} */
