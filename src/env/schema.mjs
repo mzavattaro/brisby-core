@@ -21,6 +21,7 @@ export const serverSchema = z.object({
     // VERCEL_URL doesn't include `https` so it cant be validated as a URL
     process.env.VERCEL ? z.string() : z.string().url()
   ),
+  SENDGRID_API_KEY: z.string(),
 });
 
 /**
@@ -37,7 +38,6 @@ export const clientSchema = z.object({
   NEXT_PUBLIC_AWS_S3_BUCKET: z.string(),
   NEXT_PUBLIC_AWS_S3_REGION: z.string(),
   NEXT_PUBLIC_AWS_CLOUDFRONT_DISTRIBUTION_ID: z.string(),
-  NEXT_PUBLIC_SENDGRID_API_KEY: z.string(),
 });
 
 /**
@@ -58,5 +58,4 @@ export const clientEnv = {
   NEXT_PUBLIC_AWS_S3_REGION: process.env.AWS_S3_REGION,
   NEXT_PUBLIC_AWS_CLOUDFRONT_DISTRIBUTION_ID:
     process.env.AWS_CLOUDFRONT_DISTRIBUTION_ID,
-  NEXT_PUBLIC_SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
 };
