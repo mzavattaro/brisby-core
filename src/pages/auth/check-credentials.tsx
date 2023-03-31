@@ -11,12 +11,7 @@ const CredentialCheck: NextPage = () => {
   useEffect(() => {
     if (!data) return;
 
-    if (
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      status === 'authenticated' &&
-      !data.user.name &&
-      !data.user.organisationId
-    ) {
+    if (!data.user.name && !data.user.organisationId) {
       if (calledPush) {
         // no need to call router.push() again
         return;
@@ -26,12 +21,7 @@ const CredentialCheck: NextPage = () => {
       setCalledPush(true);
     }
 
-    if (
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      status === 'authenticated' &&
-      data.user.name &&
-      !data.user.organisationId
-    ) {
+    if (data.user.name && !data.user.organisationId) {
       if (calledPush) {
         // no need to call router.push() again
         return;
@@ -40,12 +30,7 @@ const CredentialCheck: NextPage = () => {
       setCalledPush(true);
     }
 
-    if (
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      status === 'authenticated' &&
-      data.user.name &&
-      data.user.organisationId
-    ) {
+    if (data.user.name && data.user.organisationId) {
       if (calledPush) {
         // no need to call router.push() again
         return;
