@@ -11,7 +11,6 @@ import { classNames } from '../utils/classNames';
 import StyledLink from '../components/StyledLink';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { trpc } from '../utils/trpc';
 
 type HeaderProps = {
   toggle: () => void;
@@ -21,10 +20,6 @@ const Header: FC<HeaderProps> = ({ toggle }) => {
   const router = useRouter();
   const id = router.query.buildingId as string;
   const { data: sessionData } = useSession();
-
-  const { data: user } = trpc.user.byId.useQuery({
-    id: sessionData?.user.id,
-  });
 
   const { asPath } = router;
 
@@ -120,10 +115,7 @@ const Header: FC<HeaderProps> = ({ toggle }) => {
 
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
               <StyledLink
-                className={classNames(
-                  'hidden px-4 text-xs sm:block md:text-sm',
-                  !user?.buildingComplex && 'cursor-not-allowed opacity-50'
-                )}
+                className="hidden px-4 text-xs sm:block md:text-sm"
                 type="button"
                 href={{
                   pathname: '/[buildingId]/noticeboard/notice/new',
@@ -209,11 +201,7 @@ const Header: FC<HeaderProps> = ({ toggle }) => {
                     <Menu.Item>
                       <div className="mt-4 flex justify-center border-slate-200 pb-4 md:hidden">
                         <StyledLink
-                          className={classNames(
-                            'px-2 text-xs sm:block md:text-sm',
-                            !user?.buildingComplex &&
-                              'cursor-not-allowed opacity-50'
-                          )}
+                          className="px-2 text-xs sm:block md:text-sm"
                           type="button"
                           href={{
                             pathname: '/[buildingId]/noticeboard/notice/new',

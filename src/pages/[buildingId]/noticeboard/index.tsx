@@ -65,6 +65,8 @@ const Noticeboard: FC<NoticeboardProps> = ({
 
   const buildingComplexAddress = `${streetAddress || ''}, ${suburb || ''}`;
 
+  console.log(notices?.length);
+
   return (
     <Container className="text-gray-900">
       <Modal
@@ -130,14 +132,10 @@ const Noticeboard: FC<NoticeboardProps> = ({
 
       <div className="mx-auto mt-4 flex max-w-lg flex-col sm:max-w-full md:mt-6">
         <p className="text-sm font-bold md:text-lg">{name || ''}</p>
-        <p className="text-xs md:text-sm">
-          {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
-          {buildingComplexData ? buildingComplexAddress : ''}
-        </p>
+        <p className="text-xs md:text-sm">{buildingComplexAddress}</p>
       </div>
 
-      {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
-      {buildingComplexData && !isFetching && (
+      {!isFetching && (
         <GridLayout
           isFetching={isFetching}
           isFetchingNextPage={isFetchingNextPage}
@@ -159,8 +157,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
         </GridLayout>
       )}
 
-      {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
-      {buildingComplexData && notices?.length === 0 && !isFetching && (
+      {Boolean(notices?.length === 0) && !isFetching && (
         <div className="mt-20 flex flex-col items-center justify-center">
           <InfoBox>
             <h3 className="text-base font-bold">Notices</h3>
@@ -189,8 +186,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
         </div>
       )}
 
-      {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
-      {buildingComplexData && Boolean(notices?.length) && !isFetching && (
+      {Boolean(notices?.length) && !isFetching && (
         <Pagination
           handleFetchNextPage={handleFetchNextPage}
           handleFetchPreviousPage={handleFetchPreviousPage}
