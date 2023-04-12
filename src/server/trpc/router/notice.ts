@@ -161,11 +161,8 @@ export const noticeRouter = router({
         }
       }
 
-      let nextCursor: typeof cursor | undefined;
-      if (notices.length > limit) {
-        const nextItem = notices.pop();
-        nextCursor = nextItem?.id;
-      }
+      const nextItem = notices.pop();
+      const nextCursor = notices.length > limit ? nextItem?.id : undefined;
 
       return {
         notices,
@@ -276,11 +273,8 @@ export const noticeRouter = router({
         }
       }
 
-      let nextCursor: typeof cursor | undefined;
-      if (notices.length > limit) {
-        const nextItem = notices.pop();
-        nextCursor = nextItem?.id;
-      }
+      const nextItem = notices.pop();
+      const nextCursor = notices.length > limit ? nextItem?.id : undefined;
 
       return {
         notices,

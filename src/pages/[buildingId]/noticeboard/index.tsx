@@ -6,8 +6,10 @@ import { useBuildingComplexIdStore } from '../../../store/useBuildingComplexIdSt
 import { useNoticePageStore } from '../../../store/useNoticePageStore';
 import { trpc } from '../../../utils/trpc';
 import Header from '../../../components/Header';
-import GridLayout from '../../../components/GridLayout';
-import NoticeItem from '../../../components/NoticeItem';
+/*
+ * import GridLayout from '../../../components/GridLayout';
+ * import NoticeItem from '../../../components/NoticeItem';
+ */
 import Container from '../../../components/Container';
 // import ToastNofication from '../../../components/ToastNotification';
 import useModal from '../../../utils/useModal';
@@ -16,7 +18,10 @@ import StyledLink from '../../../components/StyledLink';
 import Modal from '../../../components/Modal';
 import { ArrowLongRightIcon } from '@heroicons/react/24/outline';
 import NotFoundPage from '../../404';
-import Pagination from '../../../components/Pagination';
+import { classNames } from '../../../utils/classNames';
+// import Pagination from '../../../components/Pagination';
+import dayjs from 'dayjs';
+import Link from 'next/link';
 
 export type NoticeboardProps = {
   notices:
@@ -25,11 +30,13 @@ export type NoticeboardProps = {
           id: string;
           name: string | null;
         };
-      })[]
-    | undefined;
+      })[];
+
   isFetching: boolean;
-  isFetchingNextPage: boolean;
-  hasNextPage: boolean | undefined;
+  /*
+   * isFetchingNextPage: boolean;
+   * hasNextPage: boolean | undefined;
+   */
   buildingComplexData: {
     name: string;
     streetAddress: string;
@@ -41,33 +48,67 @@ export type NoticeboardProps = {
     totalOccupancies: number;
   } | null;
   queryBuildingId: string;
-  handleFetchNextPage: () => void;
-  handleFetchPreviousPage: () => void;
-  nextCursor: string | undefined;
+  /*
+   * handleFetchNextPage: () => void;
+   * handleFetchPreviousPage: () => void;
+   * nextCursor: string | undefined;
+   */
 };
 
 const Noticeboard: FC<NoticeboardProps> = ({
   notices,
   isFetching,
-  isFetchingNextPage,
-  hasNextPage,
+  /*
+   * isFetchingNextPage,
+   * hasNextPage,
+   */
   buildingComplexData,
   queryBuildingId,
-  handleFetchNextPage,
-  handleFetchPreviousPage,
-  nextCursor,
+  /*
+   * handleFetchNextPage,
+   * handleFetchPreviousPage,
+   * nextCursor,
+   */
 }) => {
-  const { toggle } = useModal();
+  const checkbox = useRef<HTMLInputElement>(null);
+  const [checked, setChecked] = useState(false);
+  const [indeterminate, setIndeterminate] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState<
+    (Notice & {
+      author: {
+        id: string;
+        name: string | null;
+      };
+    })[]
+  >([]);
+  // const { toggle } = useModal();
   const { isShowing: isShowingModal, toggle: toggleModal } = useModal();
 
   const cancelButtonRef = useRef(null);
 
-  const { name, streetAddress, suburb } = buildingComplexData;
-
   const { data: buildingComplexes } =
     trpc.buildingComplex.byOrganisation.useQuery();
 
-  const buildingComplexAddress = `${streetAddress || ''}, ${suburb || ''}`;
+  const buildingComplexAddress = `${
+    buildingComplexData?.streetAddress ?? ''
+  }, ${buildingComplexData?.suburb ?? ''}`;
+
+  useEffect(() => {
+    const isIndeterminate =
+      selectedDocument.length > 0 && selectedDocument.length < notices.length;
+    setChecked(selectedDocument.length === notices.length);
+    setIndeterminate(isIndeterminate);
+
+    if (checkbox.current) {
+      checkbox.current.indeterminate = isIndeterminate;
+    }
+  }, [selectedDocument, notices]);
+
+  const toggleAll = () => {
+    setSelectedDocument(checked || indeterminate ? [] : notices);
+    setChecked(!checked && !indeterminate);
+    setIndeterminate(false);
+  };
 
   return (
     <Container className="text-gray-900">
@@ -133,11 +174,164 @@ const Noticeboard: FC<NoticeboardProps> = ({
       <Header toggle={toggleModal} />
 
       <div className="mx-auto mt-4 flex max-w-lg flex-col sm:max-w-full md:mt-6">
-        <p className="text-sm font-bold md:text-lg">{name || ''}</p>
+        <p className="text-sm font-bold md:text-lg">
+          {buildingComplexData?.name ?? ''}
+        </p>
         <p className="text-xs md:text-sm">{buildingComplexAddress}</p>
       </div>
 
-      {!isFetching && (
+      {/* Table */}
+      <div className="px-4 sm:px-6 lg:px-8">
+        <div className="mt-8 flow-root">
+          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full align-middle">
+              <div className="relative">
+                {selectedDocument.length > 0 && (
+                  <div className="absolute left-14 top-0 flex h-12 items-center space-x-3 bg-white sm:left-12">
+                    <button
+                      type="button"
+                      className="inline-flex items-center rounded bg-white px-2 py-1 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white"
+                    >
+                      Bulk edit
+                    </button>
+                    <button
+                      type="button"
+                      className="inline-flex items-center rounded bg-white px-2 py-1 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white"
+                    >
+                      Delete all
+                    </button>
+                  </div>
+                )}
+                <table className="min-w-full table-fixed divide-y divide-gray-300">
+                  <thead>
+                    <tr>
+                      <th scope="col" className="relative px-7 sm:w-12 sm:px-6">
+                        <input
+                          type="checkbox"
+                          className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                          ref={checkbox}
+                          checked={checked}
+                          onChange={toggleAll}
+                        />
+                      </th>
+                      <th
+                        scope="col"
+                        className="min-w-[12rem] py-3.5 pr-3 text-left text-sm font-semibold text-gray-900"
+                      >
+                        File name
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
+                        Title
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
+                        Start period
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
+                        End period
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
+                        Author
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
+                        Status
+                      </th>
+                      <th
+                        scope="col"
+                        className="relative py-3.5 pl-3 pr-4 sm:pr-3"
+                      >
+                        <span className="sr-only">Edit</span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 bg-white">
+                    {notices.map((notice) => (
+                      <tr
+                        key={notice.id}
+                        className={
+                          selectedDocument.includes(notice)
+                            ? 'bg-gray-50'
+                            : undefined
+                        }
+                      >
+                        <td className="relative px-7 sm:w-12 sm:px-6">
+                          {selectedDocument.includes(notice) && (
+                            <div className="absolute inset-y-0 left-0 w-0.5 bg-indigo-600" />
+                          )}
+                          <input
+                            type="checkbox"
+                            className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                            value={notice.id}
+                            checked={selectedDocument.includes(notice)}
+                            onChange={(event) =>
+                              setSelectedDocument(
+                                event.target.checked
+                                  ? [...selectedDocument, notice]
+                                  : selectedDocument.filter(
+                                      (document) => document !== notice
+                                    )
+                              )
+                            }
+                          />
+                        </td>
+                        <td
+                          className={classNames(
+                            'whitespace-nowrap py-4 pr-3 text-sm font-medium',
+                            selectedDocument.includes(notice)
+                              ? 'text-indigo-600'
+                              : 'text-gray-900'
+                          )}
+                        >
+                          {notice.fileName}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          {notice.title}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          {dayjs(notice.startDate).format('D MMMM YYYY')}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          {dayjs(notice.endDate).format('D MMMM YYYY')}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          {notice.author.name}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          {notice.status}
+                        </td>
+                        <td className="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
+                          <Link
+                            href="#"
+                            className="text-indigo-600 hover:text-indigo-900"
+                          >
+                            Edit<span className="sr-only">, {notice.id}</span>
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* {!isFetching && (
         <GridLayout
           isFetching={isFetching}
           isFetchingNextPage={isFetchingNextPage}
@@ -157,9 +351,9 @@ const Noticeboard: FC<NoticeboardProps> = ({
             </div>
           )}
         </GridLayout>
-      )}
+      )} */}
 
-      {Boolean(notices?.length === 0) && !isFetching && (
+      {Boolean(notices.length === 0) && !isFetching && (
         <div className="mt-20 flex flex-col items-center justify-center">
           <InfoBox>
             <h3 className="text-base font-bold">Notices</h3>
@@ -188,14 +382,14 @@ const Noticeboard: FC<NoticeboardProps> = ({
         </div>
       )}
 
-      {Boolean(notices?.length) && !isFetching && (
+      {/* {Boolean(notices?.length) && !isFetching && (
         <Pagination
           handleFetchNextPage={handleFetchNextPage}
           handleFetchPreviousPage={handleFetchPreviousPage}
           hasNextPage={hasNextPage}
           nextCursor={nextCursor}
         />
-      )}
+      )} */}
 
       {/* <ToastNofication isShowing={isShowing} toggle={toggle} /> */}
     </Container>
@@ -214,7 +408,7 @@ const NoticeboardViewPage: FC = () => {
 
   const buildingComplexQuery = trpc.buildingComplex.byId.useQuery({ id });
 
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isFetching } =
+  const { data, isFetchingNextPage, isFetching } =
     trpc.notice.infiniteList.useInfiniteQuery(
       {
         limit: 8,
@@ -225,22 +419,26 @@ const NoticeboardViewPage: FC = () => {
       }
     );
 
-  const handleFetchNextPage = async () => {
-    try {
-      await fetchNextPage();
-    } catch (error) {
-      if (error instanceof Error) {
-        // eslint-disable-next-line no-console
-        console.log(error.message);
-      }
-      return;
-    }
-    setPage((prev) => prev + 1);
-  };
+  /*
+   * const handleFetchNextPage = async () => {
+   *   try {
+   *     await fetchNextPage();
+   *   } catch (error) {
+   *     if (error instanceof Error) {
+   *       // eslint-disable-next-line no-console
+   *       console.log(error.message);
+   *     }
+   *     return;
+   *   }
+   *   setPage((prev) => prev + 1);
+   * };
+   */
 
-  const handleFetchPreviousPage = () => {
-    setPage((prev) => prev - 1);
-  };
+  /*
+   * const handleFetchPreviousPage = () => {
+   *   setPage((prev) => prev - 1);
+   * };
+   */
 
   setNoticePage(page);
 
@@ -259,7 +457,7 @@ const NoticeboardViewPage: FC = () => {
   const { data: buildingComplexData } = buildingComplexQuery;
 
   const notices = data?.pages[page]?.notices;
-  const nextCursor = data?.pages[page]?.nextCursor;
+  // const nextCursor = data?.pages[page]?.nextCursor;
 
   return (
     <Noticeboard
@@ -267,11 +465,13 @@ const NoticeboardViewPage: FC = () => {
       notices={notices}
       isFetching={isFetching}
       isFetchingNextPage={isFetchingNextPage}
-      hasNextPage={hasNextPage}
       queryBuildingId={id}
-      handleFetchNextPage={handleFetchNextPage}
-      handleFetchPreviousPage={handleFetchPreviousPage}
-      nextCursor={nextCursor}
+      // hasNextPage={hasNextPage}
+      /*
+       * handleFetchNextPage={handleFetchNextPage}
+       * handleFetchPreviousPage={handleFetchPreviousPage}
+       * nextCursor={nextCursor}
+       */
     />
   );
 };
