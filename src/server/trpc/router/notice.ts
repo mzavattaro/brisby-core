@@ -81,38 +81,41 @@ export const noticeRouter = router({
     }),
 
   // get all notices by organisation
-  byOrganisation: protectedProcedure.query(async ({ ctx }) => {
-    const { prisma, session } = ctx;
+  byBuildingComplexId: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { prisma, session } = ctx;
+      const { id } = input;
 
-    const sessionOrganisationId = session.user.organisationId;
+      const sessionOrganisationId = session.user.organisationId;
 
-    const notices = await prisma.notice.findMany({
-      where: { organisationId: sessionOrganisationId },
-      orderBy: [{ createdAt: 'desc' }],
-      select: {
-        id: true,
-        fileName: true,
-        title: true,
-        startDate: true,
-        endDate: true,
-        status: true,
-        buildingComplex: {
-          select: { name: true },
+      const notices = await prisma.notice.findMany({
+        where: {
+          organisationId: sessionOrganisationId,
+          buildingComplexId: id,
+          OR: [{ status: 'published' }, { status: 'draft' }],
         },
-      },
-    });
+        // take: 1,
+        orderBy: [{ createdAt: 'desc' }],
+        select: {
+          id: true,
+          fileName: true,
+          title: true,
+          startDate: true,
+          endDate: true,
+          status: true,
+          author: {
+            select: { name: true },
+          },
+        },
+      });
 
-    /*
-     * if (!notices.length) {
-     *   throw new TRPCError({
-     *     code: 'NOT_FOUND',
-     *     message: 'Notices not found',
-     *   });
-     * }
-     */
-
-    return notices;
-  }),
+      return notices;
+    }),
 
   // infinite list /api/notice
   infiniteList: protectedProcedure
@@ -161,8 +164,11 @@ export const noticeRouter = router({
         }
       }
 
-      const nextItem = notices.pop();
-      const nextCursor = notices.length > limit ? nextItem?.id : undefined;
+      let nextCursor: typeof cursor | undefined;
+      if (notices.length > limit) {
+        const nextItem = notices.pop();
+        nextCursor = nextItem?.id;
+      }
 
       return {
         notices,
@@ -273,8 +279,11 @@ export const noticeRouter = router({
         }
       }
 
-      const nextItem = notices.pop();
-      const nextCursor = notices.length > limit ? nextItem?.id : undefined;
+      let nextCursor: typeof cursor | undefined;
+      if (notices.length > limit) {
+        const nextItem = notices.pop();
+        nextCursor = nextItem?.id;
+      }
 
       return {
         notices,

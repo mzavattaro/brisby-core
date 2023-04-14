@@ -88,12 +88,7 @@ export const buildingComplexRouter = router({
       const buildingComplex = await prisma.buildingComplex.findUnique({
         where: { id },
         select: {
-          id: true,
-          createdAt: true,
           name: true,
-          type: true,
-          totalOccupancies: true,
-          notice: true,
           streetAddress: true,
           suburb: true,
         },
