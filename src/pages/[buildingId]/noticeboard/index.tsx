@@ -395,9 +395,6 @@ const Noticeboard: FC<NoticeboardProps> = ({
 
 const NoticeboardViewPage: FC = () => {
   const id = useRouter().query.buildingId as string;
-  // const [page, setPage] = useState(0);
-
-  // console.log('page', page);
 
   const setBuildingComplexId = useBuildingComplexIdStore(
     (state) => state.setBuildingComplexId
