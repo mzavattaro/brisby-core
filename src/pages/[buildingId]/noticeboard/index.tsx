@@ -1,4 +1,3 @@
-// import type { Notice } from '@prisma/client';
 import type { FC } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
@@ -18,6 +17,7 @@ import NotFoundPage from '../../404';
 import { classNames } from '../../../utils/classNames';
 import dayjs from 'dayjs';
 import Link from 'next/link';
+import { useQueryClient } from '@tanstack/react-query';
 
 type BuildingComplexProps = {
   name: string;
@@ -56,12 +56,38 @@ const Noticeboard: FC<NoticeboardProps> = ({
   const [selectedDocument, setSelectedDocument] = useState<NoticeProps>([]);
   const { isShowing: isShowingModal, toggle: toggleModal } = useModal();
   const cancelButtonRef = useRef(null);
+  const queryClient = useQueryClient();
   const { data: buildingComplexes } =
     trpc.buildingComplex.byOrganisation.useQuery();
 
   const buildingComplexAddress = `${buildingComplex?.streetAddress ?? ''}, ${
     buildingComplex?.suburb ?? ''
   }`;
+
+  const extractIds = (inputArray: NoticeProps) => {
+    const idArray = [] as string[];
+    inputArray?.forEach((obj) => {
+      if ('id' in obj) {
+        idArray.push(obj.id);
+      }
+    });
+    return idArray;
+  };
+
+  const ids = extractIds(selectedDocument);
+
+  const { mutate } = trpc.notice.archiveManyNotices.useMutation({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries();
+      setSelectedDocument([]);
+      setChecked(false);
+      setIndeterminate(false);
+    },
+  });
+
+  const handleBulkArchive = () => {
+    mutate({ data: { status: 'archived' }, ids });
+  };
 
   useEffect(() => {
     if (notices && selectedDocument) {
@@ -218,14 +244,9 @@ const Noticeboard: FC<NoticeboardProps> = ({
                     <button
                       type="button"
                       className="inline-flex items-center rounded bg-white px-2 py-1 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white"
+                      onClick={handleBulkArchive}
                     >
-                      Bulk edit
-                    </button>
-                    <button
-                      type="button"
-                      className="inline-flex items-center rounded bg-white px-2 py-1 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white"
-                    >
-                      Delete all
+                      Archive
                     </button>
                   </div>
                 )}
@@ -284,7 +305,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
                         scope="col"
                         className="relative rounded-tr-md py-3.5 pl-3 pr-4 sm:pr-3"
                       >
-                        <span className="sr-only">Edit</span>
+                        <span className="sr-only">View</span>
                       </th>
                     </tr>
                   </thead>
@@ -348,7 +369,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
                             href="#"
                             className="text-indigo-600 hover:text-indigo-900"
                           >
-                            Edit<span className="sr-only">, {notice.id}</span>
+                            View<span className="sr-only">, {notice.id}</span>
                           </Link>
                         </td>
                       </tr>

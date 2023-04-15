@@ -27,14 +27,7 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
 
   const { mutate, isLoading } = trpc.notice.updateStatus.useMutation({
     onSuccess: async () => {
-      try {
-        await queryClient.invalidateQueries();
-      } catch (error) {
-        if (error instanceof Error) {
-          // eslint-disable-next-line no-console
-          console.log(error.message);
-        }
-      }
+      await queryClient.invalidateQueries();
     },
   });
   const { notice } = props;

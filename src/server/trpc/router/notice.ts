@@ -443,6 +443,32 @@ export const noticeRouter = router({
       return notice;
     }),
 
+  // update many notice's statuses based on notice ID
+  archiveManyNotices: protectedProcedure
+    .input(
+      z.object({
+        ids: z.array(z.string()),
+        data: z.object({
+          status: z.string(),
+        }),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { prisma } = ctx;
+      const { ids, data } = input;
+
+      const notices = await prisma.notice.updateMany({
+        where: {
+          id: {
+            in: ids,
+          },
+        },
+        data,
+      });
+
+      return notices;
+    }),
+
   // delete /api/notice
   delete: protectedProcedure
     .input(z.string())
