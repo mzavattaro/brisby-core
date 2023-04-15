@@ -1,4 +1,4 @@
-import type { FC, SetStateAction } from 'react';
+import type { ChangeEvent, FC, SetStateAction } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useBuildingComplexIdStore } from '../../../store/useBuildingComplexIdStore';
@@ -44,6 +44,7 @@ type NoticeboardProps = {
   isFetching: boolean;
   queryBuildingId: string;
   setSortOrder: (val: SetStateAction<SortOrder>) => void;
+  setLimit: (val: SetStateAction<number>) => void;
 };
 
 enum SortOrder {
@@ -57,6 +58,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
   buildingComplex,
   queryBuildingId,
   setSortOrder,
+  setLimit,
 }) => {
   const checkbox = useRef<HTMLInputElement>(null);
   const [checked, setChecked] = useState(false);
@@ -95,6 +97,11 @@ const Noticeboard: FC<NoticeboardProps> = ({
 
   const handleBulkArchive = () => {
     mutate({ data: { status: 'archived' }, ids });
+  };
+
+  const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const value = parseInt(event.target.value, 10);
+    setLimit(value);
   };
 
   useEffect(() => {
@@ -202,18 +209,6 @@ const Noticeboard: FC<NoticeboardProps> = ({
               <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
             </div>
           </div>
-          <div className="relative">
-            <select
-              id="filter"
-              name="filter"
-              className="block w-full rounded-md border border-gray-300 py-2 pl-3 pr-10 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-            >
-              <option value="all">All</option>
-              <option value="active">Active</option>
-              <option value="draft">Drafts</option>
-              <option value="archived">Archived</option>
-            </select>
-          </div>
         </div>
         <div className="flex flex-row space-x-2">
           <div className="relative">
@@ -231,10 +226,12 @@ const Noticeboard: FC<NoticeboardProps> = ({
             </select>
           </div>
           <div className="relative">
+            {/* eslint-disable-next-line jsx-a11y/no-onchange */}
             <select
               id="per-page"
               name="per-page"
               className="block w-full rounded-md border border-gray-300 py-2 pl-3 pr-10 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+              onChange={handleSelectChange}
             >
               <option value="10">10 per page</option>
               <option value="20">20 per page</option>
@@ -435,6 +432,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
 const NoticeboardViewPage: FC<SortOrder> = () => {
   const id = useRouter().query.buildingId as string;
   const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.descending);
+  const [limit, setLimit] = useState<number>(10);
 
   const setBuildingComplexId = useBuildingComplexIdStore(
     (state) => state.setBuildingComplexId
@@ -442,8 +440,11 @@ const NoticeboardViewPage: FC<SortOrder> = () => {
 
   const buildingComplexQuery = trpc.buildingComplex.byId.useQuery({ id });
 
-  const { data: noticesData, isFetching } =
-    trpc.notice.byBuildingComplexId.useQuery({ id, orderBy: sortOrder });
+  const { data: listAllNotices, isFetching } = trpc.notice.listAll.useQuery({
+    id,
+    orderBy: sortOrder,
+    limit,
+  });
 
   useEffect(() => {
     setBuildingComplexId(id);
@@ -462,10 +463,11 @@ const NoticeboardViewPage: FC<SortOrder> = () => {
   return (
     <Noticeboard
       buildingComplex={buildingComplexData}
-      notices={noticesData}
+      notices={listAllNotices}
       isFetching={isFetching}
       queryBuildingId={id}
       setSortOrder={setSortOrder}
+      setLimit={setLimit}
     />
   );
 };

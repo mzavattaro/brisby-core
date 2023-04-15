@@ -81,16 +81,17 @@ export const noticeRouter = router({
     }),
 
   // get all notices by organisation
-  byBuildingComplexId: protectedProcedure
+  listAll: protectedProcedure
     .input(
       z.object({
         id: z.string(),
         orderBy: z.enum(['desc', 'asc']),
+        limit: z.number(),
       })
     )
     .query(async ({ ctx, input }) => {
       const { prisma, session } = ctx;
-      const { id, orderBy } = input;
+      const { id, orderBy, limit } = input;
 
       const sessionOrganisationId = session.user.organisationId;
 
@@ -100,7 +101,7 @@ export const noticeRouter = router({
           buildingComplexId: id,
           OR: [{ status: 'published' }, { status: 'draft' }],
         },
-        // take: 1,
+        take: limit,
         orderBy: [{ createdAt: orderBy }],
         select: {
           id: true,
@@ -117,6 +118,52 @@ export const noticeRouter = router({
 
       return notices;
     }),
+
+  /*
+   * get published notices by organisation
+   * filterList: protectedProcedure
+   *   .input(
+   *     z.object({
+   *       id: z.string(),
+   *       orderBy: z.enum(['desc', 'asc']),
+   *       status: z.string(),
+   *       limit: z.number(),
+   *     })
+   *   )
+   *   .query(async ({ ctx, input }) => {
+   *     const { prisma, session } = ctx;
+   *     const { id, orderBy, status, limit } = input;
+   */
+
+  //     const sessionOrganisationId = session.user.organisationId;
+
+  /*
+   *     const notices = await prisma.notice.findMany({
+   *       where: {
+   *         organisationId: sessionOrganisationId,
+   *         buildingComplexId: id,
+   *         status,
+   *       },
+   *       take: limit,
+   *       orderBy: [{ createdAt: orderBy }],
+   *       select: {
+   *         id: true,
+   *         fileName: true,
+   *         title: true,
+   *         startDate: true,
+   *         endDate: true,
+   *         status: true,
+   *         author: {
+   *           select: { name: true },
+   *         },
+   *       },
+   *     });
+   */
+
+  /*
+   *     return notices;
+   *   }),
+   */
 
   // infinite list /api/notice
   infiniteList: protectedProcedure
