@@ -367,7 +367,13 @@ const Noticeboard: FC<NoticeboardProps> = ({
                         </td>
                         <td className="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
                           <Link
-                            href="#"
+                            href={{
+                              pathname: '/[buildingId]/noticeboard/notice/[id]',
+                              query: {
+                                buildingId: queryBuildingId,
+                                id: notice.id,
+                              },
+                            }}
                             className="text-indigo-600 hover:text-indigo-900"
                           >
                             View<span className="sr-only">, {notice.id}</span>
