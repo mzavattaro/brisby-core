@@ -85,11 +85,12 @@ export const noticeRouter = router({
     .input(
       z.object({
         id: z.string(),
+        orderBy: z.enum(['desc', 'asc']),
       })
     )
     .query(async ({ ctx, input }) => {
       const { prisma, session } = ctx;
-      const { id } = input;
+      const { id, orderBy } = input;
 
       const sessionOrganisationId = session.user.organisationId;
 
@@ -100,7 +101,7 @@ export const noticeRouter = router({
           OR: [{ status: 'published' }, { status: 'draft' }],
         },
         // take: 1,
-        orderBy: [{ createdAt: 'desc' }],
+        orderBy: [{ createdAt: orderBy }],
         select: {
           id: true,
           fileName: true,

@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, SetStateAction } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useBuildingComplexIdStore } from '../../../store/useBuildingComplexIdStore';
@@ -43,13 +43,20 @@ type NoticeboardProps = {
   buildingComplex: BuildingComplexProps;
   isFetching: boolean;
   queryBuildingId: string;
+  setSortOrder: (val: SetStateAction<SortOrder>) => void;
 };
+
+enum SortOrder {
+  ascending = 'asc',
+  descending = 'desc',
+}
 
 const Noticeboard: FC<NoticeboardProps> = ({
   notices,
   isFetching,
   buildingComplex,
   queryBuildingId,
+  setSortOrder,
 }) => {
   const checkbox = useRef<HTMLInputElement>(null);
   const [checked, setChecked] = useState(false);
@@ -210,13 +217,17 @@ const Noticeboard: FC<NoticeboardProps> = ({
         </div>
         <div className="flex flex-row space-x-2">
           <div className="relative">
+            {/* eslint-disable-next-line jsx-a11y/no-onchange */}
             <select
               id="sort"
               name="sort"
               className="block w-full rounded-md border border-gray-300 py-2 pl-3 pr-10 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+              onChange={(event) =>
+                setSortOrder(event.target.value as SortOrder)
+              }
             >
-              <option value="newest">Newest</option>
-              <option value="oldest">Oldest</option>
+              <option value="desc">Newest</option>
+              <option value="asc">Oldest</option>
             </select>
           </div>
           <div className="relative">
@@ -421,16 +432,18 @@ const Noticeboard: FC<NoticeboardProps> = ({
   );
 };
 
-const NoticeboardViewPage: FC = () => {
+const NoticeboardViewPage: FC<SortOrder> = () => {
   const id = useRouter().query.buildingId as string;
+  const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.descending);
 
   const setBuildingComplexId = useBuildingComplexIdStore(
     (state) => state.setBuildingComplexId
   );
 
   const buildingComplexQuery = trpc.buildingComplex.byId.useQuery({ id });
+
   const { data: noticesData, isFetching } =
-    trpc.notice.byBuildingComplexId.useQuery({ id });
+    trpc.notice.byBuildingComplexId.useQuery({ id, orderBy: sortOrder });
 
   useEffect(() => {
     setBuildingComplexId(id);
@@ -452,6 +465,7 @@ const NoticeboardViewPage: FC = () => {
       notices={noticesData}
       isFetching={isFetching}
       queryBuildingId={id}
+      setSortOrder={setSortOrder}
     />
   );
 };
