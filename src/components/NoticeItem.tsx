@@ -33,9 +33,9 @@ const NoticeItem: FC<NoticeItemProps> = ({
   handleFetchPreviousPage,
   notices,
 }) => {
-  const { id, title, startDate, endDate, status, uploadUrl, author } = notice;
-
   const queryClient = useQueryClient();
+
+  const { id, title, startDate, endDate, status, uploadUrl, author } = notice;
 
   const deleteMutation = trpc.notice.delete.useMutation({
     onSuccess: async () => {

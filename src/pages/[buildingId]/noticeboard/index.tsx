@@ -5,20 +5,15 @@ import { useBuildingComplexIdStore } from '../../../store/useBuildingComplexIdSt
 import { trpc } from '../../../utils/trpc';
 import Header from '../../../components/Header';
 import Container from '../../../components/Container';
+import ToolBar from '../../../components/ToolBar';
 import useModal from '../../../utils/useModal';
 import InfoBox from '../../../components/InfoBox';
 import StyledLink from '../../../components/StyledLink';
 import Modal from '../../../components/Modal';
-import Badge from '../../../components/Badge';
-import {
-  ArrowLongRightIcon,
-  MagnifyingGlassIcon,
-} from '@heroicons/react/24/outline';
+import { ArrowLongRightIcon } from '@heroicons/react/24/outline';
 import NotFoundPage from '../../404';
-import { classNames } from '../../../utils/classNames';
-import dayjs from 'dayjs';
-import Link from 'next/link';
 import { useQueryClient } from '@tanstack/react-query';
+import NoticeTable from '../../../components/NoticeTable';
 
 type BuildingComplexProps = {
   name: string;
@@ -26,7 +21,7 @@ type BuildingComplexProps = {
   suburb: string;
 } | null;
 
-type NoticeProps =
+export type NoticeProps =
   | {
       id: string;
       author: { name: string | null };
@@ -47,7 +42,7 @@ type NoticeboardProps = {
   setLimit: (val: SetStateAction<number>) => void;
 };
 
-enum SortOrder {
+export enum SortOrder {
   ascending = 'asc',
   descending = 'desc',
 }
@@ -194,208 +189,21 @@ const Noticeboard: FC<NoticeboardProps> = ({
         <p className="text-xs md:text-sm">{buildingComplexAddress}</p>
       </div>
 
-      {/* Filter tools */}
-      <div className="mt-4 flex flex-col sm:flex-row sm:justify-between">
-        <div className="flex flex-row space-x-2">
-          <div className="relative">
-            <input
-              type="text"
-              name="search"
-              id="search"
-              className="block w-full rounded-md border border-gray-300 py-2 pl-10 pr-3 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-              placeholder="Search"
-            />
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-row space-x-2">
-          <div className="relative">
-            {/* eslint-disable-next-line jsx-a11y/no-onchange */}
-            <select
-              id="sort"
-              name="sort"
-              className="block w-full rounded-md border border-gray-300 py-2 pl-3 pr-10 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-              onChange={(event) =>
-                setSortOrder(event.target.value as SortOrder)
-              }
-            >
-              <option value="desc">Newest</option>
-              <option value="asc">Oldest</option>
-            </select>
-          </div>
-          <div className="relative">
-            {/* eslint-disable-next-line jsx-a11y/no-onchange */}
-            <select
-              id="per-page"
-              name="per-page"
-              className="block w-full rounded-md border border-gray-300 py-2 pl-3 pr-10 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-              onChange={handleSelectChange}
-            >
-              <option value="10">10 per page</option>
-              <option value="20">20 per page</option>
-              <option value="50">50 per page</option>
-              <option value="100">100 per page</option>
-            </select>
-          </div>
-        </div>
-      </div>
+      <ToolBar
+        setSortOrder={setSortOrder}
+        handleSelectChange={handleSelectChange}
+      />
 
-      {/* Table */}
-      <div className="px-4 sm:px-6 lg:px-8">
-        <div className="mt-8 flow-root">
-          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full align-middle">
-              <div className="relative">
-                {selectedDocument && selectedDocument.length > 0 && (
-                  <div className="absolute left-14 top-0 flex h-12 items-center space-x-3 sm:left-12">
-                    <button
-                      type="button"
-                      className="inline-flex items-center rounded bg-white px-2 py-1 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white"
-                      onClick={handleBulkArchive}
-                    >
-                      Archive
-                    </button>
-                  </div>
-                )}
-                <table className="min-w-full table-fixed divide-y divide-gray-300 ">
-                  <thead>
-                    <tr className="bg-slate-50">
-                      <th
-                        scope="col"
-                        className="relative rounded-tl-md px-7 sm:w-12 sm:px-6"
-                      >
-                        <input
-                          type="checkbox"
-                          className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                          ref={checkbox}
-                          checked={checked}
-                          onChange={toggleAll}
-                        />
-                      </th>
-                      <th
-                        scope="col"
-                        className="min-w-[12rem] py-3.5 pr-3 text-left text-sm font-semibold text-gray-900"
-                      >
-                        File name
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Title
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Start period
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        End period
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Author
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Status
-                      </th>
-                      <th
-                        scope="col"
-                        className="relative rounded-tr-md py-3.5 pl-3 pr-4 sm:pr-3"
-                      >
-                        <span className="sr-only">View</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 bg-white">
-                    {notices?.map((notice) => (
-                      <tr
-                        key={notice.id}
-                        className={
-                          selectedDocument?.includes(notice)
-                            ? 'bg-gray-50'
-                            : undefined
-                        }
-                      >
-                        <td className="relative px-7 sm:w-12 sm:px-6">
-                          {selectedDocument?.includes(notice) && (
-                            <div className="absolute inset-y-0 left-0 w-0.5 bg-indigo-600" />
-                          )}
-                          <input
-                            type="checkbox"
-                            className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                            value={notice.id}
-                            checked={selectedDocument?.includes(notice)}
-                            onChange={(event) =>
-                              setSelectedDocument(
-                                event.target.checked
-                                  ? [...(selectedDocument ?? []), notice]
-                                  : selectedDocument?.filter(
-                                      (document) => document !== notice
-                                    )
-                              )
-                            }
-                          />
-                        </td>
-                        <td
-                          className={classNames(
-                            'whitespace-nowrap py-4 pr-3 text-sm font-medium',
-                            selectedDocument?.includes(notice)
-                              ? 'text-indigo-600'
-                              : 'text-gray-900'
-                          )}
-                        >
-                          {notice.fileName}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {notice.title}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {dayjs(notice.startDate).format('D MMMM YYYY')}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {dayjs(notice.endDate).format('D MMMM YYYY')}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {notice.author.name}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          <Badge status={notice.status}>{notice.status}</Badge>
-                        </td>
-                        <td className="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
-                          <Link
-                            href={{
-                              pathname: '/[buildingId]/noticeboard/notice/[id]',
-                              query: {
-                                buildingId: queryBuildingId,
-                                id: notice.id,
-                              },
-                            }}
-                            className="text-indigo-600 hover:text-indigo-900"
-                          >
-                            View<span className="sr-only">, {notice.id}</span>
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <NoticeTable
+        queryBuildingId={queryBuildingId}
+        selectedDocument={selectedDocument}
+        setSelectedDocument={setSelectedDocument}
+        checked={checked}
+        checkbox={checkbox}
+        toggleAll={toggleAll}
+        handleBulkArchive={handleBulkArchive}
+        notices={notices}
+      />
 
       {Boolean(notices?.length === 0) && !isFetching && (
         <div className="mt-20 flex flex-col items-center justify-center">
