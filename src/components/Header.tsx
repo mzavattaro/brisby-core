@@ -70,12 +70,12 @@ const Header: FC<HeaderProps> = ({ toggle }) => {
               </Link>
               <Link
                 href={{
-                  pathname: '/[buildingId]/noticeboard/archived',
+                  pathname: '/[buildingId]/noticeboard/archive',
                   query: { buildingId: id },
                 }}
                 className={classNames(
                   'inline-flex items-center px-1 pt-1 text-xs md:text-sm',
-                  asPath.includes('/archived')
+                  asPath.includes('/archive')
                     ? '-mb-0.5 border-b-2 border-indigo-600 text-indigo-600'
                     : 'font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700 md:text-sm'
                 )}
@@ -125,7 +125,7 @@ const Header: FC<HeaderProps> = ({ toggle }) => {
                       {({ active }) => (
                         <Link
                           href={{
-                            pathname: '/[buildingId]/noticeboard/archived',
+                            pathname: '/[buildingId]/noticeboard/archive',
                             query: { buildingId: id },
                           }}
                           className={classNames(
@@ -133,7 +133,7 @@ const Header: FC<HeaderProps> = ({ toggle }) => {
                             active ? 'bg-gray-100' : ''
                           )}
                         >
-                          Archived notices
+                          Archive
                         </Link>
                       )}
                     </Menu.Item>
@@ -228,54 +228,19 @@ const Header: FC<HeaderProps> = ({ toggle }) => {
               </Link>
               <Link
                 href={{
-                  pathname: '/[buildingId]/noticeboard/published',
+                  pathname: '/[buildingId]/noticeboard/archive',
                   query: { buildingId: id },
                 }}
               >
                 <Disclosure.Button
                   className={classNames(
                     'block w-full border-l-4 py-2 px-3 text-left text-base font-medium',
-                    /\/noticeboard\/published$/u.exec(asPath)
+                    /\/noticeboard\/archive$/u.exec(asPath)
                       ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
                       : 'border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700'
                   )}
                 >
-                  Published
-                </Disclosure.Button>
-              </Link>
-
-              <Link
-                href={{
-                  pathname: '/[buildingId]/noticeboard/drafts',
-                  query: { buildingId: id },
-                }}
-              >
-                <Disclosure.Button
-                  className={classNames(
-                    'block w-full border-l-4 py-2 px-3 text-left text-base font-medium',
-                    /\/noticeboard\/drafts$/u.exec(asPath)
-                      ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
-                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700'
-                  )}
-                >
-                  Drafts
-                </Disclosure.Button>
-              </Link>
-              <Link
-                href={{
-                  pathname: '/[buildingId]/noticeboard/archived',
-                  query: { buildingId: id },
-                }}
-              >
-                <Disclosure.Button
-                  className={classNames(
-                    'block w-full border-l-4 py-2 px-3 text-left text-base font-medium',
-                    /\/noticeboard\/archived$/u.exec(asPath)
-                      ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
-                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700'
-                  )}
-                >
-                  Archived
+                  Archive
                 </Disclosure.Button>
               </Link>
             </div>

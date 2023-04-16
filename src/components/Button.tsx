@@ -5,9 +5,8 @@ const Button: FC<{
   variant: 'primary' | 'secondary' | 'tertiary' | 'none';
   size: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
-  // onClick?: () => void;
   children: ReactNode;
-  type: 'button' | 'submit' | 'reset';
+  type: 'button' | 'submit';
   disabled?: boolean;
 }> = (props) => {
   const { className, variant, size, type, children, disabled } = props;

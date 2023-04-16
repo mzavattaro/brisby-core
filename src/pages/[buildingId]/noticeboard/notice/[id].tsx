@@ -472,7 +472,6 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
                 </p>
 
                 <div className="justify-stretch mt-4 flex flex-col">
-                  {/* <StatusDropdown id={id} status={status} /> */}
                   <Dropdown
                     status={status}
                     togglePublishModal={togglePublishModal}
