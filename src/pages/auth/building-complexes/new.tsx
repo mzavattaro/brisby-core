@@ -11,9 +11,7 @@ import Button from '../../../components/Button';
 import type { FC } from 'react';
 
 const newBuildingSchema = z.object({
-  name: z
-    .string()
-    .min(1, { message: 'Community or building complex name is required' }),
+  name: z.string().min(1, { message: 'Strata Title name is required' }),
   type: z.string(),
   totalOccupancies: z.coerce.number().nonnegative(),
   streetAddress: z.string().min(1, { message: 'Street address is required' }),
@@ -88,7 +86,7 @@ const NewUser: FC<NewBuildingSchema> = () => {
       <div className="col-span-1 flex flex-col items-center sm:col-span-6">
         <h4 className="text-lg font-bold text-gray-900 sm:text-3xl">Brisby</h4>
         <h2 className="mt-3 text-center text-2xl font-extrabold text-gray-900 sm:mt-6 sm:max-w-2xl sm:text-4xl">
-          Add a building complex that you notify
+          Add a Strata Title that you manage
         </h2>
         <p className="mt-2 text-center text-base text-gray-900 sm:text-lg">
           You can change these later in your <b>notify settings.</b>
@@ -105,7 +103,7 @@ const NewUser: FC<NewBuildingSchema> = () => {
 
         {/* Complex name */}
         <label className="col-span-6 block text-left text-sm font-semibold text-gray-900">
-          Building complex name
+          Strata Title name
           <input
             className={classNames(
               'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:h-10 sm:text-sm',
@@ -287,7 +285,7 @@ const NewUser: FC<NewBuildingSchema> = () => {
             size="md"
             variant="primary"
           >
-            {isSubmitting ? <span>Creating...</span> : <span>Submit</span>}
+            {isSubmitting ? <span>Creating...</span> : <span>Create</span>}
           </Button>
         </div>
       </form>

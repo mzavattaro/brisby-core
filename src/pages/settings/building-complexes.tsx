@@ -12,9 +12,7 @@ const BuildingComplexes: NextPageWithLayout = () => {
     <>
       <div className="mx-auto grid max-w-4xl grid-cols-1 gap-4 px-2 sm:grid-cols-12 sm:px-6 md:px-8">
         <div className="col-span-1 sm:col-span-12">
-          <h1 className="text-xl font-semibold text-gray-900">
-            Building complexes
-          </h1>
+          <h1 className="text-xl font-semibold text-gray-900">Strata Titles</h1>
         </div>
         <div className="col-span-1 -mt-2 sm:col-span-12">
           <p className="text-gray-500">
