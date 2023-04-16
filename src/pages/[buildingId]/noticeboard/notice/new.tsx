@@ -70,6 +70,8 @@ const uploadToS3 = async (data: FileList) => {
 };
 
 const New: NextPage = () => {
+  // revisit select useState
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selected, setSelected] = useState(publishingOptions[0]);
   const [startDate, setStartDate] = useState<Date | null | undefined>(
     new Date()
