@@ -147,7 +147,7 @@ const Header: FC<HeaderProps> = ({ toggle }) => {
                             active ? 'bg-gray-100' : ''
                           )}
                         >
-                          Building complexes
+                          Strata Titles
                         </button>
                       )}
                     </Menu.Item>

@@ -93,16 +93,16 @@ const Archived: FC<typeof NoticeboardProps> = () => {
       >
         <div className="text-center sm:text-left">
           <h3 className="text-lg font-medium leading-6 text-gray-900">
-            Select Building Complex
+            Select Strata Title
           </h3>
 
           <div className="mt-2">
             <p className="text-sm text-gray-500">
-              Select the building complex to view its notices.
+              Select Select Strata Title to view its notices.
             </p>
           </div>
           <div className="sticky mt-6 mb-2">
-            <h4>All building complexes</h4>
+            <h4>All Strata Titles</h4>
           </div>
         </div>
         <ul className="h-96 w-full divide-y divide-gray-200 overflow-scroll rounded-lg border">
@@ -135,10 +135,10 @@ const Archived: FC<typeof NoticeboardProps> = () => {
         <div className="flex justify-center text-left">
           <StyledLink
             type="button"
-            href="/building/new"
+            href="/auth/building-complexes/new"
             className="mt-4 px-4 text-sm"
           >
-            Create a new building
+            Create new Strata Title
           </StyledLink>
         </div>
       </Modal>

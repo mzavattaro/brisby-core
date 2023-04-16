@@ -36,7 +36,7 @@ const BuildingComplexes: NextPage = () => {
             <BuildingLibraryIcon className="mx-4 h-6 w-6" />
             <BuildingOfficeIcon className="h-6 w-6" />
           </div>
-          <h5 className="mb-2 text-xl font-bold">Building Complexes</h5>
+          <h5 className="mb-2 text-xl font-bold">Strata Titles</h5>
           <p>
             You don&apos;t have any building complexes for your notices. Get
             started by creating your first <b>building complex</b>.
@@ -54,7 +54,7 @@ const BuildingComplexes: NextPage = () => {
           <h1 className="my-6 text-2xl font-bold">View a noticeboard</h1>
           <div className="flex h-14 w-full items-center rounded-t-lg border bg-indigo-50 px-4">
             <h3>
-              Building complexes for{' '}
+              Strata Titles for{' '}
               <span className="font-semibold">{organisationName}</span>
             </h3>
           </div>

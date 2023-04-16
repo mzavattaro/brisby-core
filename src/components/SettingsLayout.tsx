@@ -30,7 +30,7 @@ const navigation = [
   { name: 'Team', href: '/settings/team', icon: UsersIcon },
   /*
    * {
-   *   name: "Building complexes",
+   *   name: " Strata Titles",
    *   href: "/settings/building-complexes",
    *   icon: HomeIcon,
    * },

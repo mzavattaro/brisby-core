@@ -67,7 +67,7 @@ export const buildingComplexRouter = router({
     if (!buildingComplexes) {
       throw new TRPCError({
         code: 'NOT_FOUND',
-        message: 'Building complexes not found',
+        message: 'Strata Titles not found',
       });
     }
 

@@ -475,9 +475,6 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
                     ))}
                   </ul>
                 </div>
-                {/* <div className="justify-stretch mt-6 flex flex-col">
-                  <StatusDropdown />
-                </div> */}
               </div>
             </section>
           </div>
