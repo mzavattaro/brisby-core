@@ -6,7 +6,7 @@ type PaginationProps = {
   handleFetchPreviousPage: () => void;
   handleFetchNextPage: () => void;
   hasNextPage: boolean | undefined;
-  nextCursor: string | undefined;
+  nextCursor: string | null | undefined;
 };
 
 const Pagination: FC<PaginationProps> = ({

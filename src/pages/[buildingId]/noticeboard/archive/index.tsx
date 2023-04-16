@@ -13,10 +13,10 @@ import StyledLink from '../../../../components/StyledLink';
 import { ArrowLongRightIcon } from '@heroicons/react/24/outline';
 import useModal from '../../../../utils/useModal';
 import NotFoundPage from '../../../404';
-import type NoticeboardProps from '../../noticeboard/index';
+import type NoticeboardProps from '../index';
 import Pagination from '../../../../components/Pagination';
 
-const Drafts: FC<typeof NoticeboardProps> = () => {
+const Archived: FC<typeof NoticeboardProps> = () => {
   const [page, setPage] = useState(0);
   const { isShowing, toggle } = useModal();
   const { data: buildingComplexes } =
@@ -33,7 +33,7 @@ const Drafts: FC<typeof NoticeboardProps> = () => {
   const buildingComplexQuery = trpc.buildingComplex.byId.useQuery({ id });
 
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isFetching } =
-    trpc.notice.drafts.useInfiniteQuery(
+    trpc.notice.archived.useInfiniteQuery(
       {
         limit: 8,
         id,
@@ -48,6 +48,7 @@ const Drafts: FC<typeof NoticeboardProps> = () => {
       await fetchNextPage();
     } catch (error) {
       if (error instanceof Error) {
+        // eslint-disable-next-line no-console
         console.log(error.message);
       }
       return;
@@ -78,9 +79,9 @@ const Drafts: FC<typeof NoticeboardProps> = () => {
   const notices = data?.pages[page]?.notices;
   const nextCursor = data?.pages[page]?.nextCursor;
 
-  const { name, streetAddress, suburb } = buildingComplexData;
-
-  const buildingComplexAddress = `${streetAddress || ''}, ${suburb || ''}`;
+  const buildingComplexAddress = `${
+    buildingComplexData?.streetAddress ?? ''
+  }, ${buildingComplexData?.suburb ?? ''}`;
 
   return (
     <Container className="text-gray-900">
@@ -145,7 +146,9 @@ const Drafts: FC<typeof NoticeboardProps> = () => {
       <Header toggle={toggle} />
 
       <div className="mx-auto mt-4 flex max-w-lg flex-col sm:max-w-full md:mt-6">
-        <p className="text-sm font-bold md:text-lg">{name || ''}</p>
+        <p className="text-sm font-bold md:text-lg">
+          {buildingComplexData?.name ?? ''}
+        </p>
         <p className="text-xs md:text-sm">
           {buildingComplexData ? buildingComplexAddress : ''}
         </p>
@@ -158,11 +161,11 @@ const Drafts: FC<typeof NoticeboardProps> = () => {
         >
           {notices?.map((notice) => (
             <NoticeItem
+              notices={notices}
+              handleFetchPreviousPage={handleFetchPreviousPage}
               key={notice.id}
               notice={notice}
               toggle={toggle}
-              notices={notices}
-              handleFetchPreviousPage={handleFetchPreviousPage}
             />
           ))}
           {isFetchingNextPage && (
@@ -187,4 +190,4 @@ const Drafts: FC<typeof NoticeboardProps> = () => {
   );
 };
 
-export default Drafts;
+export default Archived;

@@ -54,7 +54,6 @@ const Header: FC<HeaderProps> = ({ toggle }) => {
             </div>
             {/* tabs */}
             <div className="hidden space-x-4 sm:flex md:space-x-8">
-              {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
               <Link
                 href={{
                   pathname: '/[buildingId]/noticeboard/',
@@ -71,34 +70,6 @@ const Header: FC<HeaderProps> = ({ toggle }) => {
               </Link>
               <Link
                 href={{
-                  pathname: '/[buildingId]/noticeboard/published',
-                  query: { buildingId: id },
-                }}
-                className={classNames(
-                  'inline-flex items-center px-1 pt-1 text-xs md:text-sm',
-                  asPath.includes('/published')
-                    ? '-mb-0.5 border-b-2 border-indigo-600 text-indigo-600'
-                    : 'font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700 md:text-sm'
-                )}
-              >
-                Published
-              </Link>
-              <Link
-                href={{
-                  pathname: '/[buildingId]/noticeboard/drafts',
-                  query: { buildingId: id },
-                }}
-                className={classNames(
-                  'inline-flex items-center px-1 pt-1 text-xs md:text-sm',
-                  asPath.includes('/drafts')
-                    ? '-mb-0.5 border-b-2 border-indigo-600 text-indigo-600'
-                    : 'font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700 md:text-sm'
-                )}
-              >
-                Drafts
-              </Link>
-              <Link
-                href={{
                   pathname: '/[buildingId]/noticeboard/archived',
                   query: { buildingId: id },
                 }}
@@ -109,7 +80,7 @@ const Header: FC<HeaderProps> = ({ toggle }) => {
                     : 'font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700 md:text-sm'
                 )}
               >
-                Archived
+                Archive
               </Link>
             </div>
 
@@ -150,6 +121,22 @@ const Header: FC<HeaderProps> = ({ toggle }) => {
                         {sessionData?.user.name ?? sessionData?.user.email}
                       </p>
                     </div>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <Link
+                          href={{
+                            pathname: '/[buildingId]/noticeboard/archived',
+                            query: { buildingId: id },
+                          }}
+                          className={classNames(
+                            'block border-b px-4 py-2 text-sm text-gray-700',
+                            active ? 'bg-gray-100' : ''
+                          )}
+                        >
+                          Archived notices
+                        </Link>
+                      )}
+                    </Menu.Item>
                     <Menu.Item>
                       {({ active }) => (
                         <button
