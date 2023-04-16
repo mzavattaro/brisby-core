@@ -175,7 +175,7 @@ const Archived: FC<typeof NoticeboardProps> = () => {
           )}
         </GridLayout>
       ) : (
-        <span>notices.length broke</span>
+        <span>Loading...</span>
       )}
 
       {buildingComplexData && Boolean(notices?.length) && !isFetching && (

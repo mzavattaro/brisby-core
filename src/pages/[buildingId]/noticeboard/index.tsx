@@ -172,7 +172,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
         <div className="flex justify-center text-left">
           <StyledLink
             type="button"
-            href="/building/new"
+            href="/auth/building-complexes/new"
             className="mt-4 px-4 text-sm"
           >
             Create a new building
