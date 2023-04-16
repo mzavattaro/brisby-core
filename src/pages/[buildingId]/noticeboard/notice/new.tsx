@@ -71,8 +71,7 @@ const uploadToS3 = async (data: FileList) => {
 
 const New: NextPage = () => {
   // revisit select useState
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [selected, setSelected] = useState(publishingOptions[0]);
+  const [selected] = useState(publishingOptions[0]);
   const [startDate, setStartDate] = useState<Date | null | undefined>(
     new Date()
   );
@@ -95,15 +94,7 @@ const New: NextPage = () => {
   const { mutateAsync } = trpc.notice.create.useMutation({
     onSuccess: async (data) => {
       queryClient.setQueryData([['notice'], data.id], data);
-
-      try {
-        await queryClient.invalidateQueries();
-      } catch (error) {
-        if (error instanceof Error) {
-          // eslint-disable-next-line no-console
-          console.log(error.message);
-        }
-      }
+      await queryClient.invalidateQueries();
     },
   });
 

@@ -48,15 +48,8 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
   const { mutateAsync: createMutateAsync, isLoading: isCreating } =
     trpc.billing.create.useMutation({
       onSuccess: async (data) => {
-        queryClient.setQueryData([['billing'], data?.id], data);
-        try {
-          await queryClient.invalidateQueries();
-        } catch (error) {
-          if (error instanceof Error) {
-            // eslint-disable-next-line no-console
-            console.log(error.message);
-          }
-        }
+        queryClient.setQueryData([['billing'], data.id], data);
+        await queryClient.invalidateQueries();
       },
     });
 
@@ -64,15 +57,8 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
   const { mutateAsync: updateMutateAsync, isLoading: isUpdating } =
     trpc.billing.update.useMutation({
       onSuccess: async (data) => {
-        queryClient.setQueryData([['billing'], data?.id], data);
-        try {
-          await queryClient.invalidateQueries();
-        } catch (error) {
-          if (error instanceof Error) {
-            // eslint-disable-next-line no-console
-            console.log(error.message);
-          }
-        }
+        queryClient.setQueryData([['billing'], data.id], data);
+        await queryClient.invalidateQueries();
       },
     });
 

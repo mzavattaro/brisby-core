@@ -82,15 +82,8 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
 
   const deleteMutation = trpc.notice.delete.useMutation({
     onSuccess: async () => {
-      try {
-        await queryClient.invalidateQueries();
-        // await router.push("/");
-      } catch (error) {
-        if (error instanceof Error) {
-          // eslint-disable-next-line no-console
-          console.log(error.message);
-        }
-      }
+      await queryClient.invalidateQueries();
+      // await router.push("/");
 
       /*
        * finish this redirect to noticeboard page

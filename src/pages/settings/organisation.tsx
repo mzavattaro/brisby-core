@@ -41,15 +41,7 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
   const { mutateAsync, isLoading } = trpc.organisation.update.useMutation({
     onSuccess: async (data) => {
       queryClient.setQueryData([['organisation'], data.id], data);
-
-      try {
-        await queryClient.invalidateQueries();
-      } catch (error) {
-        if (error instanceof Error) {
-          // eslint-disable-next-line no-console
-          console.log(error.message);
-        }
-      }
+      await queryClient.invalidateQueries();
       toggle();
     },
   });

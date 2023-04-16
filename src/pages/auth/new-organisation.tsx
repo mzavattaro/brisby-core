@@ -29,26 +29,10 @@ const Organisation: NextPage = () => {
   const { mutateAsync, isLoading } = trpc.organisation.create.useMutation({
     onSuccess: async (data) => {
       queryClient.setQueryData([['organisation'], data.id], data);
-      try {
-        await queryClient.invalidateQueries();
-      } catch (error) {
-        if (error instanceof Error) {
-          // eslint-disable-next-line no-console
-          console.log(error.message);
-        }
-      }
+      await queryClient.invalidateQueries();
     },
-    onError: async (error) => {
-      if (error instanceof Error) {
-        try {
-          await router.push('/auth/building-complexes');
-        } catch (newError) {
-          if (newError instanceof Error) {
-            // eslint-disable-next-line no-console
-            console.log(newError.message);
-          }
-        }
-      }
+    onError: async () => {
+      await router.push('/auth/building-complexes');
     },
   });
 

@@ -32,15 +32,7 @@ const NewUser: FC<NewUserSchema> = () => {
   const { mutateAsync, isLoading } = trpc.user.updateUser.useMutation({
     onSuccess: async (data) => {
       queryClient.setQueryData([['user'], data.id], data);
-
-      try {
-        await queryClient.invalidateQueries();
-      } catch (error) {
-        if (error instanceof Error) {
-          // eslint-disable-next-line no-console
-          console.log(error.message);
-        }
-      }
+      await queryClient.invalidateQueries();
     },
   });
 
