@@ -40,6 +40,15 @@ const NoticeTable: FC<NoticeTableProps> = ({
                 >
                   Archive
                 </button>
+                <div className="pl-1 text-xs font-semibold text-gray-900">
+                  {selectedDocument.length}{' '}
+                  {selectedDocument.length > 1 ? (
+                    <span>notices</span>
+                  ) : (
+                    <span>notice</span>
+                  )}{' '}
+                  selected
+                </div>
               </div>
             )}
             <table className="min-w-full table-fixed divide-y divide-gray-300 ">
