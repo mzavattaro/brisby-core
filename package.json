@@ -61,7 +61,7 @@
     "zustand": "^4.3.6"
   },
   "devDependencies": {
-    "@beskar-labs/harmony": "^2.0.10",
+    "@beskar-labs/harmony": "2.0.10",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/line-clamp": "^0.4.2",
     "@total-typescript/ts-reset": "^0.3.7",
