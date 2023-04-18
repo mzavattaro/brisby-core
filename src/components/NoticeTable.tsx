@@ -70,13 +70,13 @@ const NoticeTable: FC<NoticeTableProps> = ({
                     scope="col"
                     className="min-w-[12rem] py-3.5 pr-3 text-left text-sm font-semibold text-gray-900"
                   >
-                    File name
+                    Title
                   </th>
                   <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                   >
-                    Title
+                    File name
                   </th>
                   <th
                     scope="col"
@@ -148,10 +148,10 @@ const NoticeTable: FC<NoticeTableProps> = ({
                           : 'text-gray-900'
                       )}
                     >
-                      {notice.fileName}
+                      {notice.title}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {notice.title}
+                      {notice.fileName}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                       {dayjs(notice.startDate).format('D MMMM YYYY')}

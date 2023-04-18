@@ -16,6 +16,7 @@ import Button from '../../../../components/Button';
 import StyledLink from '../../../../components/StyledLink';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import fetchAndIndexData from '../../../../utils/search';
 
 const publishingOptions = [
   {
@@ -121,7 +122,6 @@ const New: NextPage = () => {
     const payload = {
       id,
       title: data.title,
-      // selected?.status
       status: 'draft',
       startDate,
       endDate,
@@ -132,8 +132,14 @@ const New: NextPage = () => {
       fileType: transformedData.fileType,
     };
 
+    const searchData = {
+      title: data.title,
+      fileName: transformedData.fileName,
+    };
+
     try {
       await mutateAsync(payload);
+      await fetchAndIndexData(searchData);
       router.back();
     } catch (error) {
       if (error instanceof Error) {
