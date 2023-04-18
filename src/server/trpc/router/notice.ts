@@ -5,7 +5,7 @@ import s3 from '../../../utils/s3';
 import cloudFront from '../../../utils/cloudFront';
 import { DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { CreateInvalidationCommand } from '@aws-sdk/client-cloudfront';
-import { algoliasearch } from 'algoliasearch';
+// import { algoliasearch } from 'algoliasearch';
 
 /**
  * Default selector for Notice.
@@ -13,7 +13,7 @@ import { algoliasearch } from 'algoliasearch';
  * @see https://github.com/prisma/prisma/issues/9353
  */
 
-const client = algoliasearch('5P8ZL9I43T', '44b33d64681c0653b806328b4e66dd4c');
+// const client = algoliasearch('5P8ZL9I43T', '44b33d64681c0653b806328b4e66dd4c');
 
 export const noticeRouter = router({
   // create /api/notice
@@ -116,26 +116,28 @@ export const noticeRouter = router({
         },
       });
 
-      console.log('NOTICES: ', notices);
+      /*
+       * Here we construct the request to be sent to Algolia with the `batch` method
+       * const requests: BatchOperation[] = notices.map((record) => ({
+       * `batch` allows you to do many Algolia operations, but here we want to index our record.
+       * action: 'addObject',
+       * body: record,
+       * }));
+       */
 
-      // Here we construct the request to be sent to Algolia with the `batch` method
-      const requests: BatchOperation[] = notices.map((record) => ({
-        // `batch` allows you to do many Algolia operations, but here we want to index our record.
-        action: 'addObject',
-        body: record,
-      }));
+      /*
+       * const { taskID } = await client.batch({
+       *   indexName: 'brisby-core',
+       *   batchWriteParams: {
+       *     requests,
+       *   },
+       * });
+       */
 
-      const { taskID } = await client.batch({
-        indexName: 'brisby-core',
-        batchWriteParams: {
-          requests,
-        },
-      });
-
-      // Wait for indexing to be finished
-      await client.waitForTask({ indexName: 'brisby-core', taskID });
-
-      console.log('Ready to search!');
+      /*
+       * Wait for indexing to be finished
+       * await client.waitForTask({ indexName: 'brisby-core', taskID });
+       */
 
       return notices;
     }),

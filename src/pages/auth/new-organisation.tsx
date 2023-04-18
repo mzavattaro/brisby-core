@@ -59,14 +59,7 @@ const Organisation: NextPage = () => {
       return;
     }
 
-    try {
-      await router.push('/auth/building-complexes');
-    } catch (error) {
-      if (error instanceof Error) {
-        // eslint-disable-next-line no-console
-        console.log(error.message);
-      }
-    }
+    await router.push('/auth/building-complexes');
   };
 
   return (
