@@ -38,6 +38,8 @@ export const serverSchema = z.object({
  */
 export const clientSchema = z.object({
   // NEXT_PUBLIC_CLIENTVAR: z.string(),
+  NEXT_PUBLIC_ALGOLIA_APP_ID: z.string(),
+  NEXT_PUBLIC_ALGOLIA_ADMIN_API_KEY: z.string(),
 });
 
 /**
@@ -50,4 +52,7 @@ export const clientEnv = {
   /*
    * CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
    */
+  NEXT_PUBLIC_ALGOLIA_APP_ID: process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
+  NEXT_PUBLIC_ALGOLIA_ADMIN_API_KEY:
+    process.env.NEXT_PUBLIC_ALGOLIA_ADMIN_API_KEY,
 };

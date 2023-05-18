@@ -81,8 +81,9 @@ const New: NextPage = () => {
   const [fileSize, setFileSize] = useState<number>(0);
 
   const router = useRouter();
-  const id = router.query.buildingId as string;
   const queryClient = useQueryClient();
+
+  const id = router.query.buildingId as string;
 
   const {
     register,
@@ -132,13 +133,28 @@ const New: NextPage = () => {
       fileType: transformedData.fileType,
     };
 
+    let noticeId = '';
+    try {
+      const notice = await mutateAsync(payload);
+      // Check if notice is a Promise
+      if (notice instanceof Promise) {
+        await notice;
+      }
+      noticeId = notice.id;
+    } catch (error) {
+      if (error instanceof Error) {
+        // eslint-disable-next-line no-console
+        console.log(error.message);
+      }
+    }
+
     const searchData = {
+      noticeId,
       title: data.title,
       fileName: transformedData.fileName,
     };
 
     try {
-      await mutateAsync(payload);
       await fetchAndIndexData(searchData);
       router.back();
     } catch (error) {
@@ -215,7 +231,7 @@ const New: NextPage = () => {
             <label className="text-sm font-semibold" htmlFor="fileList">
               File upload
             </label>
-            <div className="flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
+            <div className="flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pb-6 pt-5">
               <div className="space-y-1 text-center">
                 <svg
                   className="mx-auto h-12 w-12 text-gray-400"
@@ -269,7 +285,7 @@ const New: NextPage = () => {
           </div>
 
           {/* Publish */}
-          <div className="mt-10 mb-6">
+          <div className="mb-6 mt-10">
             <h3 className=" text-xl font-semibold">Publish</h3>
             <p className="mt-2 text-gray-500">
               Select the date range for the notice to be published and visible

@@ -77,7 +77,7 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
         cancelButtonRef={cancelButtonRef}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid max-w-7xl grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-12">
+          <div className="grid max-w-7xl grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-12">
             <h2 className="col-span-1 text-lg font-semibold sm:col-span-12">
               Organisation information
             </h2>
@@ -174,7 +174,7 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
             <button
               disabled={isLoading}
               className={classNames(
-                'flex w-fit justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 pl-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
+                'flex w-fit justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 pl-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
                 isLoading && 'cursor-not-allowed opacity-50'
               )}
               type="submit"

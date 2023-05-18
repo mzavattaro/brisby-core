@@ -101,7 +101,7 @@ const Archived: FC<typeof NoticeboardProps> = () => {
               Select Select Strata Title to view its notices.
             </p>
           </div>
-          <div className="sticky mt-6 mb-2">
+          <div className="sticky mb-2 mt-6">
             <h4>All Strata Titles</h4>
           </div>
         </div>

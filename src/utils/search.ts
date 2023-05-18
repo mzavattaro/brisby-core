@@ -1,15 +1,25 @@
-import { algoliasearch } from 'algoliasearch';
+import algoliasearch from 'algoliasearch';
 import { getSession } from 'next-auth/react';
 
 type searchProps = {
-  organisationId: string;
+  noticeId: string | undefined;
   title: string;
   fileName: string;
 };
 
-const client = algoliasearch('5P8ZL9I43T', '44b33d64681c0653b806328b4e66dd4c');
+if (
+  !process.env.NEXT_PUBLIC_ALGOLIA_APP_ID ||
+  !process.env.NEXT_PUBLIC_ALGOLIA_ADMIN_API_KEY
+) {
+  throw new Error('Missing Algolia env variables');
+}
 
-const fetchAndIndexData = async (searchData: searchProps) => {
+export const searchClient = algoliasearch(
+  process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
+  process.env.NEXT_PUBLIC_ALGOLIA_ADMIN_API_KEY
+);
+
+const fetchAndIndexData = async (searchData: searchProps): Promise<void> => {
   const session = await getSession();
 
   const jsonObject = JSON.parse(
@@ -19,21 +29,18 @@ const fetchAndIndexData = async (searchData: searchProps) => {
   };
 
   const { id } = jsonObject.state;
+  const index = searchClient.initIndex('brisby-core');
 
-  // Add a new record to your Algolia index
-  const { taskID } = await client.saveObject({
-    indexName: 'brisby-core',
-    body: {
-      visible_by: [session?.user.organisationId, id],
-      organisationId: session?.user.organisationId,
-      buildingComplexId: id,
-      title: searchData.title,
-      fileName: searchData.fileName,
-    },
-  });
+  const data = {
+    visible_by: [session?.user.organisationId, id],
+    organisationId: session?.user.organisationId,
+    buildingComplexId: id,
+    noticeId: searchData.noticeId,
+    title: searchData.title,
+    fileName: searchData.fileName,
+  };
 
-  // Poll the task status to know when it has been indexed
-  await client.waitForTask({ indexName: 'brisby-core', taskID });
+  await index.saveObjects([data], { autoGenerateObjectIDIfNotExist: true });
 };
 
 export default fetchAndIndexData;

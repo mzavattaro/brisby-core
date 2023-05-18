@@ -115,30 +115,6 @@ export const noticeRouter = router({
           },
         },
       });
-
-      /*
-       * Here we construct the request to be sent to Algolia with the `batch` method
-       * const requests: BatchOperation[] = notices.map((record) => ({
-       * `batch` allows you to do many Algolia operations, but here we want to index our record.
-       * action: 'addObject',
-       * body: record,
-       * }));
-       */
-
-      /*
-       * const { taskID } = await client.batch({
-       *   indexName: 'brisby-core',
-       *   batchWriteParams: {
-       *     requests,
-       *   },
-       * });
-       */
-
-      /*
-       * Wait for indexing to be finished
-       * await client.waitForTask({ indexName: 'brisby-core', taskID });
-       */
-
       return notices;
     }),
 
