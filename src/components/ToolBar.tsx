@@ -1,6 +1,5 @@
 import type { FC, ChangeEvent } from 'react';
 import type { SortOrder } from '../pages/[buildingId]/noticeboard';
-import Search from './Search';
 
 type ToolBarProps = {
   setSortOrder: (sortOrder: SortOrder) => void;
