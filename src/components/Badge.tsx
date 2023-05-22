@@ -1,12 +1,12 @@
 import type { ReactNode, FC } from 'react';
 import { classNames } from '../utils/classNames';
 
-type Badge = {
+type BadgeProps = {
   children: ReactNode;
   status: string | null;
 };
 
-const Tag: FC<Badge> = ({ status, children }) => (
+const Badge: FC<BadgeProps> = ({ status, children }) => (
   <div
     className={classNames(
       status === 'draft' &&
@@ -21,4 +21,4 @@ const Tag: FC<Badge> = ({ status, children }) => (
   </div>
 );
 
-export default Tag;
+export default Badge;

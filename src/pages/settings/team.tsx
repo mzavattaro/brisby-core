@@ -63,7 +63,7 @@ const Team: NextPageWithLayout<TeamSchema> = () => {
       </div>
       <div className="col-span-1 mt-4 sm:col-span-12">
         <form
-          className="grid max-w-7xl grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-12"
+          className="grid max-w-7xl grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-12"
           onSubmit={handleSubmit(onSubmit)}
         >
           {/* New user */}
@@ -90,7 +90,7 @@ const Team: NextPageWithLayout<TeamSchema> = () => {
           <button
             disabled={isSubmitting}
             className={classNames(
-              'col-span-1 flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:col-span-2 sm:col-end-13',
+              'col-span-1 flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:col-span-2 sm:col-end-13',
               isSubmitting && 'cursor-not-allowed opacity-50'
             )}
             type="submit"
@@ -99,7 +99,7 @@ const Team: NextPageWithLayout<TeamSchema> = () => {
           </button>
         </form>
 
-        <h2 className="col-span-1 mt-10 -mb-4 text-lg font-semibold text-gray-900 sm:col-span-12">
+        <h2 className="col-span-1 -mb-4 mt-10 text-lg font-semibold text-gray-900 sm:col-span-12">
           Users
         </h2>
         {users.map((user) => (

@@ -48,15 +48,8 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
   const { mutateAsync: createMutateAsync, isLoading: isCreating } =
     trpc.billing.create.useMutation({
       onSuccess: async (data) => {
-        queryClient.setQueryData([['billing'], data?.id], data);
-        try {
-          await queryClient.invalidateQueries();
-        } catch (error) {
-          if (error instanceof Error) {
-            // eslint-disable-next-line no-console
-            console.log(error.message);
-          }
-        }
+        queryClient.setQueryData([['billing'], data.id], data);
+        await queryClient.invalidateQueries();
       },
     });
 
@@ -64,15 +57,8 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
   const { mutateAsync: updateMutateAsync, isLoading: isUpdating } =
     trpc.billing.update.useMutation({
       onSuccess: async (data) => {
-        queryClient.setQueryData([['billing'], data?.id], data);
-        try {
-          await queryClient.invalidateQueries();
-        } catch (error) {
-          if (error instanceof Error) {
-            // eslint-disable-next-line no-console
-            console.log(error.message);
-          }
-        }
+        queryClient.setQueryData([['billing'], data.id], data);
+        await queryClient.invalidateQueries();
       },
     });
 
@@ -309,7 +295,7 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
               Update your billing address.
             </p>
             <form onSubmit={handleSubmit(onSubmitBillingAddressChange)}>
-              <div className="mt-4 grid max-w-7xl grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-12">
+              <div className="mt-4 grid max-w-7xl grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-12">
                 {/* Street address */}
                 <label className="block text-left text-sm font-semibold text-gray-900 sm:col-span-12">
                   Street address
@@ -516,7 +502,7 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
                   </div>
                 </div>
                 {/* State */}
-                <div className="my-6 sm:my-0 sm:mx-18">
+                <div className="my-6 sm:mx-18 sm:my-0">
                   <h4 className="w-fit text-left text-sm font-semibold text-gray-900">
                     State
                   </h4>

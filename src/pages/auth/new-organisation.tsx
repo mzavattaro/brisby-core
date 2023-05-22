@@ -29,26 +29,10 @@ const Organisation: NextPage = () => {
   const { mutateAsync, isLoading } = trpc.organisation.create.useMutation({
     onSuccess: async (data) => {
       queryClient.setQueryData([['organisation'], data.id], data);
-      try {
-        await queryClient.invalidateQueries();
-      } catch (error) {
-        if (error instanceof Error) {
-          // eslint-disable-next-line no-console
-          console.log(error.message);
-        }
-      }
+      await queryClient.invalidateQueries();
     },
-    onError: async (error) => {
-      if (error instanceof Error) {
-        try {
-          await router.push('/auth/building-complexes');
-        } catch (newError) {
-          if (newError instanceof Error) {
-            // eslint-disable-next-line no-console
-            console.log(newError.message);
-          }
-        }
-      }
+    onError: async () => {
+      await router.push('/auth/building-complexes');
     },
   });
 
@@ -75,14 +59,7 @@ const Organisation: NextPage = () => {
       return;
     }
 
-    try {
-      await router.push('/auth/building-complexes');
-    } catch (error) {
-      if (error instanceof Error) {
-        // eslint-disable-next-line no-console
-        console.log(error.message);
-      }
-    }
+    await router.push('/auth/building-complexes');
   };
 
   return (
@@ -128,7 +105,7 @@ const Organisation: NextPage = () => {
           <button
             disabled={isLoading}
             className={classNames(
-              'mt-10 flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:mt-10',
+              'mt-10 flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:mt-10',
               isLoading && 'cursor-not-allowed opacity-50'
             )}
             type="submit"

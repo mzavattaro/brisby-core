@@ -23,18 +23,11 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
   const [isShowingDeleteModal, setIsShowingDeleteModal] = useState(false);
   const queryClient = useQueryClient();
   const cancelButtonRef = useRef(null);
-  // const router = useRouter();
+  const router = useRouter();
 
   const { mutate, isLoading } = trpc.notice.updateStatus.useMutation({
     onSuccess: async () => {
-      try {
-        await queryClient.invalidateQueries();
-      } catch (error) {
-        if (error instanceof Error) {
-          // eslint-disable-next-line no-console
-          console.log(error.message);
-        }
-      }
+      await queryClient.invalidateQueries();
     },
   });
   const { notice } = props;
@@ -89,26 +82,8 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
 
   const deleteMutation = trpc.notice.delete.useMutation({
     onSuccess: async () => {
-      try {
-        await queryClient.invalidateQueries();
-        // await router.push("/");
-      } catch (error) {
-        if (error instanceof Error) {
-          // eslint-disable-next-line no-console
-          console.log(error.message);
-        }
-      }
-
-      /*
-       * finish this redirect to noticeboard page
-       * try {
-       *   await router.push();
-       * } catch (error) {
-       *   if (error instanceof Error) {
-       *     console.log(error.message);
-       *   }
-       * }
-       */
+      await queryClient.invalidateQueries();
+      router.back();
     },
   });
 
@@ -337,21 +312,15 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
                 </h1>
               </div>
             </div>
-            <div className="justify-stretch mt-6 flex flex-col-reverse space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-y-0 sm:space-x-3 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
+            <div className="mt-6 flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-x-3 sm:space-y-0 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
               <button
                 onClick={() => {
                   toggleDeleteModal();
                 }}
                 type="button"
-                className="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+                className="inline-flex items-center justify-center rounded-md border border-red-300 bg-white px-4 py-2 text-sm font-medium text-red-700 shadow-sm hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100"
               >
                 Delete
-              </button>
-              <button
-                type="button"
-                className="inline-flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-              >
-                Advance to offer
               </button>
             </div>
           </div>
@@ -478,8 +447,7 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
                   Change the status of the notice.
                 </p>
 
-                <div className="justify-stretch mt-4 flex flex-col">
-                  {/* <StatusDropdown id={id} status={status} /> */}
+                <div className="mt-4 flex flex-col justify-stretch">
                   <Dropdown
                     status={status}
                     togglePublishModal={togglePublishModal}
@@ -501,9 +469,6 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
                     ))}
                   </ul>
                 </div>
-                {/* <div className="justify-stretch mt-6 flex flex-col">
-                  <StatusDropdown />
-                </div> */}
               </div>
             </section>
           </div>

@@ -13,12 +13,15 @@ import StyledLink from '../../../../components/StyledLink';
 import { ArrowLongRightIcon } from '@heroicons/react/24/outline';
 import useModal from '../../../../utils/useModal';
 import NotFoundPage from '../../../404';
-import type NoticeboardProps from '../../noticeboard/index';
+import type NoticeboardProps from '../index';
 import Pagination from '../../../../components/Pagination';
+import Search from '../../../../components/Search';
 
-const Drafts: FC<typeof NoticeboardProps> = () => {
+const Archived: FC<typeof NoticeboardProps> = () => {
   const [page, setPage] = useState(0);
   const { isShowing, toggle } = useModal();
+  const { isShowing: isShowingSearchModal, toggle: toggleSearchModal } =
+    useModal();
   const { data: buildingComplexes } =
     trpc.buildingComplex.byOrganisation.useQuery();
   const cancelButtonRef = useRef(null);
@@ -33,7 +36,7 @@ const Drafts: FC<typeof NoticeboardProps> = () => {
   const buildingComplexQuery = trpc.buildingComplex.byId.useQuery({ id });
 
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isFetching } =
-    trpc.notice.drafts.useInfiniteQuery(
+    trpc.notice.archived.useInfiniteQuery(
       {
         limit: 8,
         id,
@@ -48,6 +51,7 @@ const Drafts: FC<typeof NoticeboardProps> = () => {
       await fetchNextPage();
     } catch (error) {
       if (error instanceof Error) {
+        // eslint-disable-next-line no-console
         console.log(error.message);
       }
       return;
@@ -78,9 +82,9 @@ const Drafts: FC<typeof NoticeboardProps> = () => {
   const notices = data?.pages[page]?.notices;
   const nextCursor = data?.pages[page]?.nextCursor;
 
-  const { name, streetAddress, suburb } = buildingComplexData;
-
-  const buildingComplexAddress = `${streetAddress || ''}, ${suburb || ''}`;
+  const buildingComplexAddress = `${
+    buildingComplexData?.streetAddress ?? ''
+  }, ${buildingComplexData?.suburb ?? ''}`;
 
   return (
     <Container className="text-gray-900">
@@ -92,16 +96,16 @@ const Drafts: FC<typeof NoticeboardProps> = () => {
       >
         <div className="text-center sm:text-left">
           <h3 className="text-lg font-medium leading-6 text-gray-900">
-            Select Building Complex
+            Select Strata Title
           </h3>
 
           <div className="mt-2">
             <p className="text-sm text-gray-500">
-              Select the building complex to view its notices.
+              Select Select Strata Title to view its notices.
             </p>
           </div>
-          <div className="sticky mt-6 mb-2">
-            <h4>All building complexes</h4>
+          <div className="sticky mb-2 mt-6">
+            <h4>All Strata Titles</h4>
           </div>
         </div>
         <ul className="h-96 w-full divide-y divide-gray-200 overflow-scroll rounded-lg border">
@@ -134,18 +138,28 @@ const Drafts: FC<typeof NoticeboardProps> = () => {
         <div className="flex justify-center text-left">
           <StyledLink
             type="button"
-            href="/building/new"
+            href="/auth/building-complexes/new"
             className="mt-4 px-4 text-sm"
           >
-            Create a new building
+            Create new Strata Title
           </StyledLink>
         </div>
       </Modal>
 
-      <Header toggle={toggle} />
+      <Modal
+        isShowing={isShowingSearchModal}
+        hide={toggleSearchModal}
+        cancelButtonRef={cancelButtonRef}
+      >
+        <Search />
+      </Modal>
+
+      <Header toggle={toggle} toggleSearch={toggleSearchModal} />
 
       <div className="mx-auto mt-4 flex max-w-lg flex-col sm:max-w-full md:mt-6">
-        <p className="text-sm font-bold md:text-lg">{name || ''}</p>
+        <p className="text-sm font-bold md:text-lg">
+          {buildingComplexData?.name ?? ''}
+        </p>
         <p className="text-xs md:text-sm">
           {buildingComplexData ? buildingComplexAddress : ''}
         </p>
@@ -158,11 +172,11 @@ const Drafts: FC<typeof NoticeboardProps> = () => {
         >
           {notices?.map((notice) => (
             <NoticeItem
+              notices={notices}
+              handleFetchPreviousPage={handleFetchPreviousPage}
               key={notice.id}
               notice={notice}
               toggle={toggle}
-              notices={notices}
-              handleFetchPreviousPage={handleFetchPreviousPage}
             />
           ))}
           {isFetchingNextPage && (
@@ -172,7 +186,7 @@ const Drafts: FC<typeof NoticeboardProps> = () => {
           )}
         </GridLayout>
       ) : (
-        <span>notices.length broke</span>
+        <span>Loading...</span>
       )}
 
       {buildingComplexData && Boolean(notices?.length) && !isFetching && (
@@ -187,4 +201,4 @@ const Drafts: FC<typeof NoticeboardProps> = () => {
   );
 };
 
-export default Drafts;
+export default Archived;

@@ -11,12 +11,14 @@ import { classNames } from '../utils/classNames';
 import StyledLink from '../components/StyledLink';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import MagnifyingGlass from '../../icons/MagnifyingGlass';
 
 type HeaderProps = {
   toggle: () => void;
+  toggleSearch: () => void;
 };
 
-const Header: FC<HeaderProps> = ({ toggle }) => {
+const Header: FC<HeaderProps> = ({ toggle, toggleSearch }) => {
   const router = useRouter();
   const id = router.query.buildingId as string;
   const { data: sessionData } = useSession();
@@ -54,7 +56,6 @@ const Header: FC<HeaderProps> = ({ toggle }) => {
             </div>
             {/* tabs */}
             <div className="hidden space-x-4 sm:flex md:space-x-8">
-              {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
               <Link
                 href={{
                   pathname: '/[buildingId]/noticeboard/',
@@ -71,49 +72,28 @@ const Header: FC<HeaderProps> = ({ toggle }) => {
               </Link>
               <Link
                 href={{
-                  pathname: '/[buildingId]/noticeboard/published',
+                  pathname: '/[buildingId]/noticeboard/archive',
                   query: { buildingId: id },
                 }}
                 className={classNames(
                   'inline-flex items-center px-1 pt-1 text-xs md:text-sm',
-                  asPath.includes('/published')
+                  asPath.includes('/archive')
                     ? '-mb-0.5 border-b-2 border-indigo-600 text-indigo-600'
                     : 'font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700 md:text-sm'
                 )}
               >
-                Published
-              </Link>
-              <Link
-                href={{
-                  pathname: '/[buildingId]/noticeboard/drafts',
-                  query: { buildingId: id },
-                }}
-                className={classNames(
-                  'inline-flex items-center px-1 pt-1 text-xs md:text-sm',
-                  asPath.includes('/drafts')
-                    ? '-mb-0.5 border-b-2 border-indigo-600 text-indigo-600'
-                    : 'font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700 md:text-sm'
-                )}
-              >
-                Drafts
-              </Link>
-              <Link
-                href={{
-                  pathname: '/[buildingId]/noticeboard/archived',
-                  query: { buildingId: id },
-                }}
-                className={classNames(
-                  'inline-flex items-center px-1 pt-1 text-xs md:text-sm',
-                  asPath.includes('/archived')
-                    ? '-mb-0.5 border-b-2 border-indigo-600 text-indigo-600'
-                    : 'font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700 md:text-sm'
-                )}
-              >
-                Archived
+                Archive
               </Link>
             </div>
 
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+              <button className="sm:mr-4" type="button" onClick={toggleSearch}>
+                <MagnifyingGlass
+                  className="text-gray-400"
+                  height="28"
+                  width="28"
+                />
+              </button>
               <StyledLink
                 className="hidden px-4 text-xs sm:block md:text-sm"
                 type="button"
@@ -152,6 +132,22 @@ const Header: FC<HeaderProps> = ({ toggle }) => {
                     </div>
                     <Menu.Item>
                       {({ active }) => (
+                        <Link
+                          href={{
+                            pathname: '/[buildingId]/noticeboard/archive',
+                            query: { buildingId: id },
+                          }}
+                          className={classNames(
+                            'block border-b px-4 py-2 text-sm text-gray-700',
+                            active ? 'bg-gray-100' : ''
+                          )}
+                        >
+                          Archive
+                        </Link>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
                         <button
                           type="button"
                           onClick={toggle}
@@ -160,7 +156,7 @@ const Header: FC<HeaderProps> = ({ toggle }) => {
                             active ? 'bg-gray-100' : ''
                           )}
                         >
-                          Building complexes
+                          Strata Titles
                         </button>
                       )}
                     </Menu.Item>
@@ -230,7 +226,7 @@ const Header: FC<HeaderProps> = ({ toggle }) => {
               >
                 <Disclosure.Button
                   className={classNames(
-                    'block w-full border-l-4 py-2 px-3 text-left text-base font-medium',
+                    'block w-full border-l-4 px-3 py-2 text-left text-base font-medium',
                     /\/noticeboard$/u.exec(asPath)
                       ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
                       : 'border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700'
@@ -241,54 +237,19 @@ const Header: FC<HeaderProps> = ({ toggle }) => {
               </Link>
               <Link
                 href={{
-                  pathname: '/[buildingId]/noticeboard/published',
+                  pathname: '/[buildingId]/noticeboard/archive',
                   query: { buildingId: id },
                 }}
               >
                 <Disclosure.Button
                   className={classNames(
-                    'block w-full border-l-4 py-2 px-3 text-left text-base font-medium',
-                    /\/noticeboard\/published$/u.exec(asPath)
+                    'block w-full border-l-4 px-3 py-2 text-left text-base font-medium',
+                    /\/noticeboard\/archive$/u.exec(asPath)
                       ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
                       : 'border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700'
                   )}
                 >
-                  Published
-                </Disclosure.Button>
-              </Link>
-
-              <Link
-                href={{
-                  pathname: '/[buildingId]/noticeboard/drafts',
-                  query: { buildingId: id },
-                }}
-              >
-                <Disclosure.Button
-                  className={classNames(
-                    'block w-full border-l-4 py-2 px-3 text-left text-base font-medium',
-                    /\/noticeboard\/drafts$/u.exec(asPath)
-                      ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
-                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700'
-                  )}
-                >
-                  Drafts
-                </Disclosure.Button>
-              </Link>
-              <Link
-                href={{
-                  pathname: '/[buildingId]/noticeboard/archived',
-                  query: { buildingId: id },
-                }}
-              >
-                <Disclosure.Button
-                  className={classNames(
-                    'block w-full border-l-4 py-2 px-3 text-left text-base font-medium',
-                    /\/noticeboard\/archived$/u.exec(asPath)
-                      ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
-                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700'
-                  )}
-                >
-                  Archived
+                  Archive
                 </Disclosure.Button>
               </Link>
             </div>

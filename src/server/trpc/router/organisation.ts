@@ -116,20 +116,13 @@ export const organisationRouter = router({
   getBilling: protectedProcedure.query(async ({ ctx }) => {
     const { prisma, session } = ctx;
 
-    const { organisationId } = session.user;
+    const sessionOrganisationId = session.user.organisationId;
 
     const billing = await prisma.organisation
       .findUnique({
-        where: { id: organisationId },
+        where: { id: sessionOrganisationId },
       })
       .billing();
-
-    if (!billing) {
-      throw new TRPCError({
-        code: 'NOT_FOUND',
-        message: 'No billing found',
-      });
-    }
 
     return billing;
   }),

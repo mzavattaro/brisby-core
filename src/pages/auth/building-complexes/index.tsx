@@ -36,17 +36,17 @@ const BuildingComplexes: NextPage = () => {
             <BuildingLibraryIcon className="mx-4 h-6 w-6" />
             <BuildingOfficeIcon className="h-6 w-6" />
           </div>
-          <h5 className="mb-2 text-xl font-bold">Building Complexes</h5>
+          <h5 className="mb-2 text-xl font-bold">Strata Titles</h5>
           <p>
-            You don&apos;t have any building complexes for your notices. Get
-            started by creating your first <b>building complex</b>.
+            You don&apos;t have any Strata Titles for your notices. Get started
+            by creating your first <b>Strata Title</b>.
           </p>
           <StyledLink
             className="mt-10 px-5"
             href="/auth/building-complexes/new"
             type="button"
           >
-            Create builing complex
+            Create Strata Title
           </StyledLink>
         </InfoBox>
       ) : (
@@ -54,7 +54,7 @@ const BuildingComplexes: NextPage = () => {
           <h1 className="my-6 text-2xl font-bold">View a noticeboard</h1>
           <div className="flex h-14 w-full items-center rounded-t-lg border bg-indigo-50 px-4">
             <h3>
-              Building complexes for{' '}
+              Strata Titles for{' '}
               <span className="font-semibold">{organisationName}</span>
             </h3>
           </div>
@@ -87,18 +87,18 @@ const BuildingComplexes: NextPage = () => {
 
           <div className="mt-10 flex w-full flex-col place-content-between items-center rounded-lg border py-4 px-4 sm:h-21 sm:flex-row sm:py-0">
             <h3 className="font-semibold">
-              Need to notify a new building complex?
+              Need to notify another Strata Title?
             </h3>
             <StyledLink
               className="mt-4 px-5 sm:mt-0"
               href="/auth/building-complexes/new"
               type="button"
             >
-              Create building complex
+              Create Strata Title
             </StyledLink>
           </div>
           <div className="mt-4 flex w-full flex-col items-center justify-center text-xs sm:mt-10 sm:flex-row sm:text-base">
-            <p>Not seeing your building complex?</p>
+            <p>Not seeing your Strata Title?</p>
             <button
               className="ml-1 flex items-center py-0 px-0 text-xs text-indigo-700 hover:underline sm:text-base"
               type="button"

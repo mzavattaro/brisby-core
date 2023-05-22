@@ -1,4 +1,3 @@
-// import { Prisma } from "@prisma/client";
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { protectedProcedure, router } from '../trpc';
@@ -12,8 +11,6 @@ import { CreateInvalidationCommand } from '@aws-sdk/client-cloudfront';
  * It's important to always explicitly say which fields you want to return in order to not leak extra information
  * @see https://github.com/prisma/prisma/issues/9353
  */
-
-// type BuildingComplexByIdOutput = RouterOutputs["buildingComplex"]["byId"];
 
 export const noticeRouter = router({
   // create /api/notice
@@ -81,38 +78,42 @@ export const noticeRouter = router({
     }),
 
   // get all notices by organisation
-  byOrganisation: protectedProcedure.query(async ({ ctx }) => {
-    const { prisma, session } = ctx;
+  listAll: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        orderBy: z.enum(['desc', 'asc']),
+        limit: z.number(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { prisma, session } = ctx;
+      const { id, orderBy, limit } = input;
 
-    const sessionOrganisationId = session.user.organisationId;
+      const sessionOrganisationId = session.user.organisationId;
 
-    const notices = await prisma.notice.findMany({
-      where: { organisationId: sessionOrganisationId },
-      orderBy: [{ createdAt: 'desc' }],
-      select: {
-        id: true,
-        fileName: true,
-        title: true,
-        startDate: true,
-        endDate: true,
-        status: true,
-        buildingComplex: {
-          select: { name: true },
+      const notices = await prisma.notice.findMany({
+        where: {
+          organisationId: sessionOrganisationId,
+          buildingComplexId: id,
+          OR: [{ status: 'published' }, { status: 'draft' }],
         },
-      },
-    });
-
-    /*
-     * if (!notices.length) {
-     *   throw new TRPCError({
-     *     code: 'NOT_FOUND',
-     *     message: 'Notices not found',
-     *   });
-     * }
-     */
-
-    return notices;
-  }),
+        take: limit,
+        orderBy: [{ createdAt: orderBy }],
+        select: {
+          id: true,
+          fileName: true,
+          title: true,
+          startDate: true,
+          endDate: true,
+          status: true,
+          author: {
+            select: { name: true },
+          },
+        },
+      });
+      return notices;
+    }),
 
   // infinite list /api/notice
   infiniteList: protectedProcedure
@@ -161,11 +162,7 @@ export const noticeRouter = router({
         }
       }
 
-      let nextCursor: typeof cursor | undefined;
-      if (notices.length > limit) {
-        const nextItem = notices.pop();
-        nextCursor = nextItem?.id;
-      }
+      const nextCursor = notices.length > limit ? notices.pop()?.id : undefined;
 
       return {
         notices,
@@ -229,124 +226,6 @@ export const noticeRouter = router({
       return notice;
     }),
 
-  // get multiple notices /api/notice by when state is published
-  published: protectedProcedure
-    .input(
-      z.object({
-        limit: z.number(),
-        cursor: z.string().nullish(),
-        skip: z.number().optional(),
-        organisationId: z.string().optional(),
-        id: z.string().optional(),
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      const { limit, skip, cursor, id } = input;
-      const { prisma, session } = ctx;
-
-      const sessionOrganisationId = session.user.organisationId;
-
-      const notices = await prisma.notice.findMany({
-        where: {
-          organisationId: sessionOrganisationId,
-          buildingComplexId: id,
-          status: 'published',
-        },
-        take: limit + 1,
-        skip,
-        orderBy: [{ createdAt: 'desc' }],
-        cursor: cursor ? { id: cursor } : undefined,
-        include: {
-          author: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-        },
-      });
-
-      for (const notice of notices) {
-        if (notice.key) {
-          const url = `https://d1ve2d1xbf677h.cloudfront.net/${notice.key}`;
-          notice.uploadUrl = url;
-        } else {
-          // eslint-disable-next-line no-console
-          console.log('Notice key is undefined');
-        }
-      }
-
-      let nextCursor: typeof cursor | undefined;
-      if (notices.length > limit) {
-        const nextItem = notices.pop();
-        nextCursor = nextItem?.id;
-      }
-
-      return {
-        notices,
-        nextCursor,
-      };
-    }),
-
-  // get multiple notices /api/notice by when state is draft
-  drafts: protectedProcedure
-    .input(
-      z.object({
-        limit: z.number(),
-        cursor: z.string().nullish(),
-        skip: z.number().optional(),
-        organisationId: z.string().optional(),
-        id: z.string().optional(),
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      const { limit, skip, cursor, id } = input;
-      const { prisma, session } = ctx;
-
-      const sessionOrganisationId = session.user.organisationId;
-
-      const notices = await prisma.notice.findMany({
-        where: {
-          organisationId: sessionOrganisationId,
-          buildingComplexId: id,
-          status: 'draft',
-        },
-        take: limit + 1,
-        skip,
-        orderBy: [{ createdAt: 'desc' }],
-        cursor: cursor ? { id: cursor } : undefined,
-        include: {
-          author: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-        },
-      });
-
-      for (const notice of notices) {
-        if (notice.key) {
-          const url = `https://d1ve2d1xbf677h.cloudfront.net/${notice.key}`;
-          notice.uploadUrl = url;
-        } else {
-          // eslint-disable-next-line no-console
-          console.log('Notice key is undefined');
-        }
-      }
-
-      let nextCursor: typeof cursor | undefined;
-      if (notices.length > limit) {
-        const nextItem = notices.pop();
-        nextCursor = nextItem?.id;
-      }
-
-      return {
-        notices,
-        nextCursor,
-      };
-    }),
-
   archived: protectedProcedure
     .input(
       z.object({
@@ -393,11 +272,7 @@ export const noticeRouter = router({
         }
       }
 
-      let nextCursor: typeof cursor | undefined;
-      if (notices.length > limit) {
-        const nextItem = notices.pop();
-        nextCursor = nextItem?.id;
-      }
+      const nextCursor = notices.length > limit ? notices.pop()?.id : undefined;
 
       return {
         notices,
@@ -438,6 +313,32 @@ export const noticeRouter = router({
       });
 
       return notice;
+    }),
+
+  // update many notice's statuses based on notice ID
+  archiveManyNotices: protectedProcedure
+    .input(
+      z.object({
+        ids: z.array(z.string()),
+        data: z.object({
+          status: z.string(),
+        }),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { prisma } = ctx;
+      const { ids, data } = input;
+
+      const notices = await prisma.notice.updateMany({
+        where: {
+          id: {
+            in: ids,
+          },
+        },
+        data,
+      });
+
+      return notices;
     }),
 
   // delete /api/notice

@@ -16,6 +16,7 @@ import Button from '../../../../components/Button';
 import StyledLink from '../../../../components/StyledLink';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import fetchAndIndexData from '../../../../utils/search';
 
 const publishingOptions = [
   {
@@ -70,7 +71,8 @@ const uploadToS3 = async (data: FileList) => {
 };
 
 const New: NextPage = () => {
-  const [selected, setSelected] = useState(publishingOptions[0]);
+  // revisit select useState
+  const [selected] = useState(publishingOptions[0]);
   const [startDate, setStartDate] = useState<Date | null | undefined>(
     new Date()
   );
@@ -79,8 +81,9 @@ const New: NextPage = () => {
   const [fileSize, setFileSize] = useState<number>(0);
 
   const router = useRouter();
-  const id = router.query.buildingId as string;
   const queryClient = useQueryClient();
+
+  const id = router.query.buildingId as string;
 
   const {
     register,
@@ -93,15 +96,7 @@ const New: NextPage = () => {
   const { mutateAsync } = trpc.notice.create.useMutation({
     onSuccess: async (data) => {
       queryClient.setQueryData([['notice'], data.id], data);
-
-      try {
-        await queryClient.invalidateQueries();
-      } catch (error) {
-        if (error instanceof Error) {
-          // eslint-disable-next-line no-console
-          console.log(error.message);
-        }
-      }
+      await queryClient.invalidateQueries();
     },
   });
 
@@ -128,7 +123,6 @@ const New: NextPage = () => {
     const payload = {
       id,
       title: data.title,
-      // selected?.status
       status: 'draft',
       startDate,
       endDate,
@@ -139,9 +133,30 @@ const New: NextPage = () => {
       fileType: transformedData.fileType,
     };
 
+    let noticeId = '';
     try {
-      await mutateAsync(payload);
-      router.back();
+      const notice = await mutateAsync(payload);
+      // Check if notice is a Promise
+      if (notice instanceof Promise) {
+        await notice;
+      }
+      noticeId = notice.id;
+    } catch (error) {
+      if (error instanceof Error) {
+        // eslint-disable-next-line no-console
+        console.log(error.message);
+      }
+    }
+
+    const searchData = {
+      noticeId,
+      title: data.title,
+      fileName: transformedData.fileName,
+    };
+
+    try {
+      await fetchAndIndexData(searchData);
+      await router.push(`/${id}/noticeboard`);
     } catch (error) {
       if (error instanceof Error) {
         // eslint-disable-next-line no-console
@@ -216,7 +231,7 @@ const New: NextPage = () => {
             <label className="text-sm font-semibold" htmlFor="fileList">
               File upload
             </label>
-            <div className="flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
+            <div className="flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pb-6 pt-5">
               <div className="space-y-1 text-center">
                 <svg
                   className="mx-auto h-12 w-12 text-gray-400"
@@ -270,7 +285,7 @@ const New: NextPage = () => {
           </div>
 
           {/* Publish */}
-          <div className="mt-10 mb-6">
+          <div className="mb-6 mt-10">
             <h3 className=" text-xl font-semibold">Publish</h3>
             <p className="mt-2 text-gray-500">
               Select the date range for the notice to be published and visible

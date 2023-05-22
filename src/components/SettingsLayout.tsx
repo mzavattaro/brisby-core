@@ -30,7 +30,7 @@ const navigation = [
   { name: 'Team', href: '/settings/team', icon: UsersIcon },
   /*
    * {
-   *   name: "Building complexes",
+   *   name: " Strata Titles",
    *   href: "/settings/building-complexes",
    *   icon: HomeIcon,
    * },
@@ -97,7 +97,7 @@ const SettingsLayout: FC<SetttingsLayout> = ({ children }) => {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-                  <div className="absolute top-0 right-0 -mr-12 pt-2">
+                  <div className="absolute right-0 top-0 -mr-12 pt-2">
                     <button
                       type="button"
                       className="ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
@@ -111,7 +111,7 @@ const SettingsLayout: FC<SetttingsLayout> = ({ children }) => {
                     </button>
                   </div>
                 </Transition.Child>
-                <div className="h-0 flex-1 overflow-y-auto pt-5 pb-4">
+                <div className="h-0 flex-1 overflow-y-auto pb-4 pt-5">
                   <div className="ml-4">
                     <BackButton>Back to noticeboard</BackButton>
                   </div>
@@ -170,7 +170,7 @@ const SettingsLayout: FC<SetttingsLayout> = ({ children }) => {
       <div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col">
         {/* Sidebar component, swap this element with another sidebar if you like */}
         <div className="flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white">
-          <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
+          <div className="flex flex-1 flex-col overflow-y-auto pb-4 pt-5">
             <div className="ml-4">
               <BackButton>Back to noticeboard</BackButton>
             </div>
