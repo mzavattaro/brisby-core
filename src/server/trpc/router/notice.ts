@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/init-declarations */
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { protectedProcedure, router } from '../trpc';
@@ -12,8 +13,6 @@ import { CreateInvalidationCommand } from '@aws-sdk/client-cloudfront';
  * It's important to always explicitly say which fields you want to return in order to not leak extra information
  * @see https://github.com/prisma/prisma/issues/9353
  */
-
-// const client = algoliasearch('5P8ZL9I43T', '44b33d64681c0653b806328b4e66dd4c');
 
 export const noticeRouter = router({
   // create /api/notice
@@ -165,7 +164,6 @@ export const noticeRouter = router({
         }
       }
 
-      // eslint-disable-next-line @typescript-eslint/init-declarations
       let nextCursor: typeof cursor | undefined;
       if (notices.length > limit) {
         const nextItem = notices.pop();
@@ -280,7 +278,6 @@ export const noticeRouter = router({
         }
       }
 
-      // eslint-disable-next-line @typescript-eslint/init-declarations
       let nextCursor: typeof cursor | undefined;
       if (notices.length > limit) {
         const nextItem = notices.pop();
