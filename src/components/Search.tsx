@@ -68,7 +68,7 @@ const NoResults: FC = () => {
   const { indexUiState } = useInstantSearch();
 
   return (
-    <div className="absolute left-0 w-full rounded-lg">
+    <div className="absolute left-0 h-52 w-full rounded-lg bg-white px-3 pb-4 text-center">
       <p>
         No results for <q>{indexUiState.query}</q>.
       </p>
