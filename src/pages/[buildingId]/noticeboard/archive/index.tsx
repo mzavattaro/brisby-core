@@ -15,10 +15,13 @@ import useModal from '../../../../utils/useModal';
 import NotFoundPage from '../../../404';
 import type NoticeboardProps from '../index';
 import Pagination from '../../../../components/Pagination';
+import Search from '../../../../components/Search';
 
 const Archived: FC<typeof NoticeboardProps> = () => {
   const [page, setPage] = useState(0);
   const { isShowing, toggle } = useModal();
+  const { isShowing: isShowingSearchModal, toggle: toggleSearchModal } =
+    useModal();
   const { data: buildingComplexes } =
     trpc.buildingComplex.byOrganisation.useQuery();
   const cancelButtonRef = useRef(null);
@@ -143,7 +146,15 @@ const Archived: FC<typeof NoticeboardProps> = () => {
         </div>
       </Modal>
 
-      <Header toggle={toggle} />
+      <Modal
+        isShowing={isShowingSearchModal}
+        hide={toggleSearchModal}
+        cancelButtonRef={cancelButtonRef}
+      >
+        <Search />
+      </Modal>
+
+      <Header toggle={toggle} toggleSearch={toggleSearchModal} />
 
       <div className="mx-auto mt-4 flex max-w-lg flex-col sm:max-w-full md:mt-6">
         <p className="text-sm font-bold md:text-lg">

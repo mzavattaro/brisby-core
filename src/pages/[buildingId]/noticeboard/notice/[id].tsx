@@ -312,7 +312,7 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
                 </h1>
               </div>
             </div>
-            <div className="justify-stretch mt-6 flex flex-col-reverse space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-y-0 sm:space-x-3 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
+            <div className="mt-6 flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-x-3 sm:space-y-0 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
               <button
                 onClick={() => {
                   toggleDeleteModal();
@@ -447,7 +447,7 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
                   Change the status of the notice.
                 </p>
 
-                <div className="justify-stretch mt-4 flex flex-col">
+                <div className="mt-4 flex flex-col justify-stretch">
                   <Dropdown
                     status={status}
                     togglePublishModal={togglePublishModal}
