@@ -156,7 +156,7 @@ const New: NextPage = () => {
 
     try {
       await fetchAndIndexData(searchData);
-      router.back();
+      await router.push(`/${id}/noticeboard`);
     } catch (error) {
       if (error instanceof Error) {
         // eslint-disable-next-line no-console

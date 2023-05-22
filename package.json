@@ -55,6 +55,7 @@
     "react-dom": "18.2.0",
     "react-email": "1.7.15",
     "react-hook-form": "^7.43.9",
+    "react-instantsearch-hooks-router-nextjs": "^6.44.0",
     "react-instantsearch-hooks-web": "^6.43.0",
     "react-pdf": "^6.2.2",
     "superjson": "^1.12.2",

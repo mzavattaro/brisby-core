@@ -1,4 +1,6 @@
 import { useSession } from 'next-auth/react';
+import singletonRouter from 'next/router';
+import { createInstantSearchRouterNext } from 'react-instantsearch-hooks-router-nextjs';
 import { useBuildingComplexIdStore } from '../store/useBuildingComplexIdStore';
 import type { FC, ReactNode } from 'react';
 import {
@@ -100,7 +102,11 @@ const Search: FC = () => {
   const filters = `visible_by:${organisationId} AND visible_by:${buildingComplexId}`;
 
   return (
-    <InstantSearch searchClient={searchClient} indexName="brisby-core">
+    <InstantSearch
+      searchClient={searchClient}
+      indexName="brisby-core"
+      routing={{ router: createInstantSearchRouterNext({ singletonRouter }) }}
+    >
       <Configure filters={filters} />
       <SearchBox
         queryHook={queryHook}
