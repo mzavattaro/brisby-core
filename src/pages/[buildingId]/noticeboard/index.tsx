@@ -14,6 +14,7 @@ import { ArrowLongRightIcon } from '@heroicons/react/24/outline';
 import NotFoundPage from '../../404';
 import { useQueryClient } from '@tanstack/react-query';
 import NoticeTable from '../../../components/NoticeTable';
+import Search from '../../../components/Search';
 
 type BuildingComplexProps = {
   name: string;
@@ -60,6 +61,8 @@ const Noticeboard: FC<NoticeboardProps> = ({
   const [indeterminate, setIndeterminate] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<NoticeProps>([]);
   const { isShowing: isShowingModal, toggle: toggleModal } = useModal();
+  const { isShowing: isShowingSearchModal, toggle: toggleSearchModal } =
+    useModal();
   const cancelButtonRef = useRef(null);
   const queryClient = useQueryClient();
   const { data: buildingComplexes } =
@@ -180,7 +183,15 @@ const Noticeboard: FC<NoticeboardProps> = ({
         </div>
       </Modal>
 
-      <Header toggle={toggleModal} />
+      <Modal
+        isShowing={isShowingSearchModal}
+        hide={toggleSearchModal}
+        cancelButtonRef={cancelButtonRef}
+      >
+        <Search />
+      </Modal>
+
+      <Header toggle={toggleModal} toggleSearch={toggleSearchModal} />
 
       <div className="mx-auto mt-4 flex max-w-lg flex-col sm:max-w-full md:mt-6">
         <p className="text-sm font-bold md:text-lg">

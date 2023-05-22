@@ -52,7 +52,7 @@ const NoResultsBoundary: FC<NoResultsBoundaryProps> = ({
   // eslint-disable-next-line no-underscore-dangle
   if (!results.__isArtificial && results.nbHits === 0) {
     return (
-      <div className="absolute top-11 z-10 w-full rounded bg-white px-3 py-3 shadow">
+      <div className="px-3">
         {fallback}
         <div hidden>{children}</div>
       </div>
@@ -66,7 +66,7 @@ const NoResults: FC = () => {
   const { indexUiState } = useInstantSearch();
 
   return (
-    <div className="rounded-md px-2">
+    <div className="absolute left-0 w-full rounded-lg">
       <p>
         No results for <q>{indexUiState.query}</q>.
       </p>
@@ -83,9 +83,9 @@ const Hit: FC<HitProps> = ({ hit }) => {
         pathname: `/[buildingId]/noticeboard/notice/${hit.noticeId}`,
         query: { buildingId: buildingComplexId },
       }}
-      className="cursor-pointer divide-y divide-solid py-2"
+      className="cursor-pointer"
     >
-      <div className="rounded-md px-2 hover:bg-gray-100">
+      <div className="rounded-md px-2 py-1 hover:bg-gray-100">
         <h4 className="font-bold">{hit.title}</h4>
         <p className="font-italised">{hit.fileName}</p>
       </div>
@@ -102,30 +102,28 @@ const Search: FC = () => {
   return (
     <InstantSearch searchClient={searchClient} indexName="brisby-core">
       <Configure filters={filters} />
-      <div className="relative w-1/2">
-        <SearchBox
-          queryHook={queryHook}
-          searchAsYouType={false}
-          classNames={{
-            form: 'relative',
-            input:
-              'block w-full pl-9 pr-3 py-2 bg-white border border-slate-300 placeholder-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-indigo-600 rounded-md focus:ring-1',
-            submitIcon:
-              'absolute ml-2 top-3 left-0 bottom-0 w-6 h-5 w-5 text-slate-400',
-            reset: 'hidden',
-          }}
-        />
-        <NoResultsBoundary fallback={<NoResults />}>
-          <EmptyQueryBoundary fallback={null}>
-            <Hits
-              className={classNames(
-                'absolute top-11 z-10 w-full rounded bg-white px-3 py-3 shadow'
-              )}
-              hitComponent={Hit}
-            />
-          </EmptyQueryBoundary>
-        </NoResultsBoundary>
-      </div>
+      <SearchBox
+        queryHook={queryHook}
+        searchAsYouType
+        placeholder="Search..."
+        classNames={{
+          input:
+            'block w-full pr-3 py-2 bg-white border border-slate-300 placeholder-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-indigo-600 rounded-md focus:ring-1',
+          submitIcon: 'hidden',
+          reset: 'hidden',
+          loadingIcon: 'hidden',
+        }}
+      />
+      <NoResultsBoundary fallback={<NoResults />}>
+        <EmptyQueryBoundary fallback={null}>
+          <Hits
+            className={classNames(
+              'absolute left-0 h-52 w-full overflow-auto rounded-lg bg-white px-3 pb-4'
+            )}
+            hitComponent={Hit}
+          />
+        </EmptyQueryBoundary>
+      </NoResultsBoundary>
     </InstantSearch>
   );
 };

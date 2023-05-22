@@ -14,9 +14,10 @@ import { useRouter } from 'next/router';
 
 type HeaderProps = {
   toggle: () => void;
+  toggleSearch: () => void;
 };
 
-const Header: FC<HeaderProps> = ({ toggle }) => {
+const Header: FC<HeaderProps> = ({ toggle, toggleSearch }) => {
   const router = useRouter();
   const id = router.query.buildingId as string;
   const { data: sessionData } = useSession();
@@ -85,6 +86,9 @@ const Header: FC<HeaderProps> = ({ toggle }) => {
             </div>
 
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+              <button type="button" onClick={toggleSearch}>
+                Search
+              </button>
               <StyledLink
                 className="hidden px-4 text-xs sm:block md:text-sm"
                 type="button"
