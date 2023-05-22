@@ -11,6 +11,7 @@ import { classNames } from '../utils/classNames';
 import StyledLink from '../components/StyledLink';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import MagnifyingGlass from '../../icons/MagnifyingGlass';
 
 type HeaderProps = {
   toggle: () => void;
@@ -86,8 +87,12 @@ const Header: FC<HeaderProps> = ({ toggle, toggleSearch }) => {
             </div>
 
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-              <button type="button" onClick={toggleSearch}>
-                Search
+              <button className="sm:mr-4" type="button" onClick={toggleSearch}>
+                <MagnifyingGlass
+                  className="text-gray-400"
+                  height="28"
+                  width="28"
+                />
               </button>
               <StyledLink
                 className="hidden px-4 text-xs sm:block md:text-sm"
