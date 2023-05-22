@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/init-declarations */
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { protectedProcedure, router } from '../trpc';
@@ -6,7 +5,6 @@ import s3 from '../../../utils/s3';
 import cloudFront from '../../../utils/cloudFront';
 import { DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { CreateInvalidationCommand } from '@aws-sdk/client-cloudfront';
-// import { algoliasearch } from 'algoliasearch';
 
 /**
  * Default selector for Notice.
@@ -164,11 +162,7 @@ export const noticeRouter = router({
         }
       }
 
-      let nextCursor: typeof cursor | undefined;
-      if (notices.length > limit) {
-        const nextItem = notices.pop();
-        nextCursor = nextItem?.id;
-      }
+      const nextCursor = notices.length > limit ? notices.pop()?.id : undefined;
 
       return {
         notices,
@@ -278,11 +272,7 @@ export const noticeRouter = router({
         }
       }
 
-      let nextCursor: typeof cursor | undefined;
-      if (notices.length > limit) {
-        const nextItem = notices.pop();
-        nextCursor = nextItem?.id;
-      }
+      const nextCursor = notices.length > limit ? notices.pop()?.id : undefined;
 
       return {
         notices,
