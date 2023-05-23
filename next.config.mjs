@@ -19,5 +19,14 @@ const config = {
     locales: ['en'],
     defaultLocale: 'en',
   },
+  async redirects() {
+    return [
+      {
+        source: '/signin',
+        destination: '/api/auth/signin',
+        permanent: false,
+      },
+    ];
+  },
 };
 export default config;

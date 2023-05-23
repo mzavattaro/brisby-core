@@ -1,5 +1,5 @@
 import type { RouterOutputs } from '../../utils/trpc';
-import { getCsrfToken } from 'next-auth/react';
+import { getCsrfToken, signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -30,28 +30,7 @@ const SignIn: FC<SignInSchema> = ({ csrfToken }) => {
   });
 
   const onSubmit: SubmitHandler<SignInSchema> = async (data) => {
-    console.log('Client No stringify', data);
-    console.log('Client Stringify', JSON.stringify(data));
-
-    try {
-      await fetch('/api/signinHandler', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-    }
-
-    try {
-      await router.push('/authentication/verify');
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-    }
+    await signIn('email', { email: data.email });
   };
 
   return (
@@ -66,7 +45,7 @@ const SignIn: FC<SignInSchema> = ({ csrfToken }) => {
         </p>
       </div>
       <div className="mt-6 sm:mx-10">
-        <form method="post" action="/api/auth/signin/email/">
+        <form onClick={onSubmit}>
           <input
             type="hidden"
             defaultValue={csrfToken}
