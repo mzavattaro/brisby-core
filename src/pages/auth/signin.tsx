@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { SubmitHandler } from 'react-hook-form';
-import axios from 'axios';
 import { useRouter } from 'next/router';
 import { classNames } from '../../utils/classNames';
 import Email from '../../../icons/Email';
