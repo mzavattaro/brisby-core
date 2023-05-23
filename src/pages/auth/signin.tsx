@@ -32,8 +32,13 @@ const SignIn: FC<SignInSchema> = ({ csrfToken }) => {
 
   const onSubmit: SubmitHandler<SignInSchema> = async (data) => {
     try {
-      // revisit...
-      await axios.post('/api/auth/signin/email', data);
+      await fetch('/api/auth/signin/email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);

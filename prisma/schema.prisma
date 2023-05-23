@@ -95,6 +95,7 @@ model Notice {
   uploadUrl         String           @db.Text
   key               String?          @db.Text
   status            String?
+  state             String?
   startDate         DateTime?
   endDate           DateTime?
   buildingComplex   BuildingComplex? @relation(fields: [buildingComplexId], references: [id])

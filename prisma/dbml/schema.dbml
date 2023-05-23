@@ -64,6 +64,7 @@ Table Notice {
   uploadUrl String [not null]
   key String
   status String
+  state String
   startDate DateTime
   endDate DateTime
   buildingComplex BuildingComplex
