@@ -46,7 +46,7 @@ const NewUser: FC<NewUserSchema> = () => {
         },
         id: sessionData?.user.id,
       });
-      await router.push('/auth/new-organisation');
+      await router.push('/authentication/new-organisation');
     } catch (error) {
       if (error instanceof Error) {
         // eslint-disable-next-line no-console

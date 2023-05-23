@@ -30,8 +30,11 @@ const SignIn: FC<SignInSchema> = ({ csrfToken }) => {
   });
 
   const onSubmit: SubmitHandler<SignInSchema> = async (data) => {
+    console.log('Client No stringify', data);
+    console.log('Client Stringify', JSON.stringify(data));
+
     try {
-      await fetch('/api/auth/signin/email', {
+      await fetch('/api/signinHandler', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -44,7 +47,7 @@ const SignIn: FC<SignInSchema> = ({ csrfToken }) => {
     }
 
     try {
-      await router.push('/auth/verify');
+      await router.push('/authentication/verify');
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
@@ -63,7 +66,7 @@ const SignIn: FC<SignInSchema> = ({ csrfToken }) => {
         </p>
       </div>
       <div className="mt-6 sm:mx-10">
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form method="post" action="/api/auth/signin/email">
           <input
             type="hidden"
             defaultValue={csrfToken}

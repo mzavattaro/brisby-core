@@ -175,7 +175,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
         <div className="flex justify-center text-left">
           <StyledLink
             type="button"
-            href="/auth/building-complexes/new"
+            href="/authentication/building-complexes/new"
             className="mt-4 px-4 text-sm"
           >
             Create new Strata Title

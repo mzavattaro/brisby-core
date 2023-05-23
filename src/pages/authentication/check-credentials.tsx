@@ -16,7 +16,7 @@ const CredentialCheck: NextPage = () => {
         // no need to call router.push() again
         return;
       }
-      setTimeout(async () => router.push('/auth/new-user'), 2000);
+      setTimeout(async () => router.push('/authentication/new-user'), 2000);
       // this is a hack to make sure the useEffect() is called after the first render
       setCalledPush(true);
     }
@@ -26,7 +26,10 @@ const CredentialCheck: NextPage = () => {
         // no need to call router.push() again
         return;
       }
-      setTimeout(async () => router.push('/auth/new-organisation'), 2000);
+      setTimeout(
+        async () => router.push('/authentication/new-organisation'),
+        2000
+      );
       setCalledPush(true);
     }
 
@@ -35,7 +38,10 @@ const CredentialCheck: NextPage = () => {
         // no need to call router.push() again
         return;
       }
-      setTimeout(async () => router.push('/auth/building-complexes'), 2000);
+      setTimeout(
+        async () => router.push('/authentication/building-complexes'),
+        2000
+      );
       setCalledPush(true);
     }
   }, [calledPush, data, router, status]);

@@ -1,10 +1,10 @@
-import { router } from "../trpc";
-import { authRouter } from "./auth";
-import { noticeRouter } from "./notice";
-import { organisationRouter } from "./organisation";
-import { billingRouter } from "./billing";
-import { buildingComplexRouter } from "./buildingComplex";
-import { userRouter } from "./user";
+import { router } from '../trpc';
+import { authRouter } from './auth';
+import { noticeRouter } from './notice';
+import { organisationRouter } from './organisation';
+import { billingRouter } from './billing';
+import { buildingComplexRouter } from './buildingComplex';
+import { userRouter } from './user';
 
 export const appRouter = router({
   billing: billingRouter,

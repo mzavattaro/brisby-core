@@ -23,7 +23,7 @@ const BuildingComplexes: NextPageWithLayout = () => {
 
         <Link
           className="sm:col-end-13 sm:justify-self-end"
-          href="/auth/building-complexes/new"
+          href="/authentication/building-complexes/new"
         >
           <button
             className="font-base h-10 w-31 rounded-md bg-indigo-600 text-white hover:bg-indigo-700"

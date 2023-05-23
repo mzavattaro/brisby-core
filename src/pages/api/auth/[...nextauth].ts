@@ -106,10 +106,10 @@ export const authOptions: NextAuthOptions = {
     // ...add more providers here
   ],
   pages: {
-    signIn: '/auth/signin',
-    verifyRequest: '/auth/verify',
-    newUser: '/auth/new-user',
-    error: '/auth/error',
+    signIn: '/authentication/signin',
+    verifyRequest: '/authentication/verify',
+    newUser: '/authentication/new-user',
+    error: '/authentication/error',
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
