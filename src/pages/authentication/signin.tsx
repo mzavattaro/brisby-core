@@ -66,7 +66,7 @@ const SignIn: FC<SignInSchema> = ({ csrfToken }) => {
         </p>
       </div>
       <div className="mt-6 sm:mx-10">
-        <form method="post" action="/api/auth/signin/email">
+        <form method="post" action="/api/auth/signin/email/">
           <input
             type="hidden"
             defaultValue={csrfToken}
