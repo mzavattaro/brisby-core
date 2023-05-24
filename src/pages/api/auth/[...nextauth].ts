@@ -106,7 +106,7 @@ export const authOptions: NextAuthOptions = {
     // ...add more providers here
   ],
   pages: {
-    // signIn: '/authentication/signin',
+    signIn: '/authentication/signin',
     verifyRequest: '/authentication/verify',
     newUser: '/authentication/new-user',
     error: '/authentication/error',
