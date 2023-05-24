@@ -186,7 +186,8 @@ const Header: FC<HeaderProps> = ({ toggle, toggleSearch }) => {
                               ? async () => signOut({ callbackUrl: '/' })
                               : async () =>
                                   signIn('email', {
-                                    callbackUrl: '/auth/check-credentials',
+                                    callbackUrl:
+                                      '/authentication/check-credentials',
                                   })
                           }
                         >

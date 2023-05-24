@@ -25,7 +25,7 @@ const SignInButton: FC = () => {
             ? async () => signOut()
             : async () =>
                 signIn('email', {
-                  callbackUrl: '/auth/check-credentials',
+                  callbackUrl: '/authentication/check-credentials',
                 })
         }
       >

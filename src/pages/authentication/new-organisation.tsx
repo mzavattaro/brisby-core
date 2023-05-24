@@ -32,7 +32,7 @@ const Organisation: NextPage = () => {
       await queryClient.invalidateQueries();
     },
     onError: async () => {
-      await router.push('/auth/building-complexes');
+      await router.push('/authentication/building-complexes');
     },
   });
 
@@ -59,7 +59,7 @@ const Organisation: NextPage = () => {
       return;
     }
 
-    await router.push('/auth/building-complexes');
+    await router.push('/authentication/building-complexes');
   };
 
   return (

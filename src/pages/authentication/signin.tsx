@@ -3,8 +3,6 @@ import { getCsrfToken } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { SubmitHandler } from 'react-hook-form';
-import { useRouter } from 'next/router';
 import { classNames } from '../../utils/classNames';
 import Email from '../../../icons/Email';
 import type { FC } from 'react';
@@ -20,36 +18,12 @@ type SignInSchema = z.infer<typeof signInSchema> & {
 };
 
 const SignIn: FC<SignInSchema> = ({ csrfToken }) => {
-  const router = useRouter();
   const {
     register,
-    handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
   });
-
-  const onSubmit: SubmitHandler<SignInSchema> = async (data) => {
-    try {
-      await fetch('/api/auth/signin/email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-    }
-
-    try {
-      await router.push('/auth/verify');
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-    }
-  };
 
   return (
     <div className="mx-4 mt-6 text-center sm:mx-auto sm:w-full sm:max-w-2xl">
@@ -63,7 +37,7 @@ const SignIn: FC<SignInSchema> = ({ csrfToken }) => {
         </p>
       </div>
       <div className="mt-6 sm:mx-10">
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form method="post" action="/api/auth/signin/email">
           <input
             type="hidden"
             defaultValue={csrfToken}
@@ -80,7 +54,7 @@ const SignIn: FC<SignInSchema> = ({ csrfToken }) => {
               )}
               type="text"
               id="email"
-              placeholder="you@company.com"
+              placeholder="example@email.com"
               {...register('email', { required: true })}
             />
             <div className="absolute max-w-xl">

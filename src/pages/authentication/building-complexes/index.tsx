@@ -30,7 +30,7 @@ const BuildingComplexes: NextPage = () => {
       <h4 className="text-3xl font-bold text-gray-900">Brisby</h4>
 
       {buildingComplexes?.length === 0 ? (
-        <InfoBox className="mt-6 flex flex-col items-center py-6 px-10 text-center">
+        <InfoBox className="mt-6 flex flex-col items-center px-10 py-6 text-center">
           <div className="mb-6 flex">
             <HomeIcon className="h-6 w-6" />
             <BuildingLibraryIcon className="mx-4 h-6 w-6" />
@@ -43,7 +43,7 @@ const BuildingComplexes: NextPage = () => {
           </p>
           <StyledLink
             className="mt-10 px-5"
-            href="/auth/building-complexes/new"
+            href="/authentication/building-complexes/new"
             type="button"
           >
             Create Strata Title
@@ -58,7 +58,7 @@ const BuildingComplexes: NextPage = () => {
               <span className="font-semibold">{organisationName}</span>
             </h3>
           </div>
-          <ul className="h-96 w-full divide-y divide-gray-200 overflow-scroll rounded-b-lg border-l border-r border-b px-4">
+          <ul className="h-96 w-full divide-y divide-gray-200 overflow-scroll rounded-b-lg border-b border-l border-r px-4">
             {buildingComplexes?.map((buildingComplex) => (
               <li
                 key={buildingComplex.id}
@@ -85,13 +85,13 @@ const BuildingComplexes: NextPage = () => {
             ))}
           </ul>
 
-          <div className="mt-10 flex w-full flex-col place-content-between items-center rounded-lg border py-4 px-4 sm:h-21 sm:flex-row sm:py-0">
+          <div className="mt-10 flex w-full flex-col place-content-between items-center rounded-lg border px-4 py-4 sm:h-21 sm:flex-row sm:py-0">
             <h3 className="font-semibold">
               Need to notify another Strata Title?
             </h3>
             <StyledLink
               className="mt-4 px-5 sm:mt-0"
-              href="/auth/building-complexes/new"
+              href="/authentication/building-complexes/new"
               type="button"
             >
               Create Strata Title
@@ -100,14 +100,14 @@ const BuildingComplexes: NextPage = () => {
           <div className="mt-4 flex w-full flex-col items-center justify-center text-xs sm:mt-10 sm:flex-row sm:text-base">
             <p>Not seeing your Strata Title?</p>
             <button
-              className="ml-1 flex items-center py-0 px-0 text-xs text-indigo-700 hover:underline sm:text-base"
+              className="ml-1 flex items-center px-0 py-0 text-xs text-indigo-700 hover:underline sm:text-base"
               type="button"
               onClick={
                 sessionData
                   ? async () => signOut({ callbackUrl: '/' })
                   : async () =>
                       signIn('email', {
-                        callbackUrl: '/auth/check-credentials',
+                        callbackUrl: '/authentication/check-credentials',
                       })
               }
             >
