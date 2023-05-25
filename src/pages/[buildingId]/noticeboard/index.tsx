@@ -107,7 +107,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
     setLimit(value);
   };
 
-  const handleNext = () => {
+  const handleNextPage = () => {
     setPreviousUrl(router.asPath);
   };
 
@@ -186,7 +186,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
             type="button"
             href="/authentication/building-complexes/new"
             className="mt-4 px-4 text-sm"
-            onClick={handleNext}
+            onClick={handleNextPage}
           >
             Create new Strata Title
           </StyledLink>
