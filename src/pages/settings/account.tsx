@@ -12,6 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import type { SubmitHandler } from 'react-hook-form';
 import { classNames } from '../../utils/classNames';
 import Modal from '../../components/Modal';
+import NameModal from '../../components/modals/NameModal';
 
 const accountSettingsSchema = z
   .object({
@@ -35,9 +36,9 @@ type AccountSettingsSchema = z.infer<typeof accountSettingsSchema> &
 const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
   const [isShowingEmailModal, setIsShowingEmailModal] = useState(false);
   const [isShowingNameModal, setIsShowingNameModal] = useState(false);
+  const cancelButtonRef = useRef(null);
   const queryClient = useQueryClient();
   const { data: sessionData } = useSession();
-  const cancelButtonRef = useRef(null);
 
   const { data: user, isLoading: isFetching } = trpc.user.byId.useQuery({
     id: sessionData?.user.id,
@@ -70,26 +71,6 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
     },
   });
 
-  const onSubmitNameChange: SubmitHandler<AccountSettingsSchema> = async (
-    data
-  ) => {
-    const { name } = data;
-
-    try {
-      await mutateAsync({
-        data: {
-          name,
-        },
-      });
-      setIsShowingNameModal(!isShowingNameModal);
-    } catch (error) {
-      if (error instanceof Error) {
-        // eslint-disable-next-line no-console
-        console.log(error.message);
-      }
-    }
-  };
-
   const onSubmitEmailChange: SubmitHandler<AccountSettingsSchema> = async (
     data
   ) => {
@@ -113,56 +94,13 @@ const Account: NextPageWithLayout<AccountSettingsSchema> = () => {
   return (
     <>
       {/* Name change */}
-      <Modal
+      <NameModal
         isShowing={isShowingNameModal}
         hide={toggleNameModal}
         cancelButtonRef={cancelButtonRef}
-      >
-        <h3 className="text-lg font-medium leading-6 text-gray-900">
-          Change name
-        </h3>
-        <div>
-          <div className="mt-2">
-            <p className="text-sm text-gray-500">Enter your new name.</p>
-            <form onSubmit={handleSubmit(onSubmitNameChange)}>
-              <label
-                className="mt-4 block text-left text-sm font-semibold text-gray-900"
-                htmlFor="Name"
-              >
-                New name
-                <input
-                  className="mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm"
-                  id="name"
-                  type="text"
-                  defaultValue={user?.name ?? ''}
-                  {...register('name')}
-                  autoComplete="name"
-                />
-              </label>
-              <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                <button
-                  type="submit"
-                  className={classNames(
-                    'inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm',
-                    isLoading && 'cursor-not-allowed opacity-50'
-                  )}
-                  disabled={isLoading}
-                >
-                  {isLoading ? <span>Updating...</span> : <span>Update</span>}
-                </button>
-                <button
-                  type="button"
-                  className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
-                  onClick={toggleNameModal}
-                  ref={cancelButtonRef}
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </Modal>
+        setIsShowingNameModal={setIsShowingNameModal}
+        userName={user?.name ?? ''}
+      />
 
       {/* Email change */}
       <Modal
