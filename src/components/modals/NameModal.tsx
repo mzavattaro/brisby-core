@@ -18,24 +18,13 @@ type NameModalProps = {
   userName: string | '';
 };
 
-const accountSettingsSchema = z
-  .object({
-    name: z.string().optional(),
-    email: z.string().email({ message: 'Invalid email address' }).optional(),
-    confirmEmail: z
-      .string()
-      .email({ message: 'Invalid email address' })
-      .optional(),
-  })
-  .refine((data) => data.email === data.confirmEmail, {
-    message: 'Emails do not match',
-    path: ['confirmEmail'],
-  });
+const changeNameSchema = z.object({
+  name: z.string().optional(),
+});
 
 type UserByIdOutput = RouterOutputs['user']['byId'];
 
-type AccountSettingsSchema = z.infer<typeof accountSettingsSchema> &
-  UserByIdOutput;
+type ChangeNameSchema = z.infer<typeof changeNameSchema> & UserByIdOutput;
 
 const NameModal: FC<NameModalProps> = ({
   isShowing,
@@ -46,8 +35,8 @@ const NameModal: FC<NameModalProps> = ({
 }) => {
   const queryClient = useQueryClient();
 
-  const { register, handleSubmit } = useForm<AccountSettingsSchema>({
-    resolver: zodResolver(accountSettingsSchema),
+  const { register, handleSubmit } = useForm<ChangeNameSchema>({
+    resolver: zodResolver(changeNameSchema),
   });
 
   const { mutateAsync, isLoading } = trpc.user.updateUser.useMutation({
@@ -57,9 +46,7 @@ const NameModal: FC<NameModalProps> = ({
     },
   });
 
-  const onSubmitNameChange: SubmitHandler<AccountSettingsSchema> = async (
-    data
-  ) => {
+  const onSubmitNameChange: SubmitHandler<ChangeNameSchema> = async (data) => {
     const { name } = data;
 
     try {
