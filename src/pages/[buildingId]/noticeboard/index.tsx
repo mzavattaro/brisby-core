@@ -15,6 +15,7 @@ import NotFoundPage from '../../404';
 import { useQueryClient } from '@tanstack/react-query';
 import NoticeTable from '../../../components/NoticeTable';
 import Search from '../../../components/Search';
+import { usePreviousUrlStore } from '../../../store/usePreviousUrl';
 
 type BuildingComplexProps = {
   name: string;
@@ -60,6 +61,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
   const [checked, setChecked] = useState(false);
   const [indeterminate, setIndeterminate] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<NoticeProps>([]);
+
   const { isShowing: isShowingModal, toggle: toggleModal } = useModal();
   const { isShowing: isShowingSearchModal, toggle: toggleSearchModal } =
     useModal();
@@ -67,6 +69,9 @@ const Noticeboard: FC<NoticeboardProps> = ({
   const queryClient = useQueryClient();
   const { data: buildingComplexes } =
     trpc.buildingComplex.byOrganisation.useQuery();
+
+  const router = useRouter();
+  const setPreviousUrl = usePreviousUrlStore((state) => state.setPreviousUrl);
 
   const buildingComplexAddress = `${buildingComplex?.streetAddress ?? ''}, ${
     buildingComplex?.suburb ?? ''
@@ -100,6 +105,10 @@ const Noticeboard: FC<NoticeboardProps> = ({
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const value = parseInt(event.target.value, 10);
     setLimit(value);
+  };
+
+  const handleNext = () => {
+    setPreviousUrl(router.asPath);
   };
 
   useEffect(() => {
@@ -177,6 +186,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
             type="button"
             href="/authentication/building-complexes/new"
             className="mt-4 px-4 text-sm"
+            onClick={handleNext}
           >
             Create new Strata Title
           </StyledLink>

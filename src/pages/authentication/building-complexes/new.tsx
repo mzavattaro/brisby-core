@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 import StyledLink from '../../../components/StyledLink';
 import Button from '../../../components/Button';
 import type { FC } from 'react';
+import { usePreviousUrlStore } from '../../../store/usePreviousUrl';
 
 const newBuildingSchema = z.object({
   name: z.string().min(1, { message: 'Strata Title name is required' }),
@@ -25,6 +26,7 @@ type NewBuildingSchema = z.infer<typeof newBuildingSchema>;
 const NewUser: FC<NewBuildingSchema> = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const previousUrl = usePreviousUrlStore((state) => state.previousUrl);
 
   const {
     register,
@@ -38,7 +40,13 @@ const NewUser: FC<NewBuildingSchema> = () => {
     onSuccess: async (data) => {
       queryClient.setQueryData([['buildingComplex'], data.id], data);
       await queryClient.invalidateQueries();
-      router.back();
+
+      // handle redirect
+      if (previousUrl.includes('/noticeboard')) {
+        await router.push(`/${data.id}/noticeboard`);
+      } else {
+        router.back();
+      }
     },
   });
 
