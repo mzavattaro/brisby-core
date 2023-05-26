@@ -51,7 +51,7 @@ const CredentialCheck: NextPage = () => {
       <div className="text-center">
         <h4 className="text-3xl font-bold text-gray-900">Brisby</h4>
         <h2 className="mt-6 text-center text-4xl font-extrabold text-gray-900">
-          Checking your sign in credentials...
+          Signing you in...
         </h2>
       </div>
       <div className="mt-2 px-4 sm:px-10">

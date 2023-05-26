@@ -75,7 +75,7 @@ const Billing: NextPageWithLayout = () => {
                   {billing?.fullName ? (
                     billing.fullName
                   ) : (
-                    <div className="italic">Add suburb</div>
+                    <div className="italic">Add name</div>
                   )}
                 </div>
               </div>
