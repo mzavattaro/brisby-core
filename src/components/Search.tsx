@@ -32,19 +32,6 @@ const queryHook: SearchBoxProps['queryHook'] = (query, search) => {
   search(query);
 };
 
-const EmptyQueryBoundary: FC<NoResultsBoundaryProps> = ({
-  children,
-  fallback,
-}) => {
-  const { indexUiState } = useInstantSearch();
-
-  if (!indexUiState.query) {
-    return <div>{fallback}</div>;
-  }
-
-  return <div>{children}</div>;
-};
-
 const NoResultsBoundary: FC<NoResultsBoundaryProps> = ({
   children,
   fallback,
@@ -69,9 +56,13 @@ const NoResults: FC = () => {
 
   return (
     <div className="absolute left-0 h-52 w-full rounded-lg bg-white px-3 pb-4 text-center">
-      <p>
-        No results for <q>{indexUiState.query}</q>.
-      </p>
+      {indexUiState.query === undefined ? (
+        <p className="font-sem text-slate-400">Start searching for notices.</p>
+      ) : (
+        <p>
+          No results for <q>{indexUiState.query}</q>.
+        </p>
+      )}
     </div>
   );
 };
@@ -121,14 +112,12 @@ const Search: FC = () => {
         }}
       />
       <NoResultsBoundary fallback={<NoResults />}>
-        <EmptyQueryBoundary fallback={null}>
-          <Hits
-            className={classNames(
-              'absolute left-0 h-52 w-full overflow-auto rounded-lg bg-white px-3 pb-4'
-            )}
-            hitComponent={Hit}
-          />
-        </EmptyQueryBoundary>
+        <Hits
+          className={classNames(
+            'absolute left-0 h-52 w-full overflow-auto rounded-lg bg-white px-3 pb-4'
+          )}
+          hitComponent={Hit}
+        />
       </NoResultsBoundary>
     </InstantSearch>
   );
