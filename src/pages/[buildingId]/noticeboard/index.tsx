@@ -9,13 +9,12 @@ import ToolBar from '../../../components/ToolBar';
 import useModal from '../../../utils/useModal';
 import InfoBox from '../../../components/InfoBox';
 import StyledLink from '../../../components/StyledLink';
-import Modal from '../../../components/Modal';
-import { ArrowLongRightIcon } from '@heroicons/react/24/outline';
 import NotFoundPage from '../../404';
 import { useQueryClient } from '@tanstack/react-query';
 import NoticeTable from '../../../components/NoticeTable';
-import Search from '../../../components/Search';
 import { usePreviousUrlStore } from '../../../store/usePreviousUrl';
+import SearchModal from '../../../components/modals/SearchModal';
+import StrataTitleModal from '../../../components/modals/StrataTitleModal';
 
 type BuildingComplexProps = {
   name: string;
@@ -132,74 +131,19 @@ const Noticeboard: FC<NoticeboardProps> = ({
 
   return (
     <Container className="text-gray-900">
-      <Modal
+      <StrataTitleModal
         isShowing={isShowingModal}
         hide={toggleModal}
         cancelButtonRef={cancelButtonRef}
-        className="h-112"
-      >
-        <div className="text-center sm:text-left">
-          <h3 className="text-lg font-medium leading-6 text-gray-900">
-            Select Strata Title
-          </h3>
-
-          <div className="mt-2">
-            <p className="text-sm text-gray-500">
-              Select Strata Title to view its notices.
-            </p>
-          </div>
-          <div className="sticky mb-2 mt-6">
-            <h4>All Strata Titles</h4>
-          </div>
-        </div>
-        <ul className="h-96 w-full divide-y divide-gray-200 overflow-scroll rounded-lg border">
-          {buildingComplexes?.map((buildingComplexData) => (
-            <li
-              key={buildingComplexData.id}
-              className="flex w-full flex-row place-content-between p-2 sm:items-center sm:p-4"
-            >
-              <div>
-                <p className="text-sm">{buildingComplexData.name}</p>
-                <p className="text-xs text-gray-500">
-                  {buildingComplexData.streetAddress},{' '}
-                  {buildingComplexData.suburb}
-                </p>
-              </div>
-              <StyledLink
-                onClick={toggleModal}
-                type="link"
-                href={{
-                  pathname: '/[buildingId]/noticeboard',
-                  query: { buildingId: buildingComplexData.id },
-                }}
-                className="mt-2 flex flex-row items-center sm:mt-0"
-              >
-                <p>View</p>
-                <ArrowLongRightIcon className="ml-1 h-6 w-6" />
-              </StyledLink>
-            </li>
-          ))}
-        </ul>
-
-        <div className="flex justify-center text-left">
-          <StyledLink
-            type="button"
-            href="/authentication/building-complexes/new"
-            className="mt-4 px-4 text-sm"
-            onClick={handleNextPage}
-          >
-            Create new Strata Title
-          </StyledLink>
-        </div>
-      </Modal>
-
-      <Modal
+        toggle={toggleModal}
+        buildingComplexes={buildingComplexes}
+        handleNextPage={handleNextPage}
+      />
+      <SearchModal
         isShowing={isShowingSearchModal}
         hide={toggleSearchModal}
         cancelButtonRef={cancelButtonRef}
-      >
-        <Search />
-      </Modal>
+      />
 
       <Header toggle={toggleModal} toggleSearch={toggleSearchModal} />
 

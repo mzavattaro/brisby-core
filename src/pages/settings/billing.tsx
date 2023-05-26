@@ -1,38 +1,12 @@
 import SettingsLayout from '../../components/SettingsLayout';
-import { useQueryClient } from '@tanstack/react-query';
-import type { RouterOutputs } from '../../utils/trpc';
 import { trpc } from '../../utils/trpc';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import type { SubmitHandler } from 'react-hook-form';
 import type { ReactElement } from 'react';
 import { useRef, useState } from 'react';
 import type { NextPageWithLayout } from '../_app';
-import Modal from '../../components/Modal';
-import { classNames } from '../../utils/classNames';
+import BillingAddressModal from '../../components/modals/BillingAddressModal';
+import BillingInformationModal from '../../components/modals/BillingInformationModal';
 
-const billingSettingsSchema = z.object({
-  fullName: z.string().min(1, { message: 'Full name is required' }).optional(),
-  phone: z.string().min(1, { message: 'Phone is required' }).optional(),
-  email: z.string().min(1, { message: 'Email is required' }).optional(),
-  streetAddress: z
-    .string()
-    .min(1, { message: 'Street address is required' })
-    .optional(),
-  suburb: z.string().min(1, { message: 'Suburb is required' }).optional(),
-  state: z.string().min(1, { message: 'State is required' }).optional(),
-  postcode: z.string().min(1, { message: 'Postcode is required' }).optional(),
-});
-
-type OrganisationBillingOutput = RouterOutputs['organisation'];
-
-type BillingSettingsSchema = z.infer<typeof billingSettingsSchema> &
-  OrganisationBillingOutput;
-
-const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
-  const queryClient = useQueryClient();
-
+const Billing: NextPageWithLayout = () => {
   const [
     isShowingBillingInformationModal,
     setIsShowingBillingInformationModal,
@@ -44,32 +18,6 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
   const { data: billing, isLoading: isLoadingBilling } =
     trpc.organisation.getBilling.useQuery();
 
-  // create new billing details
-  const { mutateAsync: createMutateAsync, isLoading: isCreating } =
-    trpc.billing.create.useMutation({
-      onSuccess: async (data) => {
-        queryClient.setQueryData([['billing'], data.id], data);
-        await queryClient.invalidateQueries();
-      },
-    });
-
-  // update existing billing details
-  const { mutateAsync: updateMutateAsync, isLoading: isUpdating } =
-    trpc.billing.update.useMutation({
-      onSuccess: async (data) => {
-        queryClient.setQueryData([['billing'], data.id], data);
-        await queryClient.invalidateQueries();
-      },
-    });
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<BillingSettingsSchema>({
-    resolver: zodResolver(billingSettingsSchema),
-  });
-
   const toggleBillingInformationModal = () => {
     setIsShowingBillingInformationModal(!isShowingBillingInformationModal);
   };
@@ -78,319 +26,25 @@ const Billing: NextPageWithLayout<BillingSettingsSchema> = () => {
     setIsShowingBillingAddressModal(!isShowingBillingAddressModal);
   };
 
-  const updateOrCreateBilling = async (data: BillingSettingsSchema) => {
-    const { fullName, email, phone, streetAddress, suburb, state, postcode } =
-      data;
-
-    try {
-      billingSettingsSchema.parse(data);
-    } catch (error) {
-      if (error instanceof Error) {
-        // eslint-disable-next-line no-console
-        console.log(error.message);
-      }
-      return;
-    }
-
-    if (billing?.id) {
-      try {
-        await updateMutateAsync({
-          id: billing.id,
-          fullName,
-          email,
-          phone,
-          streetAddress,
-          suburb,
-          state,
-          postcode,
-        });
-      } catch (error) {
-        if (error instanceof Error) {
-          // eslint-disable-next-line no-console
-          console.log(error.message);
-        }
-      }
-    } else {
-      try {
-        await createMutateAsync({
-          fullName,
-          email,
-          phone,
-          streetAddress,
-          suburb,
-          state,
-          postcode,
-        });
-      } catch (error) {
-        if (error instanceof Error) {
-          // eslint-disable-next-line no-console
-          console.log(error.message);
-        }
-      }
-    }
-  };
-
-  const onSubmitBillingInformationChange: SubmitHandler<
-    BillingSettingsSchema
-  > = async (data) => {
-    try {
-      await updateOrCreateBilling(data);
-    } catch (error) {
-      if (error instanceof Error) {
-        // eslint-disable-next-line no-console
-        console.log(error.message);
-      }
-    }
-    setIsShowingBillingInformationModal(!isShowingBillingInformationModal);
-  };
-
-  const onSubmitBillingAddressChange: SubmitHandler<
-    BillingSettingsSchema
-  > = async (data) => {
-    try {
-      await updateOrCreateBilling(data);
-    } catch (error) {
-      if (error instanceof Error) {
-        // eslint-disable-next-line no-console
-        console.log(error.message);
-      }
-    }
-    setIsShowingBillingAddressModal(!isShowingBillingAddressModal);
-  };
-
   return (
     <>
-      {/* Billing information */}
-      <Modal
+      <BillingInformationModal
         isShowing={isShowingBillingInformationModal}
         hide={toggleBillingInformationModal}
         cancelButtonRef={cancelButtonRef}
-      >
-        <h3 className="text-lg font-medium leading-6 text-gray-900">
-          Change billing information
-        </h3>
-        <div>
-          <div className="mt-2">
-            <p className="text-sm text-gray-500">
-              Update your billing information.
-            </p>
-            <form onSubmit={handleSubmit(onSubmitBillingInformationChange)}>
-              <label
-                className="mt-4 block text-left text-sm font-semibold text-gray-900"
-                htmlFor="Name"
-              >
-                Full name
-                <input
-                  className={classNames(
-                    'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm',
-                    errors.fullName
-                      ? 'bg-rose-100 focus:border-rose-500 focus:ring-rose-500'
-                      : 'focus:border-blue-600 focus:ring-blue-600'
-                  )}
-                  id="fullName"
-                  type="text"
-                  {...register('fullName')}
-                  defaultValue={billing?.fullName ?? ''}
-                  autoComplete="name"
-                />
-                {errors.fullName && (
-                  <p className="absolute text-xs italic text-red-500">
-                    {errors.fullName.message}
-                  </p>
-                )}
-              </label>
-              <div className="flex flex-col place-content-between sm:flex-row">
-                <label
-                  className="mt-4 block text-left text-sm font-semibold text-gray-900"
-                  htmlFor="Phone"
-                >
-                  Phone
-                  <input
-                    className={classNames(
-                      'mt-1 block h-10 w-56 appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm',
-                      errors.phone
-                        ? 'bg-rose-100 focus:border-rose-500 focus:ring-rose-500'
-                        : 'focus:border-blue-600 focus:ring-blue-600'
-                    )}
-                    id="phone"
-                    type="text"
-                    {...register('phone')}
-                    defaultValue={billing?.phone ?? ''}
-                    autoComplete="tel"
-                  />
-                  {errors.phone && (
-                    <p className="absolute text-xs italic text-red-500">
-                      {errors.phone.message}
-                    </p>
-                  )}
-                </label>
-                <label
-                  className="mt-4 block text-left text-sm font-semibold text-gray-900"
-                  htmlFor="Email"
-                >
-                  Email
-                  <input
-                    className={classNames(
-                      'mt-1 block h-10 w-56 appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 sm:text-sm',
-                      errors.email
-                        ? 'bg-rose-100 focus:border-rose-500 focus:ring-rose-500'
-                        : 'focus:border-blue-600 focus:ring-blue-600'
-                    )}
-                    id="email"
-                    type="email"
-                    {...register('email')}
-                    defaultValue={billing?.email ?? ''}
-                    autoComplete="email"
-                  />
-                  {errors.email && (
-                    <p className="absolute text-xs italic text-red-500">
-                      {errors.email.message}
-                    </p>
-                  )}
-                </label>
-              </div>
+        setIsShowingBillingInformationModal={
+          setIsShowingBillingInformationModal
+        }
+        billing={billing}
+      />
 
-              <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                <button
-                  type="submit"
-                  disabled={isCreating || isUpdating}
-                  className={classNames(
-                    'inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm',
-                    (isCreating || isUpdating) &&
-                      'cursor-not-allowed opacity-50'
-                  )}
-                >
-                  {isCreating || isUpdating ? (
-                    <span>Saving...</span>
-                  ) : (
-                    <span>Save</span>
-                  )}
-                </button>
-                <button
-                  type="button"
-                  className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
-                  onClick={toggleBillingInformationModal}
-                  ref={cancelButtonRef}
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </Modal>
-
-      {/* Billing address */}
-      <Modal
+      <BillingAddressModal
         isShowing={isShowingBillingAddressModal}
         hide={toggleBillingAddressModal}
         cancelButtonRef={cancelButtonRef}
-      >
-        <h3 className="text-lg font-medium leading-6 text-gray-900">
-          Change billing address
-        </h3>
-        <div>
-          <div className="mt-2">
-            <p className="text-sm text-gray-500">
-              Update your billing address.
-            </p>
-            <form onSubmit={handleSubmit(onSubmitBillingAddressChange)}>
-              <div className="mt-4 grid max-w-7xl grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-12">
-                {/* Street address */}
-                <label className="block text-left text-sm font-semibold text-gray-900 sm:col-span-12">
-                  Street address
-                  <input
-                    className={classNames(
-                      'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm'
-                    )}
-                    type="text"
-                    id="streetAddress"
-                    defaultValue={billing?.streetAddress ?? ''}
-                    {...register('streetAddress')}
-                    autoComplete="street-address"
-                  />
-                </label>
-
-                {/* Suburb */}
-                <label className="block text-left text-sm font-semibold text-gray-900 sm:col-span-4">
-                  Suburb
-                  <input
-                    className={classNames(
-                      'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm'
-                    )}
-                    type="text"
-                    id="suburb"
-                    defaultValue={billing?.suburb ?? ''}
-                    {...register('suburb')}
-                  />
-                </label>
-
-                {/* State */}
-                <label className="block text-left text-sm font-semibold text-gray-900 sm:col-span-4">
-                  State
-                  <select
-                    className={classNames(
-                      'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm'
-                    )}
-                    id="state"
-                    {...register('state')}
-                    defaultValue={billing?.state ?? ''}
-                  >
-                    {['ACT', 'NSW', 'NT', 'QLD', 'SA', 'TAS', 'VIC', 'WA'].map(
-                      (state) => (
-                        <option key={state} value={state}>
-                          {state}
-                        </option>
-                      )
-                    )}
-                  </select>
-                </label>
-
-                {/* Postcode */}
-                <label className="block text-left text-sm font-semibold text-gray-900 sm:col-span-4">
-                  Postcode
-                  <input
-                    className={classNames(
-                      'mt-1 block h-10 w-full appearance-none rounded-md border border-slate-200 bg-slate-50 px-3 py-2 placeholder-gray-400 focus:border-blue-600 focus:ring-blue-600 sm:text-sm'
-                    )}
-                    type="text"
-                    id="postcode"
-                    defaultValue={billing?.postcode ?? ''}
-                    {...register('postcode')}
-                    autoComplete="postal-code"
-                  />
-                </label>
-              </div>
-
-              <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                <button
-                  type="submit"
-                  className={classNames(
-                    'inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm',
-                    (isCreating || isUpdating) &&
-                      'cursor-not-allowed opacity-50'
-                  )}
-                  disabled={isCreating || isUpdating}
-                >
-                  {isCreating || isUpdating ? (
-                    <span>Saving...</span>
-                  ) : (
-                    <span>Save</span>
-                  )}
-                </button>
-                <button
-                  type="button"
-                  className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
-                  onClick={toggleBillingAddressModal}
-                  ref={cancelButtonRef}
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </Modal>
+        setIsShowingBillingAddressModal={setIsShowingBillingAddressModal}
+        billing={billing}
+      />
 
       <div className="mx-auto grid max-w-4xl grid-cols-1 gap-2 px-2 sm:grid-cols-12 sm:px-6 md:px-8">
         <div className="col-span-1 sm:col-span-12">
