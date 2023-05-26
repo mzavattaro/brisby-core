@@ -152,6 +152,7 @@ const New: NextPage = () => {
       noticeId,
       title: data.title,
       fileName: transformedData.fileName,
+      status: 'draft',
     };
 
     try {

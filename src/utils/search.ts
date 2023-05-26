@@ -5,6 +5,7 @@ type searchProps = {
   noticeId: string | undefined;
   title: string;
   fileName: string;
+  status: string;
 };
 
 if (
@@ -38,6 +39,7 @@ const fetchAndIndexData = async (searchData: searchProps): Promise<void> => {
     noticeId: searchData.noticeId,
     title: searchData.title,
     fileName: searchData.fileName,
+    status: searchData.status,
   };
 
   await index.saveObjects([data], { autoGenerateObjectIDIfNotExist: true });

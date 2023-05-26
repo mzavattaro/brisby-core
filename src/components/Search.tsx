@@ -14,12 +14,14 @@ import type { SearchBoxProps } from 'react-instantsearch-hooks-web';
 import { searchClient } from '../utils/search';
 import Link from 'next/link';
 import { classNames } from '../utils/classNames';
+import Badge from './Badge';
 
 type HitProps = {
   hit: {
     noticeId: string;
     title: string;
     fileName: string;
+    status: string;
   };
 };
 
@@ -55,11 +57,11 @@ const NoResults: FC = () => {
   const { indexUiState } = useInstantSearch();
 
   return (
-    <div className="absolute left-0 h-52 w-full rounded-lg bg-white px-3 pb-4 text-center">
+    <div className="absolute left-0 h-52 w-[512px] rounded-lg bg-white px-3 pb-4 text-center">
       {indexUiState.query === undefined ? (
         <p className="font-sem text-slate-400">Start searching for notices.</p>
       ) : (
-        <p>
+        <p className="break-words">
           No results for <q>{indexUiState.query}</q>.
         </p>
       )}
@@ -78,9 +80,12 @@ const Hit: FC<HitProps> = ({ hit }) => {
       }}
       className="cursor-pointer"
     >
-      <div className="rounded-md px-2 py-1 hover:bg-gray-100">
-        <h4 className="font-bold">{hit.title}</h4>
-        <p className="font-italised">{hit.fileName}</p>
+      <div className="flex flex-row items-center justify-between rounded-md px-2 py-1 hover:bg-gray-100">
+        <div>
+          <h4 className="font-bold">{hit.title}</h4>
+          <p className="font-italised">{hit.fileName}</p>
+        </div>
+        <Badge status={hit.status}>{hit.status}</Badge>
       </div>
     </Link>
   );
@@ -102,7 +107,7 @@ const Search: FC = () => {
       <SearchBox
         queryHook={queryHook}
         searchAsYouType
-        placeholder="Search..."
+        placeholder="Search notices..."
         classNames={{
           input:
             'block w-full pr-3 py-2 bg-white border border-slate-300 placeholder-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-indigo-600 rounded-md focus:ring-1',
