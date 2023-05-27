@@ -1,6 +1,7 @@
 import type { ChangeEventHandler } from 'react';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 import { type NextPage } from 'next';
 import { useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
@@ -17,6 +18,7 @@ import StyledLink from '../../../../components/StyledLink';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { fetchAndIndexData } from '../../../../utils/search';
+import Unauthorised from '../../../unauthorised';
 
 const publishingOptions = [
   {
@@ -72,6 +74,7 @@ const uploadToS3 = async (data: FileList) => {
 
 const New: NextPage = () => {
   // revisit select useState
+  const { data: sessionData } = useSession();
   const [selected] = useState(publishingOptions[0]);
   const [startDate, setStartDate] = useState<Date | null | undefined>(
     new Date()
@@ -99,6 +102,10 @@ const New: NextPage = () => {
       await queryClient.invalidateQueries();
     },
   });
+
+  if (sessionData === null) {
+    return <Unauthorised />;
+  }
 
   const onSubmit: SubmitHandler<NoticeSchema> = async (data) => {
     try {

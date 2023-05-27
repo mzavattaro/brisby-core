@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { trpc } from '../../../utils/trpc';
 import InfoBox from '../../../components/InfoBox';
 import StyledLink from '../../../components/StyledLink';
@@ -9,9 +9,14 @@ import {
   BuildingLibraryIcon,
   ArrowLongRightIcon,
 } from '@heroicons/react/24/outline';
+import Unauthorised from '../../unauthorised';
 
 const BuildingComplexes: NextPage = () => {
   const { data: sessionData } = useSession();
+
+  if (!sessionData) {
+    return <Unauthorised />;
+  }
 
   const { data: buildingComplexes } =
     trpc.buildingComplex.byOrganisation.useQuery();
@@ -102,18 +107,9 @@ const BuildingComplexes: NextPage = () => {
             <button
               className="ml-1 flex items-center px-0 py-0 text-xs text-indigo-700 hover:underline sm:text-base"
               type="button"
-              onClick={
-                sessionData
-                  ? async () => signOut({ callbackUrl: '/' })
-                  : async () =>
-                      signIn('email', {
-                        callbackUrl: '/authentication/check-credentials',
-                      })
-              }
+              onClick={async () => signOut({ callbackUrl: '/' })}
             >
-              {sessionData
-                ? 'Sign out and use a different email address'
-                : 'Sign in'}
+              <span>Sign out and use a different email address</span>
               <ArrowLongRightIcon className="ml-1 h-6 w-6" />
             </button>
           </div>
