@@ -16,7 +16,7 @@ import Button from '../../../../components/Button';
 import StyledLink from '../../../../components/StyledLink';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import fetchAndIndexData from '../../../../utils/search';
+import { fetchAndIndexData } from '../../../../utils/search';
 
 const publishingOptions = [
   {
