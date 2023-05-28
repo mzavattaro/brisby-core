@@ -3,17 +3,16 @@ import { useState, useRef } from 'react';
 import NextError from 'next/error';
 import { useRouter } from 'next/router';
 import type { RouterOutputs } from '../../../../utils/trpc';
-import { useQueryClient } from '@tanstack/react-query';
 import { trpc } from '../../../../utils/trpc';
 import dayjs from 'dayjs';
 import PdfViewer from '../../../../components/PdfViewer';
 import Badge from '../../../../components/Badge';
 import BackButton from '../../../../components/BackButton';
 import Dropdown from '../../../../components/Dropdown';
-import Modal from '../../../../components/Modal';
 import { PaperClipIcon } from '@heroicons/react/20/solid';
-import { classNames } from '../../../../utils/classNames';
-import { updateSearchObject } from '../../../../utils/search';
+import PublishNoticeModal from '../../../../components/modals/PublishNoticeModal';
+import DraftNoticeModal from '../../../../components/modals/DraftNoticeModal';
+import ArchiveNoticeModal from '../../../../components/modals/ArchiveNoticeModal';
 
 type NoticeByIdOutput = RouterOutputs['notice']['byId'];
 
@@ -22,17 +21,11 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
   const [isShowingDraftModal, setIsShowingDraftModal] = useState(false);
   const [isShowingArchiveModal, setIsShowingArchiveModal] = useState(false);
 
-  const queryClient = useQueryClient();
   const cancelButtonRef = useRef(null);
 
-  const { mutate, isLoading } = trpc.notice.updateStatus.useMutation({
-    onSuccess: async () => {
-      await queryClient.invalidateQueries();
-    },
-  });
   const { notice } = props;
+
   const {
-    id,
     title,
     buildingComplex,
     status,
@@ -57,27 +50,6 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
 
   const noticePeriod = `${dayjs(startDate).format('D MMMM YYYY')} -
   ${dayjs(endDate).format('D MMMM YYYY')}`;
-
-  const handlePublishChange = async () => {
-    const newStatus = 'published';
-    mutate({ data: { status: newStatus }, id });
-    await updateSearchObject([{ objectID: id, status: newStatus }]);
-    togglePublishModal();
-  };
-
-  const handleDraftChange = async () => {
-    const newStatus = 'draft';
-    mutate({ data: { status: newStatus }, id });
-    await updateSearchObject([{ objectID: id, status: newStatus }]);
-    toggleDraftModal();
-  };
-
-  const handleArchiveChange = async () => {
-    const newStatus = 'archived';
-    mutate({ data: { status: newStatus }, id });
-    await updateSearchObject([{ objectID: id, status: newStatus }]);
-    toggleArchiveModal();
-  };
 
   const statusInfo = [
     {
@@ -116,124 +88,29 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
 
   return (
     <>
-      <Modal
+      <PublishNoticeModal
         isShowing={isShowingPublishModal}
         hide={togglePublishModal}
         cancelButtonRef={cancelButtonRef}
-      >
-        <h3 className="text-lg font-medium leading-6 text-gray-900">
-          Publish notice
-        </h3>
-        <div>
-          <div className="mt-2">
-            <p className="text-sm text-gray-500">
-              Are you sure you want to publish this notice? A published notice
-              is public and viewable to anyone who has access to the
-              noticeboard.
-            </p>
-          </div>
-        </div>
+        setIsShowingPublishModal={setIsShowingPublishModal}
+        notice={notice}
+      />
 
-        <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-          <button
-            type="button"
-            className={classNames(
-              'inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm',
-              isLoading && 'cursor-not-allowed opacity-50'
-            )}
-            onClick={handlePublishChange}
-            disabled={isLoading}
-          >
-            {isLoading ? <span>Publishing...</span> : <span>Publish</span>}
-          </button>
-          <button
-            type="button"
-            className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
-            onClick={togglePublishModal}
-            ref={cancelButtonRef}
-          >
-            Cancel
-          </button>
-        </div>
-      </Modal>
-      <Modal
+      <DraftNoticeModal
         isShowing={isShowingDraftModal}
         hide={toggleDraftModal}
         cancelButtonRef={cancelButtonRef}
-      >
-        <h3 className="text-lg font-medium leading-6 text-gray-900">
-          Unpublish notice
-        </h3>
-        <div>
-          <div className="mt-2">
-            <p className="text-sm text-gray-500">
-              Are you sure you want to unpublish this notice? The notice will be
-              private and only viewable by members of your organisation.
-            </p>
-          </div>
-        </div>
+        setIsShowingDraftModal={setIsShowingDraftModal}
+        notice={notice}
+      />
 
-        <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-          <button
-            type="button"
-            className={classNames(
-              'inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm',
-              isLoading && 'cursor-not-allowed opacity-50'
-            )}
-            onClick={handleDraftChange}
-            disabled={isLoading}
-          >
-            {isLoading ? <span>Unpublishing...</span> : <span>Unpublish</span>}
-          </button>
-          <button
-            type="button"
-            className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
-            onClick={toggleDraftModal}
-            ref={cancelButtonRef}
-          >
-            Cancel
-          </button>
-        </div>
-      </Modal>
-      <Modal
+      <ArchiveNoticeModal
         isShowing={isShowingArchiveModal}
-        hide={toggleDraftModal}
+        hide={toggleArchiveModal}
         cancelButtonRef={cancelButtonRef}
-      >
-        <h3 className="text-lg font-medium leading-6 text-gray-900">
-          Archive notice
-        </h3>
-        <div>
-          <div className="mt-2">
-            <p className="text-sm text-gray-500">
-              Are you sure you want to archive this notice? The notice will be
-              private and only viewable by members of your organisation.
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-          <button
-            type="button"
-            className={classNames(
-              'inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm',
-              isLoading && 'cursor-not-allowed opacity-50'
-            )}
-            onClick={handleArchiveChange}
-            disabled={isLoading}
-          >
-            {isLoading ? <span>Archiving...</span> : <span>Archive</span>}
-          </button>
-          <button
-            type="button"
-            className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
-            onClick={toggleArchiveModal}
-            ref={cancelButtonRef}
-          >
-            Cancel
-          </button>
-        </div>
-      </Modal>
+        setIsShowingArchiveModal={setIsShowingArchiveModal}
+        notice={notice}
+      />
 
       <div className="min-h-full">
         <main className="py-10">
