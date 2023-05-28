@@ -1,8 +1,5 @@
 import type { FC } from 'react';
-import type { Notice } from '@prisma/client';
-import { useQueryClient } from '@tanstack/react-query';
 import type { RouterOutputs } from '../utils/trpc';
-import { trpc } from '../utils/trpc';
 import dayjs from 'dayjs';
 import PdfViewer from './PdfViewer';
 import DropdownMenu from './DropdownMenu';
@@ -15,82 +12,10 @@ import Badge from './Badge';
 
 type NoticeItemProps = {
   notice: RouterOutputs['notice']['infiniteList']['notices'][number];
-  toggle: () => void;
-  handleFetchPreviousPage: () => void;
-  notices:
-    | (Notice & {
-        author: {
-          id: string;
-          name: string | null;
-        };
-      })[]
-    | undefined;
 };
 
-const NoticeItem: FC<NoticeItemProps> = ({
-  notice,
-  toggle,
-  handleFetchPreviousPage,
-  notices,
-}) => {
-  const queryClient = useQueryClient();
-
+const NoticeItem: FC<NoticeItemProps> = ({ notice }) => {
   const { id, title, startDate, endDate, status, uploadUrl, author } = notice;
-
-  const deleteMutation = trpc.notice.delete.useMutation({
-    onSuccess: async () => {
-      await queryClient.invalidateQueries();
-      if (notices?.length === 1) {
-        handleFetchPreviousPage();
-      }
-    },
-  });
-
-  const deleteMutationLoadingState = deleteMutation.isLoading;
-
-  const handleDelete = () => {
-    deleteMutation.mutate(id);
-  };
-
-  const updateMutation = trpc.notice.updateStatus.useMutation({
-    onSuccess: async () => {
-      await queryClient.invalidateQueries();
-      toggle();
-    },
-
-    /*
-     * not working
-     *   try {
-     *     const html = render(<ExampleTemplate />);
-     *     await sendEmail({
-     *       to: "mwzavattaro@icloud.com",
-     *       subject: "Hello from Next.js!",
-     *       html,
-     *     });
-     *   } catch (error) {
-     *     console.log(error);
-     *   }
-     * },
-     * onError: (error) => {
-     *   console.log(error);
-     * },
-     */
-  });
-
-  const handlePublishChange = () => {
-    const newStatus = 'published';
-    updateMutation.mutate({ data: { status: newStatus }, id });
-  };
-
-  const handleDraftChange = () => {
-    const newStatus = 'draft';
-    updateMutation.mutate({ data: { status: newStatus }, id });
-  };
-
-  const handleArchiveChange = () => {
-    const newStatus = 'archived';
-    updateMutation.mutate({ data: { status: newStatus }, id });
-  };
 
   const noticePeriod = `${dayjs(startDate).format('D MMM YYYY')} -
   ${dayjs(endDate).format('D MMM YYYY')}`;
@@ -127,16 +52,7 @@ const NoticeItem: FC<NoticeItemProps> = ({
                 {author.name}
               </span>
             </div>
-            <DropdownMenu
-              handleDelete={handleDelete}
-              handlePublishChange={handlePublishChange}
-              handleDraftChange={handleDraftChange}
-              handleArchiveChange={handleArchiveChange}
-              uploadUrl={uploadUrl}
-              deleteMutationLoadingState={deleteMutationLoadingState}
-              status={status}
-              id={id}
-            />
+            <DropdownMenu uploadUrl={uploadUrl} id={id} />
           </div>
         </div>
       </div>

@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { type NextPage } from 'next';
 import { useQueryClient } from '@tanstack/react-query';
-import Link from 'next/link';
 import axios from 'axios';
 import { trpc } from '../../../../utils/trpc';
 import { classNames } from '../../../../utils/classNames';
@@ -12,7 +11,6 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { SubmitHandler } from 'react-hook-form';
-import { XMarkIcon } from '@heroicons/react/24/solid';
 import Button from '../../../../components/Button';
 import StyledLink from '../../../../components/StyledLink';
 import DatePicker from 'react-datepicker';
@@ -194,14 +192,6 @@ const New: NextPage = () => {
         <div className="my-6 flex flex-col">
           <div className="flex place-content-between items-center">
             <h3 className=" text-xl font-semibold">Upload new strata notice</h3>
-            <Link
-              href={{
-                pathname: '/[buildingId]/noticeboard',
-                query: { buildingId: id },
-              }}
-            >
-              <XMarkIcon className="h-6 w-6" />
-            </Link>
           </div>
           <p className="mt-2 text-base text-gray-500">
             Upload your organisation&apos;s strata notices and control when your
