@@ -229,7 +229,7 @@ const NoticeboardViewPage: FC<SortOrder> = () => {
     return <Unauthorised />;
   }
 
-  if (buildingComplexQuery.status !== 'success') {
+  if (buildingComplexQuery.isFetching) {
     return <>Loading...</>;
   }
 

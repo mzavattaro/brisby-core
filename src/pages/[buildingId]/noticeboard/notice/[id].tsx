@@ -13,6 +13,7 @@ import Dropdown from '../../../../components/Dropdown';
 import Modal from '../../../../components/Modal';
 import { PaperClipIcon } from '@heroicons/react/20/solid';
 import { classNames } from '../../../../utils/classNames';
+import { updateSearchObject } from '../../../../utils/search';
 
 type NoticeByIdOutput = RouterOutputs['notice']['byId'];
 
@@ -57,21 +58,24 @@ const Notice = (props: { notice: NoticeByIdOutput }) => {
   const noticePeriod = `${dayjs(startDate).format('D MMMM YYYY')} -
   ${dayjs(endDate).format('D MMMM YYYY')}`;
 
-  const handlePublishChange = () => {
+  const handlePublishChange = async () => {
     const newStatus = 'published';
     mutate({ data: { status: newStatus }, id });
+    await updateSearchObject([{ objectID: id, status: newStatus }]);
     togglePublishModal();
   };
 
-  const handleDraftChange = () => {
+  const handleDraftChange = async () => {
     const newStatus = 'draft';
     mutate({ data: { status: newStatus }, id });
+    await updateSearchObject([{ objectID: id, status: newStatus }]);
     toggleDraftModal();
   };
 
-  const handleArchiveChange = () => {
+  const handleArchiveChange = async () => {
     const newStatus = 'archived';
     mutate({ data: { status: newStatus }, id });
+    await updateSearchObject([{ objectID: id, status: newStatus }]);
     toggleArchiveModal();
   };
 

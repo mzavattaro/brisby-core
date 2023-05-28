@@ -14,12 +14,12 @@ import Unauthorised from '../../unauthorised';
 const BuildingComplexes: NextPage = () => {
   const { data: sessionData } = useSession();
 
-  if (!sessionData) {
-    return <Unauthorised />;
-  }
-
   const { data: buildingComplexes } =
     trpc.buildingComplex.byOrganisation.useQuery();
+
+  if (sessionData === null) {
+    return <Unauthorised />;
+  }
 
   const organisationArray = buildingComplexes?.flatMap(
     (buildingComplex) => buildingComplex.organisation.name

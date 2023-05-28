@@ -1,12 +1,17 @@
 import algoliasearch from 'algoliasearch';
 import { getSession } from 'next-auth/react';
 
-type searchProps = {
+type SearchProps = {
   noticeId: string | undefined;
   title: string;
   fileName: string;
   status: string;
 };
+
+type UpdateSearchObject = {
+  objectID: string;
+  status: string;
+}[];
 
 if (
   !process.env.NEXT_PUBLIC_ALGOLIA_APP_ID ||
@@ -21,7 +26,7 @@ export const searchClient = algoliasearch(
 );
 
 export const fetchAndIndexData = async (
-  searchData: searchProps
+  searchData: SearchProps
 ): Promise<void> => {
   const session = await getSession();
 
@@ -46,6 +51,13 @@ export const fetchAndIndexData = async (
   };
 
   await index.saveObjects([data], { autoGenerateObjectIDIfNotExist: true });
+};
+
+export const updateSearchObject = async (
+  data: UpdateSearchObject
+): Promise<void> => {
+  const index = searchClient.initIndex('brisby-core');
+  await index.partialUpdateObjects(data);
 };
 
 export const deleteSearchObject = async (objectID: string): Promise<void> => {
