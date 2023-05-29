@@ -37,7 +37,7 @@ const Archived: FC<typeof NoticeboardProps> = () => {
   const buildingComplexQuery = trpc.buildingComplex.byId.useQuery({ id });
 
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isFetching } =
-    trpc.notice.archived.useInfiniteQuery(
+    trpc.notice.archive.useInfiniteQuery(
       {
         limit: 8,
         id,

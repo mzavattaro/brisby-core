@@ -226,7 +226,7 @@ export const noticeRouter = router({
       return notice;
     }),
 
-  archived: protectedProcedure
+  archive: protectedProcedure
     .input(
       z.object({
         limit: z.number(),
