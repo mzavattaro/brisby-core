@@ -1,5 +1,6 @@
 import type { ChangeEvent, FC, SetStateAction } from 'react';
 import { useEffect, useRef, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useBuildingComplexIdStore } from '../../../store/useBuildingComplexIdStore';
 import { trpc } from '../../../utils/trpc';
@@ -14,8 +15,8 @@ import NoticeTable from '../../../components/NoticeTable';
 import { usePreviousUrlStore } from '../../../store/usePreviousUrl';
 import SearchModal from '../../../components/modals/SearchModal';
 import StrataTitleModal from '../../../components/modals/StrataTitleModal';
-import { useSession } from 'next-auth/react';
 import Unauthorised from '../../unauthorised';
+import LoadingSpinner from '../../../components/LoadingSpinner';
 
 type BuildingComplexProps = {
   name: string;
@@ -230,7 +231,7 @@ const NoticeboardViewPage: FC<SortOrder> = () => {
   }
 
   if (buildingComplexQuery.isFetching) {
-    return <>Loading...</>;
+    return <LoadingSpinner />;
   }
 
   const { data: buildingComplexData } = buildingComplexQuery;

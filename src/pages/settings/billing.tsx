@@ -5,6 +5,7 @@ import { useRef, useState } from 'react';
 import type { NextPageWithLayout } from '../_app';
 import BillingAddressModal from '../../components/modals/BillingAddressModal';
 import BillingInformationModal from '../../components/modals/BillingInformationModal';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const Billing: NextPageWithLayout = () => {
   const [
@@ -58,7 +59,7 @@ const Billing: NextPageWithLayout = () => {
         </div>
       </div>
       {isLoadingBilling ? (
-        <span>Loading...</span>
+        <LoadingSpinner />
       ) : (
         <>
           {/* Billing information */}

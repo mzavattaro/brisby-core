@@ -16,6 +16,7 @@ import NotFoundPage from '../../../404';
 import type NoticeboardProps from '../index';
 import Pagination from '../../../../components/Pagination';
 import Search from '../../../../components/Search';
+import LoadingSpinner from '../../../../components/LoadingSpinner';
 
 const Archived: FC<typeof NoticeboardProps> = () => {
   const [page, setPage] = useState(0);
@@ -73,8 +74,8 @@ const Archived: FC<typeof NoticeboardProps> = () => {
     return <NotFoundPage />;
   }
 
-  if (buildingComplexQuery.status !== 'success') {
-    return <>Loading...</>;
+  if (buildingComplexQuery.isFetching) {
+    return <LoadingSpinner />;
   }
 
   const { data: buildingComplexData } = buildingComplexQuery;
@@ -180,7 +181,7 @@ const Archived: FC<typeof NoticeboardProps> = () => {
           )}
         </GridLayout>
       ) : (
-        <span>Loading...</span>
+        <LoadingSpinner />
       )}
 
       {buildingComplexData && Boolean(notices?.length) && !isFetching && (

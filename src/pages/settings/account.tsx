@@ -6,6 +6,7 @@ import type { NextPageWithLayout } from '../_app';
 import { trpc } from '../../utils/trpc';
 import NameModal from '../../components/modals/NameModal';
 import EmailModal from '../../components/modals/EmailModal';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const Account: NextPageWithLayout = () => {
   const [isShowingEmailModal, setIsShowingEmailModal] = useState(false);
@@ -61,7 +62,7 @@ const Account: NextPageWithLayout = () => {
       <div className="mx-auto mt-4 max-w-4xl px-2 sm:px-6 md:px-8">
         <h2 className="text-lg font-semibold">Personal information</h2>
         {isFetching ? (
-          <span>Loading..</span>
+          <LoadingSpinner />
         ) : (
           <div className="flex flex-col">
             {/* Name */}
