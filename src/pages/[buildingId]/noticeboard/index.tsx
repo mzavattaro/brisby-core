@@ -1,5 +1,6 @@
 import type { ChangeEvent, FC, SetStateAction } from 'react';
 import { useEffect, useRef, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useBuildingComplexIdStore } from '../../../store/useBuildingComplexIdStore';
 import { trpc } from '../../../utils/trpc';
@@ -9,12 +10,13 @@ import ToolBar from '../../../components/ToolBar';
 import useModal from '../../../utils/useModal';
 import InfoBox from '../../../components/InfoBox';
 import StyledLink from '../../../components/StyledLink';
-import NotFoundPage from '../../404';
 import { useQueryClient } from '@tanstack/react-query';
 import NoticeTable from '../../../components/NoticeTable';
 import { usePreviousUrlStore } from '../../../store/usePreviousUrl';
 import SearchModal from '../../../components/modals/SearchModal';
 import StrataTitleModal from '../../../components/modals/StrataTitleModal';
+import Unauthorised from '../../unauthorised';
+import LoadingSpinner from '../../../components/LoadingSpinner';
 
 type BuildingComplexProps = {
   name: string;
@@ -36,7 +38,7 @@ export type NoticeProps =
 
 type NoticeboardProps = {
   notices: NoticeProps;
-  buildingComplex: BuildingComplexProps;
+  buildingComplex: BuildingComplexProps | undefined;
   isFetching: boolean;
   queryBuildingId: string;
   setSortOrder: (val: SetStateAction<SortOrder>) => void;
@@ -203,6 +205,7 @@ const Noticeboard: FC<NoticeboardProps> = ({
 };
 
 const NoticeboardViewPage: FC<SortOrder> = () => {
+  const { data: sessionData } = useSession();
   const id = useRouter().query.buildingId as string;
   const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.descending);
   const [limit, setLimit] = useState<number>(10);
@@ -223,12 +226,12 @@ const NoticeboardViewPage: FC<SortOrder> = () => {
     setBuildingComplexId(id);
   }, [id, setBuildingComplexId]);
 
-  if (buildingComplexQuery.error) {
-    return <NotFoundPage />;
+  if (sessionData === null) {
+    return <Unauthorised />;
   }
 
-  if (buildingComplexQuery.status !== 'success') {
-    return <>Loading...</>;
+  if (buildingComplexQuery.isFetching) {
+    return <LoadingSpinner />;
   }
 
   const { data: buildingComplexData } = buildingComplexQuery;

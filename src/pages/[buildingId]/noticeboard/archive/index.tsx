@@ -16,6 +16,7 @@ import NotFoundPage from '../../../404';
 import type NoticeboardProps from '../index';
 import Pagination from '../../../../components/Pagination';
 import Search from '../../../../components/Search';
+import LoadingSpinner from '../../../../components/LoadingSpinner';
 
 const Archived: FC<typeof NoticeboardProps> = () => {
   const [page, setPage] = useState(0);
@@ -36,7 +37,7 @@ const Archived: FC<typeof NoticeboardProps> = () => {
   const buildingComplexQuery = trpc.buildingComplex.byId.useQuery({ id });
 
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isFetching } =
-    trpc.notice.archived.useInfiniteQuery(
+    trpc.notice.archive.useInfiniteQuery(
       {
         limit: 8,
         id,
@@ -73,8 +74,8 @@ const Archived: FC<typeof NoticeboardProps> = () => {
     return <NotFoundPage />;
   }
 
-  if (buildingComplexQuery.status !== 'success') {
-    return <>Loading...</>;
+  if (buildingComplexQuery.isFetching) {
+    return <LoadingSpinner />;
   }
 
   const { data: buildingComplexData } = buildingComplexQuery;
@@ -171,13 +172,7 @@ const Archived: FC<typeof NoticeboardProps> = () => {
           isFetchingNextPage={isFetchingNextPage}
         >
           {notices?.map((notice) => (
-            <NoticeItem
-              notices={notices}
-              handleFetchPreviousPage={handleFetchPreviousPage}
-              key={notice.id}
-              notice={notice}
-              toggle={toggle}
-            />
+            <NoticeItem key={notice.id} notice={notice} />
           ))}
           {isFetchingNextPage && (
             <div className="flex flex-col items-center justify-center font-bold text-slate-300">
@@ -186,7 +181,7 @@ const Archived: FC<typeof NoticeboardProps> = () => {
           )}
         </GridLayout>
       ) : (
-        <span>Loading...</span>
+        <LoadingSpinner />
       )}
 
       {buildingComplexData && Boolean(notices?.length) && !isFetching && (

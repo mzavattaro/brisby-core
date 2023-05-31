@@ -1,7 +1,6 @@
 // import { Prisma } from "@prisma/client";
 import { z } from 'zod';
 import { protectedProcedure, router } from '../trpc';
-import { TRPCError } from '@trpc/server';
 
 export const buildingComplexRouter = router({
   // create building complex /api/buildingComplex/create
@@ -54,25 +53,6 @@ export const buildingComplexRouter = router({
         },
       });
     }),
-
-  findAnEntry: protectedProcedure.query(async ({ ctx }) => {
-    const { prisma } = ctx;
-
-    const buildingComplexes = await prisma.buildingComplex.findFirst({
-      select: {
-        id: true,
-      },
-    });
-
-    if (!buildingComplexes) {
-      throw new TRPCError({
-        code: 'NOT_FOUND',
-        message: 'Strata Titles not found',
-      });
-    }
-
-    return buildingComplexes;
-  }),
 
   // get single /api/buildingComplex by id
   byId: protectedProcedure

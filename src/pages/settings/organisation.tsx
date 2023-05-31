@@ -8,6 +8,7 @@ import { trpc } from '../../utils/trpc';
 import { z } from 'zod';
 import useModal from '../../utils/useModal';
 import OrganisationModal from '../../components/modals/OrganisationModal';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const organisationSettingsSchema = z.object({
   name: z.string().optional(),
@@ -59,7 +60,7 @@ const Organisation: NextPageWithLayout<OrganisationSettingsSchema> = () => {
       <div className="mx-auto mt-4 max-w-4xl px-2 sm:px-6 md:px-8">
         <h2 className="text-lg font-semibold">Organisation information</h2>
         {isFetching ? (
-          <span>Loading...</span>
+          <LoadingSpinner />
         ) : (
           <div className="flex flex-col">
             {/* Name */}

@@ -4,21 +4,18 @@ import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { classNames } from '../utils/classNames';
 
-type Notice = {
+type DropdownProps = {
   status: string | null;
+  handleArchiveChange: () => void;
+  handlePublishChange: () => void;
+  handleDraftChange: () => void;
 };
 
-type Modals = {
-  togglePublishModal: () => void;
-  toggleDraftModal: () => void;
-  toggleArchiveModal: () => void;
-};
-
-const DropDown: FC<Modals & Notice> = ({
+const DropDown: FC<DropdownProps> = ({
   status,
-  togglePublishModal,
-  toggleDraftModal,
-  toggleArchiveModal,
+  handleArchiveChange,
+  handlePublishChange,
+  handleDraftChange,
 }) => (
   <Menu as="div" className="relative inline-block text-left">
     <div>
@@ -56,7 +53,7 @@ const DropDown: FC<Modals & Notice> = ({
             {({ active }) => (
               <button
                 disabled={status === 'published'}
-                onClick={() => togglePublishModal()}
+                onClick={() => handlePublishChange()}
                 type="button"
                 className={classNames(
                   'block w-full px-4 py-2 text-left text-sm',
@@ -72,7 +69,7 @@ const DropDown: FC<Modals & Notice> = ({
             {({ active }) => (
               <button
                 disabled={status === 'draft'}
-                onClick={() => toggleDraftModal()}
+                onClick={() => handleDraftChange()}
                 type="button"
                 className={classNames(
                   'block w-full px-4 py-2 text-left text-sm',
@@ -88,7 +85,7 @@ const DropDown: FC<Modals & Notice> = ({
             {({ active }) => (
               <button
                 disabled={status === 'archived'}
-                onClick={() => toggleArchiveModal()}
+                onClick={() => handleArchiveChange()}
                 type="button"
                 className={classNames(
                   'block w-full px-4 py-2 text-left text-sm',
