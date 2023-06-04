@@ -1,30 +1,43 @@
 ![Visualization of the codebase](./diagram.svg)
 
-# Create T3 App
+# Brisby T3 App
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+The Brisby app uses the [T3 Stack](https://create.t3.gg/).
 
-## What's next? How do I make an app with this?
+Technologies include:
+- React
+- NextJS
+- TypeScript
+- Prisma
+- tRPC
+- React-Query
+- Zustand (global state management)
+- TailwindCSS
+- AWS s3 (file storage) and Cloudfront (global file distribution)
+- Vercel (hosting)
+- NextAuth (authentication)
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+## Goal
+The goal of this app is to build a very simple MVP as quickly as possible to show users and customers and obtain feedback. Overtime revisit areas (see Improvements and further work) as new feedback is received and more features develop. Try to keep tech debt to a minimum.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## How to use
+Feel free to clone locally. However, you'll need a copy of my .env file with all the environment variables for it to work. Contact me on (mwzavattaro@icloud.com) if you'd like a copy.
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+Otherwise you can try these links to experiment with it:
+- https://www.getbrisby.com
+- https://brisby-core.vercel.app/
+- https://brisby-core-mzavattaro.vercel.app/
+- https://brisby-core.vercel.app/
 
-## Learn More
-
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+## Improvements and further work
+- Migrate from s3/Cloudfront to [Uploadthing](https://uploadthing.com/) or [Vercel Blob](https://vercel.com/docs/storage/vercel-blob)
+- Further abstraction of code into their own utilities/functions outside of the components they're being used in (eg. new notice page)
+- Implement backend and email invitation for adding new team members
+- Implement payments (Stripe)
+- Revisit Algolia search
+  - Update Algolia index object when a notice is archived from the noticeboard
+- Replace cursor pagination with offset paginiaton and add to noticeboard table page
+- Implement Redis (not needed but would be fun) via Amazon ElastiCache or Vercel KV
+- Convert HTML elements to use React components (eg <Button /> <StyledLink />). These components exist, just need to implement them throughout
+- Clean up [...nextauth], remove HTML email template into its own folder for email templates
+- Implement React-Email for Notice broadcasting
