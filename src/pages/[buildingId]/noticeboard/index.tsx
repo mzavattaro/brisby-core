@@ -208,7 +208,7 @@ const NoticeboardViewPage: FC<SortOrder> = () => {
   const { data: sessionData } = useSession();
   const id = useRouter().query.buildingId as string;
   const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.descending);
-  const [limit, setLimit] = useState<number>(10);
+  const [limit, setLimit] = useState<number>(5);
 
   const setBuildingComplexId = useBuildingComplexIdStore(
     (state) => state.setBuildingComplexId

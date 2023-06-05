@@ -32,10 +32,10 @@ const ToolBar: FC<ToolBarProps> = ({ setSortOrder, handleSelectChange }) => (
           className="block w-full rounded-md border border-gray-300 py-2 pl-3 pr-10 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
           onChange={handleSelectChange}
         >
+          <option value="5">5 per page</option>
           <option value="10">10 per page</option>
-          <option value="20">20 per page</option>
-          <option value="50">50 per page</option>
-          <option value="100">100 per page</option>
+          <option value="15">15 per page</option>
+          <option value="25">25 per page</option>
         </select>
       </div>
     </div>
